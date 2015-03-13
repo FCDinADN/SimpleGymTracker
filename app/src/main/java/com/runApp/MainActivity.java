@@ -1,5 +1,6 @@
 package com.runApp;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +18,7 @@ import com.runApp.fragments.HistoryFragment;
 import com.runApp.fragments.NavigationDrawerFragment;
 import com.runApp.fragments.PathGoogleMapFragment;
 import com.runApp.models.ComplexLocation;
+import com.runApp.utils.DialogHandler;
 import com.runApp.utils.DumbData;
 import com.runApp.utils.GPSTracker;
 import com.runApp.utils.UserUtils;
@@ -121,25 +123,35 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
 
-        // update the main content by replacing fragments
-        Fragment fragment = null;
+        if (UserUtils.isTracking()) {
+            DialogHandler.showSimpleDialog(this, R.string.dialog_tracking_will_stop_title, R.string.dialog_tracking_will_stop_text,
+                    R.string.dialog_ok,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //nothing happens
+                        }
+                    });
+        } else {
+            // update the main content by replacing fragments
+            Fragment fragment = null;
 
-        getSupportFragmentManager().popBackStackImmediate();
+            getSupportFragmentManager().popBackStackImmediate();
 
-        switch (position) {
+            switch (position) {
 //            case 1:
 //                fragment = new RoutinesFragment();
 //                mTitle = getString(R.string.routines_selection);
 //                getSupportActionBar().setTitle(mTitle);
 //                break;
-            case 0:
-                fragment = new CardioFragment();
-                mTitle = getString(R.string.cardio_selection);
-                break;
-            case 1:
-                fragment = new HistoryFragment();
-                mTitle = getString(R.string.history_selection);
-                break;
+                case 0:
+                    fragment = new CardioFragment();
+                    mTitle = getString(R.string.cardio_selection);
+                    break;
+                case 1:
+                    fragment = new HistoryFragment();
+                    mTitle = getString(R.string.history_selection);
+                    break;
 //            case 4:
 //                fragment = new HistoryFragment();
 //                mTitle = "Logs History";
@@ -150,23 +162,24 @@ public class MainActivity extends ActionBarActivity
 //                mTitle = "Your Best Trainer";
 //                getSupportActionBar().setTitle(mTitle);
 //                break;
-            default:
-                fragment = new CardioFragment();
-                mTitle = getString(R.string.cardio_selection);
+                default:
+                    fragment = new CardioFragment();
+                    mTitle = getString(R.string.cardio_selection);
+            }
+
+            if (currentFragment != null && currentFragment.equals(fragment.getClass().getSimpleName())) {
+                return;
+            }
+
+            currentFragment = fragment.getClass().getSimpleName();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .commit();
+
+            setToolbarTitle(mTitle.toString());
         }
-
-        if (currentFragment != null && currentFragment.equals(fragment.getClass().getSimpleName())) {
-            return;
-        }
-
-        currentFragment = fragment.getClass().getSimpleName();
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
-
-        setToolbarTitle(mTitle.toString());
     }
 
     public void setToolbarTitle(String title) {

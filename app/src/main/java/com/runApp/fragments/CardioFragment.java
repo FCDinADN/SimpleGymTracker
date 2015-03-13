@@ -71,7 +71,6 @@ public class CardioFragment extends Fragment implements HxMListener {
     private CubicLineChartFragment historyChartFragment;
 
     private Date startTime;
-    private Date endTime;
 
     private Handler mHandler;
 
@@ -104,26 +103,24 @@ public class CardioFragment extends Fragment implements HxMListener {
         if (!pressed) {
             ((MainActivity) getActivity()).startTracker();
             mProgress.setVisibility(View.VISIBLE);
-            if (UserUtils.getDeviceBattery() < 0) {
-                showBattery = true;
-            } else {
-                hxMBattery.setText(UserUtils.getDeviceBattery() + " %");
-            }
-            UserUtils.setExerciseNumber(UserUtils.getExerciseNumber() + 1);
-            exerciseNumber.setText(UserUtils.getExerciseNumber() + "");
-            date.setText(UserUtils.getDate());
             connect.setText("CONNECTING...");
             pressed = true;
             mHxMConnection.findBT();
-            startTime = new Date();
         } else {
             closeConnection();
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
+    private void initData() {
+        if (UserUtils.getDeviceBattery() < 0) {
+            showBattery = true;
+        } else {
+            hxMBattery.setText(UserUtils.getDeviceBattery() + " %");
+        }
+        UserUtils.setExerciseNumber(UserUtils.getExerciseNumber() + 1);
+        exerciseNumber.setText(UserUtils.getExerciseNumber() + "");
+        date.setText(UserUtils.getDate());
+        startTime = new Date();
     }
 
 //    @OnClick(R.id.mapButton)
@@ -141,14 +138,17 @@ public class CardioFragment extends Fragment implements HxMListener {
         mBundle.putInt(HistoryChartFragment.EXERCISE_NUMBER, UserUtils.getExerciseNumber());
         historyChartFragment.setArguments(mBundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, historyChartFragment)
+                .add(R.id.container, historyChartFragment)
                 .addToBackStack("")
                 .commit();
         getActivity().getSupportFragmentManager().executePendingTransactions();
     }
 
     @Override
-    public void sendMessage(final HxMMessage hxMMessage, Handler handler) {
+    public void sendMessage(final HxMMessage hxMMessage) {
+        if (!UserUtils.isTracking()) {
+            UserUtils.setIsTracking();
+        }
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -173,6 +173,7 @@ public class CardioFragment extends Fragment implements HxMListener {
                 }
 
                 if (initialValue == -1) {
+                    initData();
                     initialValue = hxMMessage.getDistance();
                 }
 
@@ -198,20 +199,22 @@ public class CardioFragment extends Fragment implements HxMListener {
 
     @Override
     public void socketClosed() {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mProgress.setVisibility(View.GONE);
-                DialogHandler.showSimpleDialog(getActivity(), R.string.dialog_socket_closed_title, R.string.dialog_socket_closed_text,
-                        R.string.dialog_ok,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                closeConnection();
-                            }
-                        });
-            }
-        });
+        if (pressed) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mProgress.setVisibility(View.GONE);
+                    DialogHandler.showSimpleDialog(getActivity(), R.string.dialog_socket_closed_title, R.string.dialog_socket_closed_text,
+                            R.string.dialog_ok,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    closeConnection();
+                                }
+                            });
+                }
+            });
+        }
     }
 
     @Override
@@ -246,12 +249,14 @@ public class CardioFragment extends Fragment implements HxMListener {
 
     private void closeConnection() {
         ((MainActivity) getActivity()).stopTracker();
-        UserUtils.setActualSpeed(0.0f);
         connect.setText("CONNECT");
         pressed = false;
-        endTime = new Date();
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        GymDatabaseHelper.getInst().insertExercise(new History(UserUtils.getExerciseNumber(), df.format(startTime.getTime()), df.format(endTime.getTime())));
+        UserUtils.setActualSpeed(0.0f);
+        if (initialValue != -1) {
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            GymDatabaseHelper.getInst().insertExercise(new History(UserUtils.getExerciseNumber(), df.format(startTime.getTime()), df.format(new Date().getTime())));
+            UserUtils.setIsTracking();
+        }
         try {
             mHxMConnection.closeBT();
         } catch (IOException e) {
@@ -262,19 +267,19 @@ public class CardioFragment extends Fragment implements HxMListener {
     @Override
     public void onResume() {
         super.onResume();
-        if (pressed) {
-            mHxMConnection.findBT();
-
-            if (UserUtils.getDeviceBattery() < 0) {
-                showBattery = true;
-            } else {
-                hxMBattery.setText(UserUtils.getDeviceBattery() + " %");
-            }
-            exerciseNumber.setText(UserUtils.getExerciseNumber() + "");
-            date.setText(UserUtils.getDate());
-        } else {
-            resetValues();
-        }
+//        if (pressed) {
+//            mHxMConnection.findBT();
+//
+//            if (UserUtils.getDeviceBattery() < 0) {
+//                showBattery = true;
+//            } else {
+//                hxMBattery.setText(UserUtils.getDeviceBattery() + " %");
+//            }
+//            exerciseNumber.setText(UserUtils.getExerciseNumber() + "");
+//            date.setText(UserUtils.getDate());
+//        } else {
+//            resetValues();
+//        }
     }
 
     @Override

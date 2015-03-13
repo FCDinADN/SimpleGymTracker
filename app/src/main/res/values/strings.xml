@@ -83,6 +83,8 @@
     <string name="dialog_no_exercises_text">Please select at least one exercise for this routine.</string>
     <string name="dialog_socket_closed_title">HxM not working</string>
     <string name="dialog_socket_closed_text">Please put HxM on before starting any activity.</string>
+    <string name="dialog_tracking_will_stop_title">Warning!</string>
+    <string name="dialog_tracking_will_stop_text">You cannot see History while working out. Please press DISCONNECT first.</string>
 
     <!-- Workout -->
     <string name="routine_workout_exercises">Exercises</string>
@@ -150,6 +152,7 @@ Eight words: Eat quality food. Increase your protein. Train hard."THE KEY IS FEE
     <string name="cardio_dialog_connection_successful_title">Successful!</string>
     <string name="cardio_dialog_connection_successful_text">You successfuly connected to the sensor. Press Ready to get the values!</string>
     <string name="cardio_dialog_connection_successful_ready">Ready</string>
+    <string name="disconnect_btn">DISCONNECT</string>
 
     <!-- Maps Activity -->
     <string name="google_maps_activity">Google Maps</string>

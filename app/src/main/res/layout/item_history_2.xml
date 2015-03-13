@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="70dp"
+                android:background="@drawable/item_light_blue_bg">
+
+    <View
+        android:layout_width="60dp"
+        android:layout_height="0.5dp"
+        android:id="@+id/history_item_border_padding"
+        android:background="@color/calendar_day_background"
+        android:visibility="visible"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_toRightOf="@id/history_item_border_padding"
+        android:layout_toEndOf="@id/history_item_border_padding"
+        android:id="@+id/history_item_border"
+        android:background="@color/border_color"/>
+
+    <LinearLayout
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/history_item_border"
+        android:id="@+id/history_item_day_date_container"
+        android:gravity="center_vertical"
+        android:layout_alignBottom="@+id/item_histoy_layout"
+        android:layout_alignTop="@+id/item_histoy_layout"
+        android:background="@color/calendar_day_background">
+
+        <com.runApp.ui.FontMerriweatherTextView
+            android:id="@+id/history_item_day"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textColor="@color/grey_very_dark"
+            android:maxLines="1"/>
+
+        <com.runApp.ui.FontLatoTextView
+            android:id="@+id/history_item_day_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:gravity="center"
+            android:textSize="13sp"
+            android:textColor="@color/grey_very_dark"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/item_histoy_layout"
+        android:minHeight="70dp"
+        android:layout_toRightOf="@+id/history_item_day_date_container"
+        android:layout_toEndOf="@+id/history_item_day_date_container"
+        android:layout_below="@+id/history_item_border"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="3dp"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            android:layout_alignParentTop="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_time"
+                android:contentDescription="@null"/>
+
+            <com.runApp.ui.FontMerriweatherTextView
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginEnd="15dp"
+                android:id="@+id/history_item_time"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="11sp"
+                android:text="10:00 Uhr - 11:00 Uhr"/>
+        </LinearLayout>
+
+        <com.runApp.ui.FontLatoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/history_item_title"
+            android:layout_centerVertical="true"
+            android:text="TITLE"
+            android:layout_marginRight="7dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/history_item_delete"
+            android:contentDescription="@null"
+            android:background="@drawable/item_delete_bg"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>

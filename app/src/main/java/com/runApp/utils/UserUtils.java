@@ -22,6 +22,7 @@ public class UserUtils {
     private static final String MODERATE_LIMIT = "moderate_limit";
     private static final String LIGHT_LIMIT = "light_limit";
     private static final String ACTUAL_SPEED = "actual_speed";
+    private static final String IS_TRACKING = "is_tracking_now";
 
     public static int getExerciseNumber() {
         SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
@@ -128,6 +129,16 @@ public class UserUtils {
     public static void setActualSpeed(float speed) {
         SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         sharedPreferences.edit().putFloat(ACTUAL_SPEED, speed).apply();
+    }
+
+    public static boolean isTracking() {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(IS_TRACKING, false);
+    }
+
+    public static void setIsTracking() {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(IS_TRACKING, !isTracking()).apply();
     }
 
 }

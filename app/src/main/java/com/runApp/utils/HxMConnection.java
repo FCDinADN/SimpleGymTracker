@@ -189,7 +189,7 @@ public class HxMConnection {
             try {
                 while (!Thread.currentThread().isInterrupted() && (i = mmInputStream.read()) != -1) {
                     if (counter == 59) {
-                        mHxMListener.sendMessage(new HxMMessage(readBuffer), mHandler);
+                        mHxMListener.sendMessage(new HxMMessage(readBuffer));
                         readBuffer = new byte[1024];
                         counter = 0;
                     } else {

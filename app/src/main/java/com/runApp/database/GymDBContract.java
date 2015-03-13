@@ -15,6 +15,7 @@ public class GymDBContract {
     protected static final String PATH_HEART_RATE = "heart_rate_path";
     protected static final String PATH_LOCATIONS = "locations_table_path";
     protected static final String PATH_EXERCISES = "exercises_path";
+    protected static final String PATH_HEART_RATE_WITH_EXERCISE = "heart_rate_with_exercise_path";
 //    protected static final String PATH_ROUTINES = "routines_path";
 //    protected static final String PATH_WORKOUTS = "workouts_path";
 
@@ -50,7 +51,7 @@ public class GymDBContract {
     public interface HeartRatesColumns {
         String ID = "heart_rate_id";
         String VALUE = "heart_rate_value";
-//        String START_DATE = "heart_rate_start_date";
+        //        String START_DATE = "heart_rate_start_date";
 //        String END_DATE = "heart_rate_end_date";
 //        String NUMBER = "heart_rate_number";
         String EXERCISE_ID = "heart_rate_exercise_id";
@@ -77,6 +78,8 @@ public class GymDBContract {
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.runApp.heartrates";
         public static final String CONTENT_URI_EXERCISE_ORDER = GymDatabase.Tables.HEART_RATES
                 + "." + HeartRatesColumns.EXERCISE_ID + " DESC";
+
+        public static final Uri CONTENT_URI_WITH_EXERCISE = Uri.withAppendedPath(CONTENT_URI, "with_exercise");
     }
 
     public static class Locations implements LocationsColumns, BaseColumns {

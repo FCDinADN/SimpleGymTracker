@@ -3,6 +3,7 @@ package com.runApp.database;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.OperationApplicationException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.RemoteException;
 
 import com.runApp.models.ComplexLocation;
@@ -87,9 +88,9 @@ public class GymDatabaseHelper {
         ContentProviderOperation.Builder insertBuilder = ContentProviderOperation.newInsert(GymDBContract.HeartRates.CONTENT_URI);
 
         insertBuilder.withValue(GymDBContract.HeartRatesColumns.VALUE, hxMMessage.getHeartRate());
-        insertBuilder.withValue(GymDBContract.HeartRatesColumns.START_DATE, UserUtils.getDate());
-        insertBuilder.withValue(GymDBContract.HeartRatesColumns.END_DATE, UserUtils.getDate());
-        insertBuilder.withValue(GymDBContract.HeartRatesColumns.NUMBER, UserUtils.getExerciseNumber());
+//        insertBuilder.withValue(GymDBContract.HeartRatesColumns.START_DATE, UserUtils.getDate());
+//        insertBuilder.withValue(GymDBContract.HeartRatesColumns.END_DATE, UserUtils.getDate());
+        insertBuilder.withValue(GymDBContract.HeartRatesColumns.EXERCISE_ID, UserUtils.getExerciseNumber());
 
         batch.add(insertBuilder.build());
         ContentResolver resolver = Utils.getContext().getContentResolver();
@@ -176,4 +177,12 @@ public class GymDatabaseHelper {
 //        mSqLiteDatabase.delete(GymDatabase.Tables.ROUTINES,
 //                GymDBContract.RoutinesColumns.ID + " = " + routine.getId(), null);
 //    }
+
+    public void deleteExercise(History history) {
+        SQLiteDatabase mSqLiteDatabase = new GymDatabase(Utils.getContext()).getWritableDatabase();
+        mSqLiteDatabase.delete(GymDatabase.Tables.HEART_RATES,
+                GymDBContract.HeartRatesColumns.ID + " = " + history.getId(), null);
+        mSqLiteDatabase.delete(GymDatabase.Tables.EXERCISES,
+                GymDBContract.ExercisesColumns.ID + " = " + history.getId(), null);
+    }
 }

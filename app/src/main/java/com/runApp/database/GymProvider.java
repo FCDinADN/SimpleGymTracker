@@ -23,6 +23,7 @@ import static com.runApp.database.GymDBContract.Locations;
 import static com.runApp.database.GymDBContract.LocationsColumns;
 import static com.runApp.database.GymDBContract.PATH_EXERCISES;
 import static com.runApp.database.GymDBContract.PATH_HEART_RATE;
+import static com.runApp.database.GymDBContract.PATH_HEART_RATE_WITH_EXERCISE;
 import static com.runApp.database.GymDBContract.PATH_LOCATIONS;
 import static com.runApp.database.GymDatabase.Tables;
 
@@ -38,8 +39,9 @@ public class GymProvider extends ContentProvider {
     private static final int HEARTRATES = 1000;
     private static final int LOCATIONS = 1001;
     private static final int EXERCISES = 1002;
-    private static final int ROUTINES = 1003;
-    private static final int WORKOUTS = 1004;
+    private static final int HEARTRATES_WITH_EXERCISE = 1003;
+//    private static final int ROUTINES = 1004;
+//    private static final int WORKOUTS = 1005;
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -53,6 +55,9 @@ public class GymProvider extends ContentProvider {
 
         /* EXERCISES TABLE */
         matcher.addURI(authority, PATH_EXERCISES, EXERCISES);
+
+         /* HEARTRATES WITH EXERCISE TABLE TABLE */
+        matcher.addURI(authority, PATH_HEART_RATE + "/" + PATH_HEART_RATE_WITH_EXERCISE, HEARTRATES_WITH_EXERCISE);
 
         /* ROUTINES TABLE */
 //        matcher.addURI(authority, PATH_ROUTINES, ROUTINES);
@@ -186,12 +191,16 @@ public class GymProvider extends ContentProvider {
                 return builder.table(Tables.HEART_RATES);
             case LOCATIONS:
                 return builder.table(Tables.LOCATIONS);
-            case ROUTINES:
-                return builder.table(Tables.ROUTINES);
+//            case ROUTINES:
+//                return builder.table(Tables.ROUTINES);
             case EXERCISES:
                 return builder.table(Tables.EXERCISES);
-            case WORKOUTS:
-                return builder.table(Tables.WORKOUTS);
+            case HEARTRATES_WITH_EXERCISE:
+                return builder.table(Tables.HEARTRATES_WITH_EXERCISE)
+                        .mapToTable(HeartRatesColumns.EXERCISE_ID, Tables.HEART_RATES)
+                        .mapToTable(ExercisesColumns.ID, Tables.EXERCISES);
+//            case WORKOUTS:
+//                return builder.table(Tables.WORKOUTS);
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

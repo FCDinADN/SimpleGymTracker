@@ -114,6 +114,10 @@ public class GymDatabase extends SQLiteOpenHelper {
         String WORKOUTS = "WORKOUTS";
         String HEART_RATES = "HEART_RATES";
         String LOCATIONS = "LOCATIONS_TABLE";
+
+        String HEARTRATES_WITH_EXERCISE = HEART_RATES + " JOIN "
+                + EXERCISES + " ON " + HEART_RATES + "." + HeartRatesColumns.EXERCISE_ID
+                + "=" + EXERCISES + "." + ExercisesColumns.ID;
     }
 
     private boolean checkDataBase() {

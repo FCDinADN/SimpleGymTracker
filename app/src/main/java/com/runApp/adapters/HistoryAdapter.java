@@ -41,6 +41,10 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
     private ExpandableListView mExpandableListView;
     private final LayoutInflater inflater;
     private final Context mContext;
+    private CallBack mCallBack;
+
+    private final String ADD = "add_item";
+    private final String DELETE = "delete_item";
 
     public HistoryAdapter(Context context, ArrayList<History> histories, ExpandableListView expandableListView) {
         inflater = LayoutInflater.from(context);
@@ -86,7 +90,8 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
                     eventWrapper.isFirst = true;
                 }
                 lastDay = eventWrapper.day;
-                eventWrapper.today = today.compareTo(eventWrapper.day) == 0;
+                eventWrapper.today = new SimpleDateFormat("yyyy-MM-dd").format(today).equals(new SimpleDateFormat("yyyy-MM-dd").format(eventWrapper.day));
+
                 wrappedEventsHeader.add(eventWrapper);
             }
         }
@@ -157,9 +162,9 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int position, boolean isExpanded, View view, ViewGroup viewGroup) {
+    public View getGroupView(final int position, boolean isExpanded, View view, ViewGroup viewGroup) {
         int type = getGroupType(position);
-        EventWrapper wrapper = ((EventWrapper) getGroup(position));
+        final EventWrapper wrapper = ((EventWrapper) getGroup(position));
         Holder holder = null;
         if (view == null) {
             switch (type) {
@@ -170,28 +175,28 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
                     break;
                 case TYPE_FIRST:
                 case TYPE_TODAY_FIRST:
-                    view = inflater.inflate(R.layout.item_calendar_day, viewGroup, false);
+                    view = inflater.inflate(R.layout.item_history_2, viewGroup, false);
                     holder = new Holder(view);
                     if (type == TYPE_TODAY_FIRST) {
-                        View background = view.findViewById(R.id.calendar_item_day_date_container);
+                        View background = view.findViewById(R.id.history_item_day_date_container);
                         background.setBackgroundColor(mContext.getResources().getColor(R.color.actionbar_background));
                         holder.day.setTextColor(mContext.getResources().getColor(R.color.white));
                         holder.dayName.setTextColor(mContext.getResources().getColor(R.color.white));
                     } else {
-                        View background = view.findViewById(R.id.calendar_item_day_date_container);
+                        View background = view.findViewById(R.id.history_item_day_date_container);
                         background.setBackgroundColor(mContext.getResources().getColor(R.color.calendar_day_background));
                     }
                     view.setTag(holder);
                     break;
                 case TYPE_OTHER:
                 case TYPE_TODAY_OTHER:
-                    view = inflater.inflate(R.layout.item_calendar_day, viewGroup, false);
+                    view = inflater.inflate(R.layout.item_history_2, viewGroup, false);
                     holder = new Holder(view);
                     if (type == TYPE_TODAY_OTHER) {
-                        View background = view.findViewById(R.id.calendar_item_day_date_container);
+                        View background = view.findViewById(R.id.history_item_day_date_container);
                         background.setBackgroundColor(mContext.getResources().getColor(R.color.actionbar_background));
                     } else {
-                        View background = view.findViewById(R.id.calendar_item_day_date_container);
+                        View background = view.findViewById(R.id.history_item_day_date_container);
                         background.setBackgroundColor(mContext.getResources().getColor(R.color.calendar_day_background));
                     }
                     view.setTag(holder);
@@ -221,7 +226,7 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
                         holder.border.setVisibility(View.GONE);
                     }
                     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                    holder.title.setText(sdf.format(wrapper.history.getStartTimeDate()) + " - " + sdf.format(wrapper.history.getEntTimeDate()));
+                    holder.time.setText(sdf.format(wrapper.history.getStartTimeDate()) + " - " + sdf.format(wrapper.history.getEntTimeDate()));
 //                    SimpleDateFormat sdf;// = new SimpleDateFormat("HH:mm", Locale.getDefault());
 //                    holder.time.setText(getTime(sdf.format(wrapper.event.getStartTime()),sdf.format(wrapper.event.getEndTime())));
 //                    String time = sdf.format(wrapper.event.getStartTime());
@@ -232,12 +237,34 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
                     holder.day.setText(sdf.format(wrapper.history.getStartTimeDate()));
                     sdf = new SimpleDateFormat("EEEE", Locale.getDefault());
                     holder.dayName.setText(sdf.format(wrapper.history.getStartTimeDate()).substring(0, 3));
+                    holder.delete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mCallBack.deleteItem(position - 1);
+
+
+//                                                setAnimation(holder.container, position, DELETE);
+//                                                exercises.remove(position);
+//                                                new Timer().schedule(new TimerTask() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                                                            @Override
+//                                                            public void run() {
+//                                                                notifyItemRemoved(position);
+//                                                                notifyItemRangeChanged(position, exercises.size());
+//                                                            }
+//                                                        });
+//                                                    }
+//                                                }, 400);
+                        }
+                    });
                     break;
                 }
                 case TYPE_OTHER:
                 case TYPE_TODAY_OTHER: {
                     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                    holder.title.setText(sdf.format(wrapper.history.getStartTimeDate()) + " - " + sdf.format(wrapper.history.getEntTimeDate()));
+                    holder.time.setText(sdf.format(wrapper.history.getStartTimeDate()) + " - " + sdf.format(wrapper.history.getEntTimeDate()));
 //                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 //                    String time = sdf.format(wrapper.event.getStartTime());
 //                    holder.time.setText(getTime(sdf.format(wrapper.event.getStartTime()),sdf.format(wrapper.event.getEndTime())));
@@ -249,6 +276,14 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
                         holder.borderPadding.setBackgroundColor(Utils.getContext().getResources().getColor(R.color.calendar_day_background));
                         holder.border.setVisibility(View.VISIBLE);
                     }
+                    holder.delete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //TODO delete history
+                            mCallBack.deleteItem(position - 1);
+
+                        }
+                    });
                     break;
                 }
             }
@@ -309,8 +344,11 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
     }
 
     class Holder {
-        @InjectView(R.id.item_friends_routine_title)
+        @InjectView(R.id.history_item_title)
         TextView title;
+        @Optional
+        @InjectView(R.id.history_item_time)
+        TextView time;
         @Optional
         @InjectView(R.id.item_friends_routine_arrow_down)
         ImageView arrowDown;
@@ -318,20 +356,57 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
         @InjectView(R.id.item_friends_routine_arrow_up)
         ImageView arrowUp;
         @Optional
-        @InjectView(R.id.calendar_item_day_date)
+        @InjectView(R.id.history_item_day)
         TextView day;
         @Optional
-        @InjectView(R.id.calendar_item_day_date_name)
+        @InjectView(R.id.history_item_day_name)
         TextView dayName;
         @Optional
-        @InjectView(R.id.calendar_item_border)
+        @InjectView(R.id.history_item_border)
         View border;
         @Optional
-        @InjectView(R.id.calendar_item_border_padding)
+        @InjectView(R.id.history_item_border_padding)
         View borderPadding;
+        @Optional
+        @InjectView(R.id.history_item_delete)
+        ImageView delete;
 
         public Holder(View view) {
             ButterKnife.inject(this, view);
         }
     }
+
+//    private void setAnimation(View viewToAnimate, int position, String type) {
+//        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_in_right);
+//        switch (type) {
+//            case ADD:
+//                //if the bound view wasn't previously displayed on the screen
+//                if (position > lastPosition) {
+//                    viewToAnimate.startAnimation(animation);
+//                    lastPosition = position;
+//                }
+//                break;
+//            case DELETE:
+//                animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_out_right);
+//                viewToAnimate.startAnimation(animation);
+//                break;
+//        }
+//    }
+
+    public interface CallBack {
+        void deleteItem(int position);
+    }
+
+    public void setCallBack(CallBack callback) {
+        mCallBack = callback;
+    }
+
+    public void removeItem(int position) {
+        if (wrappedEventsHeader.get(position).isFirst && position > 0) {
+//            wrappedEventsHeader.get(position + 1).isFirst = true;
+        }
+        wrappedEventsHeader.remove(position);
+        notifyDataSetChanged();
+    }
+
 }

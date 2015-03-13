@@ -1,5 +1,6 @@
 package com.runApp.fragments;
 
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,8 +17,10 @@ import android.widget.LinearLayout;
 import com.runApp.R;
 import com.runApp.adapters.HistoryAdapter;
 import com.runApp.database.GymDBContract;
+import com.runApp.database.GymDatabaseHelper;
 import com.runApp.database.QueryExercises;
 import com.runApp.models.History;
+import com.runApp.utils.DialogHandler;
 import com.runApp.utils.Utils;
 
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ import butterknife.InjectView;
 /**
  * Created by Rares on 12/01/15.
  */
-public class HistoryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class HistoryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, HistoryAdapter.CallBack {
 
     private final int LOADER_HEART_RATES = 2000;
 
@@ -82,18 +85,30 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         if (cursor != null && !cursor.isClosed()) {
+            historyList = new ArrayList<>();
             while (cursor.moveToNext()) {
                 History history = new History(cursor.getInt(QueryExercises.ID),
                         cursor.getString(QueryExercises.START_TIME),
                         cursor.getString(QueryExercises.END_TIME));
                 historyList.add(history);
             }
+            mProgress.setVisibility(View.GONE);
             mHistoryAdapter = new HistoryAdapter(getActivity(), historyList, calendarList);
+            mHistoryAdapter.setCallBack(this);
             calendarList.setAdapter(mHistoryAdapter);
 
             calendarList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
                 @Override
                 public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                    CubicLineChartFragment historyChartFragment = new CubicLineChartFragment();
+                    Bundle mBundle = new Bundle();
+                    mBundle.putInt(HistoryChartFragment.EXERCISE_NUMBER, historyList.get(groupPosition - 1).getId());
+                    historyChartFragment.setArguments(mBundle);
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .add(R.id.container, historyChartFragment)
+                            .addToBackStack("")
+                            .commit();
+                    getActivity().getSupportFragmentManager().executePendingTransactions();
                     return true;
                 }
             });
@@ -103,12 +118,32 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
         getLoaderManager().restartLoader(LOADER_HEART_RATES, null, this);
+    }
+
+    @Override
+    public void deleteItem(final int position) {
+        DialogHandler.showConfirmDialog(getActivity(),
+                R.string.dialog_delete_title,
+                R.string.dialog_delete_exercise_text,
+                R.string.dialog_delete,
+                R.string.dialog_cancel,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            GymDatabaseHelper.getInst().deleteExercise(historyList.get(position));
+                            mHistoryAdapter.removeItem(position);
+//                            historyList.remove(position);
+//                            mHistoryAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+        );
     }
 }

@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.utils.LimitLine;
 import com.runApp.R;
 import com.runApp.database.GymDBContract;
+import com.runApp.database.QueryExercises;
 import com.runApp.database.QueryHeartRates;
 import com.runApp.utils.Utils;
 
@@ -99,8 +100,8 @@ public class HistoryChartFragment extends Fragment implements LoaderManager.Load
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Loader<Cursor> loader;
-        String selection = GymDBContract.HeartRatesColumns.NUMBER + " = " + exerciseNumber;
-        loader = new CursorLoader(Utils.getContext(), GymDBContract.HeartRates.CONTENT_URI, QueryHeartRates.PROJECTION_SIMPLE, selection, null, GymDBContract.HeartRates.CONTENT_URI_DATE_ORDER);
+        String selection = GymDBContract.HeartRatesColumns.EXERCISE_ID + " = " + exerciseNumber;
+        loader = new CursorLoader(Utils.getContext(), GymDBContract.HeartRates.CONTENT_URI_WITH_EXERCISE, QueryHeartRates.PROJECTION_SIMPLE, selection, null, GymDBContract.HeartRates.CONTENT_URI_EXERCISE_ORDER);
         return loader;
     }
 
@@ -121,7 +122,7 @@ public class HistoryChartFragment extends Fragment implements LoaderManager.Load
                         } else {
                             colors.add(Color.GREEN);
                         }
-                        xVals.add(cursor.getString(QueryHeartRates.START_DATE));
+                        xVals.add(cursor.getString(QueryExercises.START_TIME));
                         //chartEntries - list of Type Entry that will hold the values
                         chartEntries1.add(entry);
                         counter++;

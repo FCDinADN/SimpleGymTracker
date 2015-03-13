@@ -91,8 +91,8 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Loader<Cursor> loader;
-        String selection = GymDBContract.HeartRatesColumns.NUMBER + " = " + exerciseNumber;
-        loader = new CursorLoader(Utils.getContext(), GymDBContract.HeartRates.CONTENT_URI, QueryHeartRates.PROJECTION_SIMPLE, selection, null, GymDBContract.HeartRates.CONTENT_URI_DATE_ORDER);
+        String selection = GymDBContract.HeartRatesColumns.EXERCISE_ID + " = " + exerciseNumber;
+        loader = new CursorLoader(Utils.getContext(), GymDBContract.HeartRates.CONTENT_URI, QueryHeartRates.PROJECTION_SIMPLE, selection, null, GymDBContract.HeartRates.CONTENT_URI_EXERCISE_ORDER);
         return loader;
     }
 
