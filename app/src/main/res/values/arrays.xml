@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Navigation drawer items -->
+    <string-array name="nav_drawer_items">
+        <!--<item>Routines</item>-->
+        <item>Cardio</item>
+        <item>History</item>
+        <!--<item>Friends</item>-->
+        <!--<item>Logs History</item>-->
+        <!--<item>Your Best Trainer</item>-->
+    </string-array>
+
+    <array name="nav_drawer_icons">
+        <!--<item>@drawable/app_icon</item>-->
+        <item>@drawable/icon_cardio</item>
+        <item>@drawable/calendar_calendar_icon</item>
+        <!--<item>@drawable/friends_icon</item>-->
+        <!--<item>@drawable/calendar_calendar_icon</item>-->
+        <!--<item>@drawable/configurator_icon</item>-->
+    </array>
+
+</resources>

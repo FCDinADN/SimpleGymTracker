@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:weightSum="4">
+
+    <TextView
+        android:id="@+id/friend_full_profile_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="50dp"
+        android:text="@string/friend_full_profile_see_logs"
+        android:gravity="center_vertical"
+        android:padding="7dp"
+        android:textSize="18sp"
+        android:textColor="@color/actionbar_text_color"/>
+
+    <ExpandableListView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/friendsRoutines"
+        android:divider="@color/main_divider"
+        android:dividerHeight="1dp"
+        android:gravity="center"
+        android:cacheColorHint="@android:color/transparent"
+        android:listSelector="@android:color/transparent"
+        android:groupIndicator="@android:color/transparent"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="7dp"
+        android:layout_weight="4"/>
+
+    <TextView
+        android:id="@+id/friend_full_profile_rate"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="7dp"
+        android:minHeight="50dp"
+        android:text="Rate friend"
+        android:background="@drawable/light_blue_bg"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/actionbar_text_color"
+        android:layout_weight="1"/>
+
+</LinearLayout>

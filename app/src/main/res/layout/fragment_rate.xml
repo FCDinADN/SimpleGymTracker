@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/main_background">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="200dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/actionbar_background"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_rate"
+                android:background="@android:color/transparent"/>
+
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/rate_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rate"
+                android:textSize="20sp"
+                android:textColor="@color/actionbar_text_color"
+                />
+
+            <ImageButton
+                android:id="@+id/rank_save"
+                android:layout_weight="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_save_bg"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/main_divider"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="7dp"
+            android:gravity="center_vertical"
+            android:background="@android:color/white">
+
+            <TextView
+                android:id="@+id/rate_hint"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:padding="5dp"
+                android:textSize="@dimen/exercise_edit_title_size"
+                android:text="@string/friend_full_profile_add_comment"
+                android:gravity="center_vertical"
+                android:layout_weight="0.5"/>
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ratingBar"
+                android:layout_gravity="center_horizontal"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/main_divider"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

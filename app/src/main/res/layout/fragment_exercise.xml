@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/main_background">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="300dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/actionbar_background"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/app_icon"
+                android:background="@android:color/transparent"/>
+
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/exercise_item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/new_exercise"
+                android:textSize="20sp"
+                android:textColor="@color/actionbar_text_color"
+                />
+
+            <ImageButton
+                android:id="@+id/exercise_item_save"
+                android:layout_weight="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/item_save_bg"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/exercise_item_name_title"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginLeft="7dp"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:textSize="@dimen/exercise_edit_title_size"
+            android:text="@string/new_exercise_add_name"
+            android:textColor="@color/actionbar_text_color"
+            android:gravity="center_vertical"
+            android:layout_weight="0.5"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/main_divider"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_marginRight="7dp"
+            android:layout_marginLeft="7dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/exercise_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="40dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_weight="1"
+                android:textSize="@dimen/exercise_edit_title_size"
+                android:inputType="textMultiLine"
+                android:background="@android:color/transparent"
+                android:hint="@string/new_exercise_add_name_hint"/>
+
+            <View
+                android:id="@+id/item_exercise_name_clear"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:background="@drawable/icon_searchbar"
+                android:visibility="gone"/>
+
+            <View
+                android:id="@+id/exercise_error"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center"
+                android:background="@drawable/icon_error_bg"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/exercise_item_type_title"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="7dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:textSize="@dimen/exercise_edit_title_size"
+            android:text="@string/new_routine_type"
+            android:textColor="@color/actionbar_text_color"
+            android:gravity="center_vertical"/>
+
+        <Spinner
+            android:id="@+id/new_exercise_type_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="7dp"
+            android:layout_marginLeft="7dp"
+            android:spinnerMode="dropdown"/>
+
+        <LinearLayout
+            android:id="@+id/new_exercise_measurement_unit_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginLeft="7dp">
+
+            <TextView
+                android:id="@+id/exercise_item_measurement_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:textSize="@dimen/exercise_edit_title_size"
+                android:gravity="center_vertical"
+                android:text="@string/new_exercise_measurement_unit"
+                android:textColor="@color/actionbar_text_color"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/main_divider"/>
+
+            <LinearLayout
+                android:id="@+id/new_exercise_repetitions_units_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minHeight="40dp"
+                android:weightSum="3"
+                android:visibility="visible"
+                android:background="@android:color/white"
+                >
+
+                <CheckBox
+                    android:id="@+id/new_exercise_kg_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_exercise_kg_unit"
+                    android:layout_weight="1"/>
+
+                <CheckBox
+                    android:id="@+id/new_exercise_second_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_exercise_lb_unit"
+                    android:layout_weight="1"/>
+
+                <CheckBox
+                    android:id="@+id/new_exercise_third_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_exercise_no_unit"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/new_exercise_distance_units_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minHeight="40dp"
+                android:weightSum="2"
+                android:background="@android:color/white"
+                android:visibility="visible">
+
+                <CheckBox
+                    android:id="@+id/new_exercise_km_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_exercise_km_unit"
+                    android:layout_weight="1"/>
+
+                <CheckBox
+                    android:id="@+id/new_exercise_ft_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_exercise_miles_unit"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="7dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/exercise_item_note_title"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:textSize="@dimen/exercise_edit_title_size"
+                android:text="@string/new_exercise_add_note"
+                android:gravity="center_vertical"
+                android:layout_weight="0.5"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/main_divider"/>
+
+            <EditText
+                android:id="@+id/new_exercise_note"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:minHeight="40dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textSize="@dimen/exercise_edit_title_size"
+                android:hint="@string/new_exercise_add_note_hint"
+                android:inputType="textMultiLine"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

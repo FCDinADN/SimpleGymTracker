@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">RunApp</string>
+
+    <!-- navigation -->
+    <string name="routines_selection">Routines</string>
+    <string name="cardio_selection">Cardio</string>
+    <string name="friends_selection">Friends</string>
+    <string name="history_selection">History</string>
+    <string name="map_selection">Map</string>
+    <array name="navigation_titles">
+        <item>Routines</item>
+        <item>Cardio</item>
+        <item>Friends</item>
+    </array>
+
+    <!-- Action Bar Drawer -->
+    <string name="drawer_open">Drawer Open</string>
+    <string name="drawer_close">Drawer Close</string>
+
+    <!-- settings menu -->
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- new routine -->
+    <string name="new_routine">Create Routine</string>
+    <string name="new_routine_add_name_hint">Routine name</string>
+    <string name="new_routine_save_routine">Save routine</string>
+    <string name="new_routine_type">Type</string>
+    <array name="new_routine_types">
+        <item>Workout</item>
+        <item>Running</item>
+        <item>Cycling</item>
+        <item>Walking</item>
+    </array>
+    <string name="new_routine_select_exercises">Select exercises in routine</string>
+    <string name="new_routine_no_exercises">There are no exercises, please add one.</string>
+    <string name="new_routine_add_exercise">Add your first exercise.</string>
+    <string name="new_routine_add_new_exercise">ADD NEW EXERCISE</string>
+
+    <!-- new exercise -->
+    <string name="new_exercise">Create Exercise</string>
+    <string name="new_exercise_add_name">Exercise name</string>
+    <string name="new_exercise_add_name_hint">Enter exercise name here</string>
+    <string name="new_exercise_save_routine">Save routine</string>
+    <string name="new_exercise_type">Type</string>
+    <array name="new_exercise_types">
+        <item>Repetitions</item>
+        <item>Repetitions - weight</item>
+        <item>Distance</item>
+        <item>Time</item>
+    </array>
+    <string name="new_exercise_measurement_unit">Select measurement unit</string>
+    <string name="new_exercise_kg_unit">kg</string>
+    <string name="new_exercise_lb_unit">lb</string>
+    <string name="new_exercise_no_unit">no unit</string>
+    <string name="new_exercise_km_unit">km</string>
+    <string name="new_exercise_miles_unit">miles</string>
+    <string name="new_exercise_add_note">Add note</string>
+    <string name="new_exercise_add_note_hint">Note</string>
+    <string name="new_exercise_successfull">Exercise added successfully!</string>
+
+    <!-- edit exercise -->
+    <string name="edit_exercise">Edit Exercise</string>
+    <string name="edit_exercise_successfull">Exercise edited successfully!</string>
+
+    <!-- edit routine -->
+    <string name="edit_routine">Edit Routine</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_save_exercise_name_too_short_title">Name too short!</string>
+    <string name="dialog_save_exercise_name_too_short_text">The exercise name must be longer than 3 characters.</string>
+    <string name="dialog_save_exercise_name_exists_title">Name exists!</string>
+    <string name="dialog_save_exercise_name_exists_text">The exercise name already exists. Please choose another name.</string>
+    <string name="dialog_delete_title">Delete confirmation</string>
+    <string name="dialog_delete_exercise_text">Are you sure you want to delete this exercise?</string>
+    <string name="dialog_delete_routine_text">Are you sure you want to delete this routine?</string>
+    <string name="dialog_delete">Delete</string>
+    <string name="dialog_no_exercises_title">No exercises selected!</string>
+    <string name="dialog_no_exercises_text">Please select at least one exercise for this routine.</string>
+    <string name="dialog_socket_closed_title">HxM not working</string>
+    <string name="dialog_socket_closed_text">Please put HxM on before starting any activity.</string>
+
+    <!-- Workout -->
+    <string name="routine_workout_exercises">Exercises</string>
+
+    <!-- Friends -->
+    <string name="friends_rank">Rank</string>
+    <string name="friend_full_profile_see_logs">Your friend\'s exercises:</string>
+    <string name="friend_full_profile_add_comment">Add comment</string>
+    <string name="friend_full_profile_add_comment_hint">Write your comment here…</string>
+
+    <!-- Configurator -->
+    <string name="lose_weight_tipes">Losing pounds doesn\'t have to be torture (we\'re looking at you, cayenne-pepper cleanse). Adopt at least three of these behaviors — they\'re simple to integrate into your day-to-day routine, and all are enthusiastically backed by nutritionists — and you\'ll be thinner and healthier in days. (Plus, the weight will stay off.)
+
+\n1. SNACK, BUT SMARTLY\n
+Grazing between meals used to be on the weight-loss hit list. But nutritionists now know that it\'s better to satisfy a craving with healthy grub than ignore it and risk a junk\-food binge later. The best picks are filling, protein-packed snacks, such as one stick of string cheese, a tablespoon of peanut butter on a piece of fruit, or a medium-size bowl of edamame.
+   \n 2. TURN OFF THE TV\n
+
+    Dining while viewing can make you take in 40 percent more calories than usual, reports a new study. And texting, driving, or any other distracting activity during a meal can also result in your eating too much. Instead, make each meal something you put on a plate and sit down to, even if you\'re eating solo.
+
+    \n  3. STEP ON THE SCALE DAILY\n
+
+    If your regular weight increases several days in a row, it\'s a red flag letting you know you need to cut back a little or beef up your workouts slightly.
+
+    \n 4. SCULPT THREE TIMES A WEEK\n
+
+    Doing 5 minutes each of push-ups, lunges, and squats (in 30-second intervals) will help build and maintain muscle mass. The more muscle you have, the higher your metabolism will be, so you\'ll torch more calories as you go about your day.
+
+    \n 5. REACH FOR YOUR CELL\n
+
+    Next time your mind gets stuck on a certain food, call a friend and redirect your brain by asking how her day\'s going. Research shows that cravings only last about 5 minutes, so by the time you hang up, the urge to devour junk will have subsided.
+
+    \n 6. EAT A BIG, BALANCED BREAKFAST\n
+
+    An a.m. meal made up mostly of carbs and protein with some fat keeps blood-sugar levels steady and hunger pangs away so you\'re not susceptible to pigging out come lunch, studies show. Opt for something satisfying for your stomach and taste buds — like egg whites and turkey bacon with whole-wheat toast.
+
+    \n 7. WATCH THE BOOZE\n
+
+    One innocent-looking margarita or cosmopolitan can rack up hundreds of calories that do nothing to quench your appetite. Treat yourself just on the weekends and cut back somewhere else or stick to a glass of wine, light beer, or vodka and soda — three drinks that each have about 100 calories per serving.
+
+    \n 8. HAVE FRUIT TWICE A DAY\n
+
+    Fruit has no fat and is mostly water, so it\'ll fill you up while leaving less room on your plate (and in your stomach) for high-cal fare. Don\'t freak about fruit\'s carb count — we\'re talking the good kind of carbohydrates that contain lots of healthy fiber.
+
+    \n 9. STAY ASLEEP LONGER\n
+
+    Getting to bed just 30 minutes earlier and waking up 30 minutes later than you normally do can help you make better food choices, researchers report. Also, when you\'re well-rested, you\'re less prone to snacking out of fatigue or stress.
+
+    \n 10. VISUALIZE YOURSELF THIN \n
+
+    When you feel your willpower breaking, conjure up a mental picture of yourself when you looked and felt slim. The visual motivation keeps you focused on your goal weight and reminds you that it is attainable, since you\'ve achieved it before.</string>
+
+    <string name="mantain_tips">
+        Be mindful of your weight. It\'s your best feedback for how your lifestyle and diet are affecting your body. A big part of the reason people gain weight is because it happens gradually, and they don\'t notice until they\'ve gained a significant amount. Balancing energy intake and energy expenditure is the basis of weight management throughout life.Research says that 75% of successful weight losers that keep it off weigh themselves every week.[1] It shouldn\'t be a preoccupation, but it should be something you\'re aware of if you\'re actively trying to maintain it.\n\n
+        Don\'t sweat the small stuff. Keep in mind that fluctuations of 1-3 lbs are normal throughout the week and even during the day. Do not become obsessive about weighing yourself daily; this mindset can become counterproductive. Because of fluctuations in weight, it\'s recommended to weight yourself only once a week.Your weight will be different morning, noon and night. Each week you weigh yourself, weigh yourself at the same time to keep an accurate record of your efforts.\n\n
+        De-stress and get enough sleep. An easy way to start gaining weight inadvertently is to not get enough shut eye and stress yourself out. Your body functions best when it\'s rested and relaxed.[2]When you\'re tired, you handle stress less well. When you handle stress poorly, you start eating. Start adding a bit more time to your sleep schedule and practice relaxation techniques - yoga is a great way to get started.
+    </string>
+
+    <string name="gain_muscles_tips">
+THE MOST IMPORTANT PARTS OF BUILDING MUSCLE\n
+
+Eight words: Eat quality food. Increase your protein. Train hard."THE KEY IS FEEDING YOUR MUSCLES CONSISTENTLY WITH HIGH-QUALITY FUEL."Those rules may seem obvious, but here\'s the catch: the order they\'re in matters. The fact that I stay lean eating sometimes more than 5,000 calories each day surprises people. But, the more muscle you have, the more you have to feed. The key is feeding your muscles consistently with high-quality fuel.So what do my macros look like, you ask? As an economics major, you\'d better believe I can tell you the numbers. But I\'d prefer to tell you the priorities, because the way they break down for everyone is going to be different. Here are the three guiding principles that determine what goes on my plate:Balance meals around lean proteinInclude nutrient-rich, low-glycemic carbsEnjoy generous portions of healthy fatsNow let\'s break down how they look in action, starting—where else?—with protein.
+    </string>
+
+    <!-- Cardio Fragment -->
+    <string name="cardio_dialog_connection_successful_title">Successful!</string>
+    <string name="cardio_dialog_connection_successful_text">You successfuly connected to the sensor. Press Ready to get the values!</string>
+    <string name="cardio_dialog_connection_successful_ready">Ready</string>
+
+    <!-- Maps Activity -->
+    <string name="google_maps_activity">Google Maps</string>
+    <string name="menu_maps">Map</string>
+
+</resources>

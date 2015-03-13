@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="7dp">
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/routine_item_selector">
+
+        <TextView
+            android:id="@+id/item_previous_log_set_number"
+            android:text="Set No."
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_width="50dp"
+            android:layout_height="fill_parent"
+            android:padding="2dp"
+            android:background="@color/actionbar_background"/>
+
+        <TextView
+            android:id="@+id/item_previous_log_set_exercises_number"
+            android:layout_toRightOf="@id/item_previous_log_set_number"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="Reps X weights"
+            android:padding="5dp"
+            android:textSize="20sp"
+            android:gravity="center"/>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/log_workout_divider"
+        android:layout_below="@id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/main_divider"/>
+
+    <ListView
+        android:id="@+id/log_workout_previous_list_view"
+        android:layout_width="fill_parent"
+        android:layout_height="244dp"
+        android:layout_below="@id/log_workout_divider"
+        android:divider="@color/main_divider"
+        android:dividerHeight="1dp"/>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="7dp"
+        android:layout_below="@id/log_workout_previous_list_view"
+        android:background="@color/white">
+
+        <Spinner
+            android:id="@+id/log_workout_reps_spinner"
+            android:layout_width="60dp"
+            android:layout_height="fill_parent"
+            android:layout_marginRight="24dp"
+            android:spinnerMode="dropdown"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="7dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignBottom="@+id/textView"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Reps"
+            android:id="@+id/textView"
+            android:layout_toRightOf="@+id/log_workout_reps_spinner"
+            android:layout_toEndOf="@+id/log_workout_reps_spinner"
+            android:gravity="fill_vertical"
+            android:layout_above="@+id/log_workout_add_log"/>
+
+        <Spinner
+            android:id="@+id/log_workout_weights_spinner"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="24dp"
+            android:spinnerMode="dropdown"
+            android:layout_toLeftOf="@+id/textView2"
+            android:layout_toStartOf="@+id/textView2"
+            android:layout_alignTop="@+id/textView3"
+            android:layout_alignBottom="@+id/textView3"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Kg"
+            android:layout_marginRight="7dp"
+            android:id="@+id/textView2"
+            android:layout_alignParentRight="true"
+            android:gravity="fill_vertical"
+            android:layout_alignTop="@+id/log_workout_weights_spinner"
+            android:layout_alignBottom="@+id/log_workout_weights_spinner"/>
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:id="@+id/log_workout_add_log"
+            android:src="@drawable/item_add_black_bg"
+            android:layout_marginBottom="12dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="X"
+            android:id="@+id/textView3"
+            android:gravity="center_vertical"
+            android:layout_alignTop="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/textView"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,11 @@
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:layout_width="fill_parent"
+          android:layout_height="match_parent"
+          android:choiceMode="singleChoice"
+          android:divider="@color/actionbar_background"
+          android:dividerHeight="1dp"
+          android:background="@color/actionbar_text_color"
+          android:listSelector="@drawable/nav_item_selector"
+          android:cacheColorHint="@android:color/transparent"
+          tools:context=".NavigationDrawerFragment"/>

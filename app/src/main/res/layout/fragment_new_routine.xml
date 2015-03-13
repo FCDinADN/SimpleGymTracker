@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="7dp"
+              android:background="@color/main_background">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/routine_item_name_title"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="7dp"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:textSize="@dimen/exercise_edit_title_size"
+            android:text="@string/new_exercise_add_name"
+            android:textColor="@color/actionbar_text_color"
+            android:gravity="center_vertical"
+            android:layout_weight="0.5"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:paddingRight="7dp"
+            android:paddingLeft="7dp"
+            android:background="@color/main_divider"/>
+
+        <EditText
+            android:id="@+id/routine_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp"
+            android:paddingRight="7dp"
+            android:paddingLeft="7dp"
+            android:background="@android:color/white"
+            android:hint="@string/new_routine_add_name_hint"/>
+
+        <TextView
+            android:id="@+id/new_routine_type_title"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="7dp"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:textSize="@dimen/exercise_edit_title_size"
+            android:text="@string/new_exercise_type"
+            android:textColor="@color/actionbar_text_color"
+            android:gravity="center_vertical"
+            android:layout_weight="0.5"/>
+
+        <Spinner
+            android:id="@+id/new_routine_type_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:spinnerMode="dropdown"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/new_routine_select_exercises"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/exercise_edit_title_size"
+        android:layout_marginTop="7dp"
+        android:textColor="@color/actionbar_text_color"
+        android:paddingLeft="7dp"
+        android:gravity="center_vertical"
+        android:text="@string/new_routine_select_exercises"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/main_divider"/>
+
+    <RelativeLayout
+        android:id="@+id/progress"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/main_background"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/new_routine_exercisesList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="48dp"
+            />
+
+        <TextView
+            android:id="@+id/new_routine_no_exercises"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/new_routine_no_exercises"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/new_routine_add_exercise"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:textSize="@dimen/abc_text_size_medium_material"
+            android:text="@string/new_routine_add_new_exercise"
+            android:background="@drawable/light_blue_bg"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"/>
+
+        <!--<ImageButton-->
+        <!--android:id="@+id/new_routine_add_exercise"-->
+        <!--android:layout_width="80dp"-->
+        <!--android:layout_height="80dp"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--android:src="@drawable/blue_add"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginRight="3dp"-->
+        <!--android:layout_marginBottom="20dp"/>-->
+    </RelativeLayout>
+</LinearLayout>

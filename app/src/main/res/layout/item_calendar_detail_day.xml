@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:background="@color/actionbar_background"
+                android:id="@+id/item_calendar_detail_layout">
+
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="fill_parent"
+        android:id="@+id/item_calendar_detail_imageView"
+        android:background="@android:color/transparent"/>
+
+    <com.appsrise.dusseldorfkarneval.ui.FontLatoTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_calendar_detail_detail"
+        android:text="GROUP aasddasdasdasdadasdasd\nasdasdasdasdasd"
+        android:lineSpacingExtra="5dp"
+        android:gravity="center_vertical"
+        android:background="@android:color/white"
+        android:paddingLeft="15dp"
+        android:textSize="16dp"
+        android:paddingRight="33dp"
+        android:layout_toRightOf="@+id/item_calendar_detail_imageView"/>
+
+    <com.appsrise.dusseldorfkarneval.ui.FontLatoTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_calendar_detail_detail"
+        android:background="@android:color/white"
+        android:paddingTop="15dp"
+        android:id="@+id/item_calendar_detail_addresse"
+        android:textSize="16dp"
+        android:layout_toRightOf="@+id/item_calendar_detail_imageView"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="20dp"/>
+
+    <com.appsrise.dusseldorfkarneval.ui.FontLatoTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_calendar_detail_location"
+        android:layout_below="@id/item_calendar_detail_addresse"
+        android:background="@android:color/white"
+        android:paddingTop="3dp"
+        android:layout_toRightOf="@+id/item_calendar_detail_imageView"
+        android:text="Location"
+        android:textSize="16dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="20dp"/>
+
+    <com.appsrise.dusseldorfkarneval.ui.FontLatoTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_calendar_detail_location"
+        android:background="@android:color/white"
+        android:id="@+id/item_calendar_detail_street"
+        android:text="Street"
+        android:textSize="16dp"
+        android:paddingTop="3dp"
+        android:layout_toRightOf="@+id/item_calendar_detail_imageView"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="20dp"/>
+
+    <com.appsrise.dusseldorfkarneval.ui.FontLatoTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_calendar_detail_city"
+        android:layout_below="@id/item_calendar_detail_street"
+        android:layout_toRightOf="@+id/item_calendar_detail_imageView"
+        android:background="@android:color/white"
+        android:paddingTop="3dp"
+        android:textSize="16dp"
+        android:text="City"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="20dp"/>
+
+    <com.appsrise.dusseldorfkarneval.ui.FontLatoTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_calendar_detail_city"
+        android:id="@+id/item_calendar_detail_add_to_calendar"
+        android:background="@android:color/white"
+        android:layout_toRightOf="@+id/item_calendar_detail_imageView"
+        android:gravity="center_vertical"
+        android:textColor="@color/text"
+        android:paddingTop="15dp"
+        android:textSize="16dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="20dp"/>
+
+</RelativeLayout>

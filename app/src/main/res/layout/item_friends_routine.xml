@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="60dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/routine_item_selector">
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:id="@+id/item_karnavel_border_padding"
+        android:background="@color/main_divider"
+        android:visibility="visible"/>
+
+    <TextView
+        android:paddingLeft="20dp"
+        android:paddingTop="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="TITLE"
+        android:gravity="center_vertical"
+        android:layout_marginRight="20dp"
+        android:textSize="17dp"
+        android:id="@+id/item_friends_routine_title"/>
+
+    <TextView
+        android:paddingLeft="20dp"
+        android:paddingTop="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="VALUE"
+        android:gravity="center_vertical"
+        android:layout_marginRight="20dp"
+        android:paddingBottom="20dp"
+        android:textSize="16dp"
+        android:id="@+id/item_friends_routine_exercises"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/item_friends_routine_arrow_down"
+        android:paddingLeft="20dp"
+        android:paddingTop="26dp"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/arrow_down"
+        android:background="@android:color/transparent"
+        android:layout_marginRight="20dp"
+        />
+
+    <ImageView
+        android:id="@+id/item_friends_routine_arrow_up"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:paddingLeft="20dp"
+        android:paddingTop="26dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/arrow_up"
+        android:background="@android:color/transparent"
+        android:layout_marginRight="20dp"
+        />
+
+
+</RelativeLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/routine_item_selector">
+
+    <TextView
+        android:id="@+id/item_previous_log_set_number"
+        android:text="1"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_width="50dp"
+        android:layout_height="fill_parent"
+        android:background="@color/actionbar_background"/>
+
+    <TextView
+        android:id="@+id/item_previous_log_set_exercises_number"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_toRightOf="@id/item_previous_log_set_number"
+        android:layout_toLeftOf="@+id/item_preivous_log_add_note"
+        android:background="@color/white"
+        android:text="35 X 20kg"
+        android:padding="5dp"
+        android:textSize="16sp"
+        android:gravity="center_vertical"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_preivous_log_add_note"
+        android:background="@drawable/item_add_note_bg"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+
+</RelativeLayout>

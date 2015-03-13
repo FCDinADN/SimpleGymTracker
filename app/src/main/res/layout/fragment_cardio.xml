@@ -1,0 +1,224 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".MainActivity$PlaceholderFragment">
+
+    <View
+        android:layout_width="125dp"
+        android:layout_height="75dp"
+        android:background="@drawable/running_icon"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:id="@+id/view"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/view"
+        android:layout_toRightOf="@+id/view"
+        android:layout_alignTop="@+id/view"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardio_date"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardio_exercise_number"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardio_battery"
+            android:layout_marginTop="15dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:id="@+id/linearLayout1"
+        android:layout_marginTop="24dp"
+        android:layout_below="@+id/view"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Heart Rate"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/heartRate"
+            android:textIsSelectable="false"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="25sp"
+            android:gravity="bottom"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/heartRate_value"
+            android:padding="7dp"
+            android:gravity="center_vertical|end"
+            android:textSize="30sp"
+            android:layout_marginLeft="50dp"
+            android:textColor="@android:color/holo_red_light"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/cardio_stats"
+        android:src="@drawable/stats"
+        android:layout_alignRight="@+id/linearLayout1"
+        android:layout_alignEnd="@+id/linearLayout1"
+        android:layout_alignBottom="@+id/linearLayout1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/icon_transparent_bg"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:id="@+id/linearLayout2"
+        android:layout_below="@+id/linearLayout1"
+        android:layout_alignLeft="@+id/linearLayout1"
+        android:layout_alignStart="@+id/linearLayout1"
+        android:layout_marginTop="24dp"
+        android:layout_alignRight="@+id/linearLayout1"
+        android:layout_alignEnd="@+id/linearLayout1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Speed"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/speen"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="25sp"
+            android:gravity="bottom"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/speed_value"
+            android:padding="7dp"
+            android:textSize="30sp"
+            android:textColor="@android:color/holo_blue_light"
+            android:textStyle="bold"
+            android:gravity="center_vertical|end"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:visibility="gone"
+        android:id="@+id/labelStatusMsg"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="27dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:id="@+id/linearLayout3"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_alignLeft="@+id/linearLayout2"
+        android:layout_alignStart="@+id/linearLayout1"
+        android:layout_marginTop="24dp"
+        android:layout_alignRight="@+id/linearLayout2"
+        android:layout_alignEnd="@+id/linearLayout2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Distance"
+            android:id="@+id/distance"
+            android:layout_gravity="center_vertical"
+            android:textColor="@android:color/holo_green_dark"
+            android:textSize="25sp"
+            android:gravity="bottom"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/distance_value"
+            android:padding="7dp"
+            android:textSize="30sp"
+            android:textColor="@android:color/holo_green_light"
+            android:textStyle="bold"
+            android:gravity="center_vertical|end"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:id="@+id/cardio_device_status"
+        android:text="status:disconnected."
+        android:layout_above="@+id/connectButton"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/black"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/connectButton"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:textSize="@dimen/abc_text_size_medium_material"
+        android:text="CONNECT"
+        android:background="@drawable/light_blue_bg"
+        android:layout_above="@+id/mapButton"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/mapButton"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:textSize="@dimen/abc_text_size_medium_material"
+        android:text="SEE MAP"
+        android:background="@drawable/light_blue_bg"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:id="@+id/linlaHeaderProgress"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:background="#30000000"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</RelativeLayout>

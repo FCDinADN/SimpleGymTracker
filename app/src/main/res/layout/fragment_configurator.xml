@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="7dp"
+                android:background="@color/white"
+    >
+
+    <View
+        android:layout_width="150dp"
+        android:layout_height="125dp"
+        android:background="@drawable/weightscale_icon"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/getTips"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:textSize="@dimen/abc_text_size_medium_material"
+        android:text="GET THE BEST TIPS"
+        android:background="@drawable/light_blue_bg"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Set your goals"
+        android:id="@+id/textView4"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="154dp"
+        android:textSize="20sp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/textView4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:weightSum="3"
+        android:id="@+id/linearLayout">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="Lose Weight"
+            android:id="@+id/loseWeight"
+            android:layout_weight="1"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="Maintain"
+            android:id="@+id/maintain"
+            android:layout_weight="1"
+            />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="Gain Muscles"
+            android:id="@+id/gainMuscles"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_below="@+id/textView4"
+        android:layout_centerHorizontal="true"
+        android:weightSum="3"
+        android:id="@+id/linearLayout2"
+        android:layout_marginTop="100dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Your weight"
+            android:id="@+id/textView5"
+            android:padding="7dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
+
+        <EditText
+            android:id="@+id/new_exercise_note"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp"
+            android:layout_marginLeft="21dp"
+            android:textSize="26dp"
+            android:background="@android:color/transparent"
+            android:hint="..."
+            android:gravity="center"
+            android:textColor="@color/actionbar_background"
+            android:textStyle="bold"
+            android:inputType="number"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="kg"
+            android:layout_marginLeft="7dp"
+            android:padding="5dp"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:id="@+id/textView6"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_below="@+id/textView4"
+        android:layout_centerHorizontal="true"
+        android:weightSum="3"
+        android:id="@+id/linearLayout3"
+        android:layout_marginTop="170dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Ideal weight"
+            android:padding="7dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
+
+        <EditText
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp"
+            android:layout_marginLeft="21dp"
+            android:textSize="26dp"
+            android:background="@android:color/transparent"
+            android:hint="..."
+            android:gravity="center"
+            android:textColor="@color/actionbar_background"
+            android:textStyle="bold"
+            android:inputType="number"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="kg"
+            android:layout_marginLeft="7dp"
+            android:padding="5dp"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
