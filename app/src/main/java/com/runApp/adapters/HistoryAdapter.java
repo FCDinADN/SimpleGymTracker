@@ -80,13 +80,13 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
                 eventWrapper.history = history;
                 try {
                     eventWrapper.day = new SimpleDateFormat("yyyy-MM-dd").parse(new SimpleDateFormat("yyyy-MM-dd").format(date));
-                } catch (ParseException e) {
+                } catch (ParseException ignored) {
                 }
                 if (lastDay == null) {
                     eventWrapper.isFirst = true;
                 } else if (lastDay.compareTo(eventWrapper.day) == 0) {
                     eventWrapper.isFirst = false;
-                } else if (lastDay.compareTo(eventWrapper.day) == -1) {
+                } else {
                     eventWrapper.isFirst = true;
                 }
                 lastDay = eventWrapper.day;
@@ -185,6 +185,8 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
                     } else {
                         View background = view.findViewById(R.id.history_item_day_date_container);
                         background.setBackgroundColor(mContext.getResources().getColor(R.color.calendar_day_background));
+                        holder.day.setTextColor(mContext.getResources().getColor(R.color.primary_text));
+                        holder.dayName.setTextColor(mContext.getResources().getColor(R.color.primary_text));
                     }
                     view.setTag(holder);
                     break;
