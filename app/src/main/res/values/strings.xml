@@ -85,6 +85,9 @@
     <string name="dialog_socket_closed_text">Please put HxM on before starting any activity.</string>
     <string name="dialog_tracking_will_stop_title">Warning!</string>
     <string name="dialog_tracking_will_stop_text">You cannot see History while working out. Please press DISCONNECT first.</string>
+    <string name="dialog_discard_workout_title">Discard Activity</string>
+    <string name="dialog_discard_workout_text">Are you sure you want to discard this activity?</string>
+    <string name="dialog_discard_workout_button">DISCARD</string>
 
     <!-- Workout -->
     <string name="routine_workout_exercises">Exercises</string>

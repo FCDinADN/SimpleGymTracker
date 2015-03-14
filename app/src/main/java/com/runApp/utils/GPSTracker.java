@@ -9,6 +9,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v7.app.ActionBarActivity;
 
 import com.runApp.database.GymDatabaseHelper;
 import com.runApp.models.ComplexLocation;
@@ -148,7 +149,7 @@ public class GPSTracker implements LocationListener {
         // called when the status of the GPS provider changes
     }
 
-    public void showSettingsDialog() {
+    public void showSettingsDialog(final ActionBarActivity activity) {
         LogUtils.LOGE(TAG, "showDialog");
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setTitle("dialog title");
@@ -164,6 +165,7 @@ public class GPSTracker implements LocationListener {
         alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                activity.getSupportFragmentManager().popBackStackImmediate();
                 dialog.cancel();
             }
         });

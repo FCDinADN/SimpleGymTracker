@@ -8,9 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.BarEntry;
@@ -31,18 +33,29 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
+ * Class taking care of graph.
  * Created by Rares on 21/02/15.
  */
 public class CubicLineChartFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    private final String TAG = CubicLineChartFragment.class.getSimpleName();
+
+    public static final String FROM_HISTORY = "from_history";
     public static final String EXERCISE_NUMBER = "exercise_number";
+    public static final String EXERCISE_DATE = "exercise_date";
+    public static final String EXERCISE_VALUES = "exercise_values";
     private final int LOADER_HEART_RATES = 2000;
 
     @InjectView(R.id.chart)
     LineChart mLineChart;
+    @InjectView(R.id.linlaHeaderProgress)
+    LinearLayout mProgress;
 
     ArrayList<Entry> chartEntries1 = new ArrayList<>();
+    ArrayList<Integer> entryValues = new ArrayList<>();
 
     private int exerciseNumber;
+    private String exerciseDate;
+    private boolean fromHistory;
     private int counter;
     private boolean created;
 
@@ -58,6 +71,8 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
 
         if (getArguments() != null) {
             exerciseNumber = getArguments().getInt(EXERCISE_NUMBER);
+            exerciseDate = getArguments().getString(EXERCISE_DATE);
+            fromHistory = getArguments().getBoolean(FROM_HISTORY);
         }
         // if enabled, the chart will always start at zero on the y-axis
         mLineChart.setStartAtZero(false);
@@ -70,7 +85,7 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
         mLineChart.setDrawLegend(false);
 
         // no description text
-        mLineChart.setDescription(UserUtils.getDate());
+        mLineChart.setDescription(exerciseDate.substring(0, 10));
         mLineChart.setUnit(" BMP");
 
         // enable value highlighting
@@ -86,12 +101,32 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
         mLineChart.animateX(1500);
 
         mLineChart.setDrawVerticalGrid(false);
+
+        if (fromHistory) {
+            getLoaderManager().restartLoader(LOADER_HEART_RATES, null, this);
+        } else if (!created) {
+            entryValues = getArguments().getIntegerArrayList(EXERCISE_VALUES);
+            for (int i = 0; i < entryValues.size(); i++) {
+                Log.e(TAG, "values @ " + i + " -> " + entryValues.get(i));
+                Entry entry = new Entry(entryValues.get(i), i);
+                chartEntries1.add(entry);
+            }
+            counter = entryValues.size();
+            showGraph();
+        }
     }
+
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        created = false;
+//        chartEntries1 = new ArrayList<>();
+//    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Loader<Cursor> loader;
-        String selection = GymDBContract.HeartRatesColumns.EXERCISE_ID + " = " + exerciseNumber;
+        String selection = GymDBContract.HeartRatesColumns.EXERCISE_ID + " = " + exerciseNumber;//+ 10;
         loader = new CursorLoader(Utils.getContext(), GymDBContract.HeartRates.CONTENT_URI, QueryHeartRates.PROJECTION_SIMPLE, selection, null, GymDBContract.HeartRates.CONTENT_URI_EXERCISE_ORDER);
         return loader;
     }
@@ -102,16 +137,17 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
             switch (cursorLoader.getId()) {
                 case LOADER_HEART_RATES:
                     counter = 0;
-                    ArrayList<Integer> colors = new ArrayList<>();
+//                    ArrayList<Integer> colors = new ArrayList<>();
                     while (cursor.moveToNext()) {
 //                        LogUtils.LOGE("got", cursor.getString(QueryHeartRates.VALUE));
                         float value = Float.parseFloat(cursor.getString(QueryHeartRates.VALUE));
+                        Log.e(TAG, "value " + value);
                         Entry entry = new Entry(value, counter);
-                        if (value > 90.0f) {
-                            colors.add(Color.RED);
-                        } else {
-                            colors.add(Color.GREEN);
-                        }
+//                        if (value > 90.0f) {
+//                            colors.add(Color.RED);
+//                        } else {
+//                            colors.add(Color.GREEN);
+//                        }
                         //chartEntries - list of Type Entry that will hold the values
                         chartEntries1.add(entry);
                         counter++;
@@ -137,14 +173,18 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
 //                    // Add data to the chart
 //                    mLineChart.setData(mLineData);
 
-                    setData(chartEntries1);
-
-                    mLineChart.invalidate();
-                    created = true;
+                    showGraph();
                     break;
             }
         }
+    }
 
+    private void showGraph() {
+        setData(chartEntries1);
+        mProgress.setVisibility(View.GONE);
+        mLineChart.setVisibility(View.VISIBLE);
+        mLineChart.invalidate();
+        created = true;
     }
 
     @Override
@@ -155,15 +195,17 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
     @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().restartLoader(LOADER_HEART_RATES, null, this);
     }
 
     public void addEntry(Float value) {
         if (created) {
+            Log.e(TAG, "new values @ " + counter + " -> " + value);
             Entry barEntry = new BarEntry(value, counter);
             chartEntries1.add(barEntry);
             counter++;
             setData(chartEntries1);
+            mProgress.setVisibility(View.GONE);
+            mLineChart.setVisibility(View.VISIBLE);
             mLineChart.invalidate();
         }
     }
@@ -218,5 +260,10 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
         ll.setLineColor(Color.BLUE);
         ll.setLineWidth(2f);
         mLineData.addLimitLine(ll);
+    }
+
+    public void resetValues() {
+        created = false;
+        chartEntries1 = new ArrayList<>();
     }
 }

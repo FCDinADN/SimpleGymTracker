@@ -172,7 +172,7 @@ public class PathGoogleMapFragment extends Fragment implements GPSLocationListen
                 }
             } else {
                 locationGot = false;
-                tracker.showSettingsDialog();    // show "enable gps" dialog box
+                tracker.showSettingsDialog(((MainActivity) getActivity()));    // show "enable gps" dialog box
             }
         } else
             Log.e("getLocation", "tracker NULL");

@@ -405,7 +405,7 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
 
     public void removeItem(int position) {
         if (wrappedEventsHeader.get(position).isFirst && position > 0) {
-//            wrappedEventsHeader.get(position + 1).isFirst = true;
+            wrappedEventsHeader.get(position + 1).isFirst = true;
         }
         wrappedEventsHeader.remove(position);
         notifyDataSetChanged();

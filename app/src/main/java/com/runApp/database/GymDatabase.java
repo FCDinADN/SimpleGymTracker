@@ -31,8 +31,6 @@ public class GymDatabase extends SQLiteOpenHelper {
                 .append("CREATE TABLE IF NOT EXISTS ").append(Tables.HEART_RATES)
                 .append(" ( ").append(HeartRatesColumns.ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ")
                 .append(HeartRatesColumns.VALUE).append(" INTEGER, ")
-//                .append(HeartRatesColumns.START_DATE).append(" TEXT, ")
-//                .append(HeartRatesColumns.END_DATE).append(" TEXT, ")
                 .append(HeartRatesColumns.EXERCISE_ID).append(" INTEGER )")
                 .toString();
         LogUtils.LOGE(TAG, "onCreate HEARTRATES TABLE");

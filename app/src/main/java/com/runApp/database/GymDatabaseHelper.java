@@ -88,8 +88,6 @@ public class GymDatabaseHelper {
         ContentProviderOperation.Builder insertBuilder = ContentProviderOperation.newInsert(GymDBContract.HeartRates.CONTENT_URI);
 
         insertBuilder.withValue(GymDBContract.HeartRatesColumns.VALUE, hxMMessage.getHeartRate());
-//        insertBuilder.withValue(GymDBContract.HeartRatesColumns.START_DATE, UserUtils.getDate());
-//        insertBuilder.withValue(GymDBContract.HeartRatesColumns.END_DATE, UserUtils.getDate());
         insertBuilder.withValue(GymDBContract.HeartRatesColumns.EXERCISE_ID, UserUtils.getExerciseNumber());
 
         batch.add(insertBuilder.build());

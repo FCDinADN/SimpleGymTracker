@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.ButterKnife;
@@ -38,6 +39,7 @@ import butterknife.OnClick;
  * Created by Rares on 27/11/14.
  */
 public class CardioFragment extends Fragment implements HxMListener {
+    private final static String TAG = CardioFragment.class.getSimpleName();
 
     @InjectView(R.id.heartRate_value)
     TextView heartRateValue;
@@ -68,7 +70,11 @@ public class CardioFragment extends Fragment implements HxMListener {
     private float valueTravelledBefore = 0;
     private float intermediateValue = -1;
     private boolean showBattery = false;
+    private boolean dataInitialised = false;
     private CubicLineChartFragment historyChartFragment;
+
+    //values used for chart
+    private ArrayList<Integer> entryValues;
 
     private Date startTime;
 
@@ -90,12 +96,6 @@ public class CardioFragment extends Fragment implements HxMListener {
 
         mHxMConnection = new HxMConnection(this);
         mHxMConnection.setHxMListener(this);
-
-        if (getActivity() != null && getActivity().getActionBar() != null) {
-            getActivity().getActionBar().setTitle(R.string.cardio_selection);
-            getActivity().getActionBar().setIcon(R.drawable.icon_cardio);
-        }
-
     }
 
     @OnClick(R.id.connectButton)
@@ -107,7 +107,7 @@ public class CardioFragment extends Fragment implements HxMListener {
             pressed = true;
             mHxMConnection.findBT();
         } else {
-            closeConnection();
+            closeConnection(true);
         }
     }
 
@@ -117,10 +117,16 @@ public class CardioFragment extends Fragment implements HxMListener {
         } else {
             hxMBattery.setText(UserUtils.getDeviceBattery() + " %");
         }
+        maxSpeed = -1;
+        initialValue = -1;
+        previousValue = -1;
+        valueTravelledBefore = 0.0f;
+        intermediateValue = -1.0f;
         UserUtils.setExerciseNumber(UserUtils.getExerciseNumber() + 1);
         exerciseNumber.setText(UserUtils.getExerciseNumber() + "");
         date.setText(UserUtils.getDate());
         startTime = new Date();
+        entryValues = new ArrayList<>();
     }
 
 //    @OnClick(R.id.mapButton)
@@ -135,7 +141,9 @@ public class CardioFragment extends Fragment implements HxMListener {
     @OnClick(R.id.cardio_stats)
     void statsClicked() {
         Bundle mBundle = new Bundle();
-        mBundle.putInt(HistoryChartFragment.EXERCISE_NUMBER, UserUtils.getExerciseNumber());
+        mBundle.putInt(CubicLineChartFragment.EXERCISE_NUMBER, UserUtils.getExerciseNumber());
+        mBundle.putString(CubicLineChartFragment.EXERCISE_DATE, UserUtils.getDate());
+        mBundle.putIntegerArrayList(CubicLineChartFragment.EXERCISE_VALUES, entryValues);
         historyChartFragment.setArguments(mBundle);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, historyChartFragment)
@@ -152,47 +160,56 @@ public class CardioFragment extends Fragment implements HxMListener {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                //used for map
-                UserUtils.setActualSpeed(hxMMessage.getSpeed());
-                historyChartFragment.addEntry((float) hxMMessage.getHeartRate());
-                mProgress.setVisibility(View.GONE);
-                connect.setText("DISCONNECT");
-                GymDatabaseHelper.getInst().insertHeartRate(hxMMessage);
-                mProgress.setVisibility(View.GONE);
-                heartRateValue.setText(hxMMessage.getHeartRate() + "");
-
-                LogUtils.LOGE("value", hxMMessage.getBattery() + "");
-
-                if (hxMMessage.getBattery() < UserUtils.getDeviceBattery()) {
-                    UserUtils.setDeviceBattery(hxMMessage.getBattery());
-                }
-
-                if (showBattery) {
-                    showBattery = false;
-                    hxMBattery.setText(hxMMessage.getBattery() + " %");
-                }
-
-                if (initialValue == -1) {
+                //it executes only once
+                if (!dataInitialised) {
                     initData();
-                    initialValue = hxMMessage.getDistance();
-                }
-
-                if (hxMMessage.getDistance() < previousValue) {
-                    previousValue = hxMMessage.getDistance();
-                    initialValue = 0;
-                    valueTravelledBefore += intermediateValue;
+                    dataInitialised = true;
                 } else {
-                    previousValue = hxMMessage.getDistance();
-                    intermediateValue = valueTravelledBefore + (((hxMMessage.getDistance() - initialValue) * 6.25f) / 100.0f);
-                    distanceValue.setText(new DecimalFormat("##.##").format(intermediateValue));
-                }
 
-                if (hxMMessage.getSpeed() > maxSpeed) {
-                    maxSpeed = hxMMessage.getSpeed();
-                }
-                status.setText("maximum speed " + new DecimalFormat("##.##").format(maxSpeed));
+                    //used for map
+                    UserUtils.setActualSpeed(hxMMessage.getSpeed());
+                    historyChartFragment.addEntry((float) hxMMessage.getHeartRate());
+                    mProgress.setVisibility(View.GONE);
+                    connect.setText("DISCONNECT");
+                    GymDatabaseHelper.getInst().insertHeartRate(hxMMessage);
+                    mProgress.setVisibility(View.GONE);
+                    heartRateValue.setText(hxMMessage.getHeartRate() + "");
 
-                speedValue.setText(new DecimalFormat("##.##").format(hxMMessage.getSpeed()));
+                    if (hxMMessage.getBattery() < UserUtils.getDeviceBattery()) {
+                        UserUtils.setDeviceBattery(hxMMessage.getBattery());
+                    }
+
+                    if (showBattery) {
+                        initData();
+                        showBattery = false;
+                        hxMBattery.setText(hxMMessage.getBattery() + " %");
+                    }
+
+                    entryValues.add(hxMMessage.getHeartRate());
+
+                    if (initialValue == -1) {
+                        initialValue = hxMMessage.getDistance();
+                    }
+
+//                Log.e("@sendMessage", "hxm [" + hxMMessage.getDistance() + "], previous [" + previousValue + " ], traveledBefore [" + valueTravelledBefore + "], " +
+//                        "intermediate value [" + intermediateValue + "]");
+                    if (hxMMessage.getDistance() < previousValue) {
+                        previousValue = hxMMessage.getDistance();
+                        initialValue = 0;
+                        valueTravelledBefore += intermediateValue;
+                    } else {
+                        previousValue = hxMMessage.getDistance();
+                        intermediateValue = valueTravelledBefore + (((hxMMessage.getDistance() - initialValue) * 6.25f) / 100.0f);
+                        distanceValue.setText(new DecimalFormat("##.##").format(intermediateValue));
+                    }
+
+                    if (hxMMessage.getSpeed() > maxSpeed) {
+                        maxSpeed = hxMMessage.getSpeed();
+                    }
+                    status.setText("maximum speed " + new DecimalFormat("##.##").format(maxSpeed));
+
+                    speedValue.setText(new DecimalFormat("##.##").format(hxMMessage.getSpeed()));
+                }
             }
         });
     }
@@ -209,7 +226,7 @@ public class CardioFragment extends Fragment implements HxMListener {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    closeConnection();
+                                    closeConnection(true);
                                 }
                             });
                 }
@@ -238,6 +255,12 @@ public class CardioFragment extends Fragment implements HxMListener {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        LogUtils.LOGE("onPause", "yep");
+    }
+
+    @Override
     public void setProgressVisibility(int visibility) {
         mProgress.setVisibility(visibility);
     }
@@ -247,18 +270,24 @@ public class CardioFragment extends Fragment implements HxMListener {
         //do nothing
     }
 
-    private void closeConnection() {
+    public void closeConnection(boolean saveToDB) {
         ((MainActivity) getActivity()).stopTracker();
         connect.setText("CONNECT");
         pressed = false;
+        dataInitialised = false;
         UserUtils.setActualSpeed(0.0f);
-        if (initialValue != -1) {
+        historyChartFragment.resetValues();
+        if (initialValue != -1 && saveToDB) {
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             GymDatabaseHelper.getInst().insertExercise(new History(UserUtils.getExerciseNumber(), df.format(startTime.getTime()), df.format(new Date().getTime())));
             UserUtils.setIsTracking();
         }
         try {
             mHxMConnection.closeBT();
+            if (!saveToDB) {
+                UserUtils.setIsTracking();
+                getActivity().finish();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -53,6 +53,8 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.inject(this, view);
         historyList = new ArrayList<>();
+
+        getLoaderManager().restartLoader(LOADER_HEART_RATES, null, this);
 //        Routine mRoutine = new Routine("27/12/20014 - Chest", "Workout", null);
 //        historyList.add(mRoutine);
 //        mRoutine = new Routine("29/12/2014 - Triceps", "Workout", null);
@@ -102,7 +104,9 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
                 public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                     CubicLineChartFragment historyChartFragment = new CubicLineChartFragment();
                     Bundle mBundle = new Bundle();
-                    mBundle.putInt(HistoryChartFragment.EXERCISE_NUMBER, historyList.get(groupPosition - 1).getId());
+                    mBundle.putInt(CubicLineChartFragment.EXERCISE_NUMBER, historyList.get(groupPosition - 1).getId());
+                    mBundle.putString(CubicLineChartFragment.EXERCISE_DATE, historyList.get(groupPosition - 1).getStartTime());
+                    mBundle.putBoolean(CubicLineChartFragment.FROM_HISTORY, true);
                     historyChartFragment.setArguments(mBundle);
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .add(R.id.container, historyChartFragment)
@@ -121,12 +125,6 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getLoaderManager().restartLoader(LOADER_HEART_RATES, null, this);
-    }
-
-    @Override
     public void deleteItem(final int position) {
         DialogHandler.showConfirmDialog(getActivity(),
                 R.string.dialog_delete_title,
@@ -138,9 +136,7 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == DialogInterface.BUTTON_POSITIVE) {
                             GymDatabaseHelper.getInst().deleteExercise(historyList.get(position));
-                            mHistoryAdapter.removeItem(position);
-//                            historyList.remove(position);
-//                            mHistoryAdapter.notifyDataSetChanged();
+                            mHistoryAdapter.removeItem(position + 1);
                         }
                     }
                 }

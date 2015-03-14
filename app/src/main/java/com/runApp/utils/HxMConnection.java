@@ -133,6 +133,7 @@ public class HxMConnection {
         private final BluetoothSocket mmSockect;
         private final BluetoothDevice mmDevice;
         private final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); //Standard SerialPortService ID
+        private ConnectedThread mConnectedThread;
 
         public ConnectThread(BluetoothDevice device) {
             mmDevice = device;
@@ -154,11 +155,13 @@ public class HxMConnection {
                 } catch (IOException ignored) {
                 }
             }
-            new ConnectedThread(mmSockect).start();
+            mConnectedThread = new ConnectedThread(mmSockect);
+            mConnectedThread.start();
         }
 
         public void cancel() {
             try {
+                mConnectedThread.cancel();
                 mmSockect.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -189,6 +192,7 @@ public class HxMConnection {
             try {
                 while (!Thread.currentThread().isInterrupted() && (i = mmInputStream.read()) != -1) {
                     if (counter == 59) {
+//                        Log.e(TAG, "value from HXM " + readBuffer[12]);
                         mHxMListener.sendMessage(new HxMMessage(readBuffer));
                         readBuffer = new byte[1024];
                         counter = 0;
@@ -199,7 +203,6 @@ public class HxMConnection {
                 }
             } catch (IOException e) {
                 mHxMListener.socketClosed();
-                e.printStackTrace();
             }
         }
 
@@ -212,9 +215,5 @@ public class HxMConnection {
     }
 
     private Handler mHandler = new Handler();
-
-    public ConnectThread getConnectedThread() {
-        return mConnectThread;
-    }
 
 }

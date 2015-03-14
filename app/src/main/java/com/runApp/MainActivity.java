@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -18,9 +19,11 @@ import com.runApp.fragments.HistoryFragment;
 import com.runApp.fragments.NavigationDrawerFragment;
 import com.runApp.fragments.PathGoogleMapFragment;
 import com.runApp.models.ComplexLocation;
+import com.runApp.utils.Constants;
 import com.runApp.utils.DialogHandler;
 import com.runApp.utils.DumbData;
 import com.runApp.utils.GPSTracker;
+import com.runApp.utils.LogUtils;
 import com.runApp.utils.UserUtils;
 
 import butterknife.ButterKnife;
@@ -29,6 +32,7 @@ import butterknife.InjectView;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     //    @InjectView(R.id.main_content_frame)
 //    View contentFrame;
@@ -47,7 +51,7 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
-    private String currentFragment = null;
+    private Fragment currentFragment = null;
     private GPSTracker tracker;
     private PathGoogleMapFragment mPathGoogleMapFragment;
 
@@ -102,7 +106,7 @@ public class MainActivity extends ActionBarActivity
         super.onResume();
         UserUtils.checkDate();
         //TODO remove the tracker from here
-        startTracker();
+//        startTracker();
     }
 
     private void inserLocations() {
@@ -122,36 +126,38 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+//
+//        if (UserUtils.isTracking()) {
+//            DialogHandler.showSimpleDialog(this, R.string.dialog_tracking_will_stop_title, R.string.dialog_tracking_will_stop_text,
+//                    R.string.dialog_ok,
+//                    new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            //nothing happens
+//                        }
+//                    });
+//        } else {
+        // update the main content by replacing fragments
+        Fragment fragment = null;
 
-        if (UserUtils.isTracking()) {
-            DialogHandler.showSimpleDialog(this, R.string.dialog_tracking_will_stop_title, R.string.dialog_tracking_will_stop_text,
-                    R.string.dialog_ok,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //nothing happens
-                        }
-                    });
-        } else {
-            // update the main content by replacing fragments
-            Fragment fragment = null;
+        Log.e("navigation called", "pos " + position);
 
-            getSupportFragmentManager().popBackStackImmediate();
+        getSupportFragmentManager().popBackStackImmediate();
 
-            switch (position) {
+        switch (position) {
 //            case 1:
 //                fragment = new RoutinesFragment();
 //                mTitle = getString(R.string.routines_selection);
 //                getSupportActionBar().setTitle(mTitle);
 //                break;
-                case 0:
-                    fragment = new CardioFragment();
-                    mTitle = getString(R.string.cardio_selection);
-                    break;
-                case 1:
-                    fragment = new HistoryFragment();
-                    mTitle = getString(R.string.history_selection);
-                    break;
+            case 0:
+                fragment = new CardioFragment();
+                mTitle = getString(R.string.cardio_selection);
+                break;
+            case 1:
+                fragment = new HistoryFragment();
+                mTitle = getString(R.string.history_selection);
+                break;
 //            case 4:
 //                fragment = new HistoryFragment();
 //                mTitle = "Logs History";
@@ -162,23 +168,58 @@ public class MainActivity extends ActionBarActivity
 //                mTitle = "Your Best Trainer";
 //                getSupportActionBar().setTitle(mTitle);
 //                break;
-                default:
-                    fragment = new CardioFragment();
-                    mTitle = getString(R.string.cardio_selection);
+            default:
+                fragment = new CardioFragment();
+                mTitle = getString(R.string.cardio_selection);
+        }
+
+        if (currentFragment != null && currentFragment.equals(fragment.getClass().getSimpleName())) {
+            return;
+        }
+
+        currentFragment = fragment;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
+
+        setToolbarTitle(mTitle.toString());
+//        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        LogUtils.LOGE(TAG, "size:" + currentFragment.getFragmentManager().getBackStackEntryCount());
+        if (mNavigationDrawerFragment.isDrawerOpen()) {
+            mNavigationDrawerFragment.closeDrawer();
+            return;
+        }
+        if (currentFragment instanceof CardioFragment && currentFragment.getFragmentManager().getBackStackEntryCount() == 0) {
+            LogUtils.LOGE(TAG, "in the main screen");
+            if (UserUtils.isTracking()) {
+                DialogHandler.showConfirmDialog(this,
+                        R.string.dialog_discard_workout_title,
+                        R.string.dialog_discard_workout_text,
+                        R.string.dialog_discard_workout_button,
+                        R.string.dialog_cancel,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (which == DialogInterface.BUTTON_POSITIVE) {
+                                    ((CardioFragment) currentFragment).closeConnection(false);
+                                    finish();
+                                }
+                            }
+                        });
+            } else {
+                super.onBackPressed();
             }
-
-            if (currentFragment != null && currentFragment.equals(fragment.getClass().getSimpleName())) {
-                return;
-            }
-
-            currentFragment = fragment.getClass().getSimpleName();
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, fragment)
-                    .commit();
-
-            setToolbarTitle(mTitle.toString());
+        } else if (currentFragment instanceof CardioFragment) {
+            LogUtils.LOGE(TAG, "not in the main screen");
+            super.onBackPressed();
+        } else {
+            LogUtils.LOGE(TAG, "other");
+            onNavigationDrawerItemSelected(Constants.HOME_FRAGMENT);
         }
     }
 
@@ -195,7 +236,6 @@ public class MainActivity extends ActionBarActivity
         actionBar.setLogo(R.drawable.icon_cardio);
         actionBar.setTitle(mTitle);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
