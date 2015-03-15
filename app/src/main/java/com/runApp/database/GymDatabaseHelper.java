@@ -134,6 +134,7 @@ public class GymDatabaseHelper {
         }
         insertBuilder.withValue(GymDBContract.Exercises.START_TIME, history.getStartTime());
         insertBuilder.withValue(GymDBContract.Exercises.END_TIME, history.getEndTime());
+        insertBuilder.withValue(GymDBContract.Exercises.DISTANCE, history.getDistance());
 
         batch.add(insertBuilder.build());
         LogUtils.LOGE(TAG, "Database insert");

@@ -70,6 +70,7 @@ public class GymDBContract {
         String ID = "exercise_id";
         String START_TIME = "exercise_start_time";
         String END_TIME = "exercise_end_time";
+        String DISTANCE = "exercise_distance";
     }
 
     public static class HeartRates implements HeartRatesColumns, BaseColumns {

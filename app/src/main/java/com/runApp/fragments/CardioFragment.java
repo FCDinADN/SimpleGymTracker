@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.runApp.MainActivity;
 import com.runApp.R;
@@ -23,17 +25,25 @@ import com.runApp.utils.HxMConnection;
 import com.runApp.utils.HxMListener;
 import com.runApp.utils.LogUtils;
 import com.runApp.utils.UserUtils;
+import com.runApp.utils.Utils;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import de.keyboardsurfer.android.widget.crouton.Configuration;
+import de.keyboardsurfer.android.widget.crouton.Style;
+import hugo.weaving.DebugLog;
 
 /**
  * Created by Rares on 27/11/14.
@@ -68,10 +78,16 @@ public class CardioFragment extends Fragment implements HxMListener {
     private short previousValue = -1;
     private float maxSpeed = -1;
     private float valueTravelledBefore = 0;
-    private float intermediateValue = -1;
+    private float intermediateValue = 0;
     private boolean showBattery = false;
     private boolean dataInitialised = false;
+    private boolean mapShown;
     private CubicLineChartFragment historyChartFragment;
+    private int seconds = 0;
+    private int minutes = 0;
+    private Timer timer;
+    private TimerTask timerTask;
+
 
     //values used for chart
     private ArrayList<Integer> entryValues;
@@ -79,6 +95,12 @@ public class CardioFragment extends Fragment implements HxMListener {
     private Date startTime;
 
     private Handler mHandler;
+
+    private static final Style INFINITE = new Style.Builder().
+            setBackgroundColorValue(Style.holoBlueLight).build();
+    private static final Configuration CONFIGURATION_INFINITE = new Configuration.Builder()
+            .setDuration(Configuration.DURATION_INFINITE)
+            .build();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,6 +118,30 @@ public class CardioFragment extends Fragment implements HxMListener {
 
         mHxMConnection = new HxMConnection(this);
         mHxMConnection.setHxMListener(this);
+
+        getActivity().getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (getActivity() != null) {
+                    if (getActivity().getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                        if (mapShown) {
+                            setHasOptionsMenu(false);
+                            ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.map_selection));
+                        } else {
+                            setHasOptionsMenu(true);
+                            ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.cardio_selection));
+                        }
+                    } else if (getActivity().getSupportFragmentManager().getBackStackEntryCount() == 2) {
+                        mapShown = false;
+                        setHasOptionsMenu(false);
+                    } else {
+                        mapShown = false;
+                        setHasOptionsMenu(true);
+                        ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.cardio_selection));
+                    }
+                }
+            }
+        });
     }
 
     @OnClick(R.id.connectButton)
@@ -121,7 +167,7 @@ public class CardioFragment extends Fragment implements HxMListener {
         initialValue = -1;
         previousValue = -1;
         valueTravelledBefore = 0.0f;
-        intermediateValue = -1.0f;
+        intermediateValue = 0;
         UserUtils.setExerciseNumber(UserUtils.getExerciseNumber() + 1);
         exerciseNumber.setText(UserUtils.getExerciseNumber() + "");
         date.setText(UserUtils.getDate());
@@ -160,11 +206,76 @@ public class CardioFragment extends Fragment implements HxMListener {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+
+//                if (seconds < 10 && minutes < 10) {
+//                    ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.cardio_selection) + " - 0" + String.valueOf(minutes) + ":0" + String.valueOf(seconds));
+//                } else if (seconds < 10 && minutes > 10) {
+//                    ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.cardio_selection) + " - " + String.valueOf(minutes) + ":0" + String.valueOf(seconds));
+//                }
+//                if (seconds == 59) {
+//                    seconds = 0;
+//                    minutes += 1;
+//                } else {
+//                    seconds++;
+//                }
+
                 //it executes only once
                 if (!dataInitialised) {
                     initData();
                     dataInitialised = true;
                 } else {
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+                    long startTimeInMillis = (int) (System.currentTimeMillis() - startTime.getTime());
+                    String time;
+                    String h = (int) ((startTimeInMillis / 1000) / 3600) + "";
+                    String m = (int) (((startTimeInMillis / 1000) / 60) % 60) + "";
+                    String s = (int) ((startTimeInMillis / 1000) % 60) + "";
+
+                    if (h.length() == 1) {
+                        h = "0" + h;
+                    }
+                    if (m.length() == 1) {
+                        m = "0" + m;
+                    }
+                    if (s.length() == 1) {
+                        s = "0" + s;
+                    }
+//                    if (startTimeInMillis / 3600 < 10) {
+//                        time = "0" + startTimeInMillis / 3600;
+//                    } else {
+//                        time = "" + startTimeInMillis / 3600;
+//                    }
+//                    if ((((startTimeInMillis / 1000) / 60) % 60) < 10) {
+//                        time += ":0" + ((startTimeInMillis / 1000) / 60) % 60;
+//                    } else {
+//                        time += ":" + ((startTimeInMillis / 1000) / 60) % 60;
+//                    }
+//                    if (((startTimeInMillis / 1000) % 60) < 10) {
+//                        time += ":0" + (startTimeInMillis / 1000) % 60;
+//                    } else {
+//                        time += ":" + (startTimeInMillis / 1000) % 60;
+//                    }
+//                    calendar.setTimeInMillis(System.currentTimeMillis() - startTime.getTime());
+//                    LogUtils.LOGE(TAG, "start tme:" + startTime.getTime() + " - " + System.currentTimeMillis() + " millis:" + (System.currentTimeMillis() - startTime.getTime()) + " result: " + new SimpleDateFormat("hh:mm:ss").format(calendar.getTime()));
+//                    ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.cardio_selection) + " - " + new SimpleDateFormat("hh:mm:ss").format(calendar.getTime()));
+//                    ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.cardio_selection) + " - " + time);
+//                    ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.cardio_selection) + " - " + h + ":" + m + ":" + s);
+//                    Style style = new Style.Builder()
+//                            .setBackgroundColor(R.color.actionbar_background)
+//                            .setGravity(Gravity.CENTER_HORIZONTAL)
+//                            .setTextColor(R.color.black)
+//                            .setHeight(heightInPx)
+//                            .build();
+//                    Crouton crouton;
+//                    crouton = Crouton.makeText(getActivity(), h + ":" + m + ":" + s, INFINITE)
+//                            .setConfiguration(new Configuration.Builder()
+//                                    .setDuration(Configuration.DURATION_INFINITE)
+//                                    .build());
+//                    crouton = Crouton.make(getActivity(), connect, R.id.connectButton, CONFIGURATION_INFINITE);
+//                    crouton.show();
+
 
                     //used for map
                     UserUtils.setActualSpeed(hxMMessage.getSpeed());
@@ -191,16 +302,20 @@ public class CardioFragment extends Fragment implements HxMListener {
                         initialValue = hxMMessage.getDistance();
                     }
 
-//                Log.e("@sendMessage", "hxm [" + hxMMessage.getDistance() + "], previous [" + previousValue + " ], traveledBefore [" + valueTravelledBefore + "], " +
-//                        "intermediate value [" + intermediateValue + "]");
+//                    Log.e("@sendMessage", "hxm [" + hxMMessage.getDistance() + "], previous [" + previousValue + " ], traveledBefore [" + valueTravelledBefore + "], " +
+//                            "intermediate value [" + intermediateValue + "]");
                     if (hxMMessage.getDistance() < previousValue) {
                         previousValue = hxMMessage.getDistance();
                         initialValue = 0;
-                        valueTravelledBefore += intermediateValue;
+                        //TODO here was
+//                        valueTravelledBefore += intermediateValue;
+                        valueTravelledBefore = intermediateValue;
                     } else {
                         previousValue = hxMMessage.getDistance();
                         intermediateValue = valueTravelledBefore + (((hxMMessage.getDistance() - initialValue) * 6.25f) / 100.0f);
+//                        intermediateValue += (((hxMMessage.getDistance() - initialValue) * 6.25f) / 100.0f);
                         distanceValue.setText(new DecimalFormat("##.##").format(intermediateValue));
+//                        LogUtils.LOGE(TAG, "final value:[" + intermediateValue + "]");
                     }
 
                     if (hxMMessage.getSpeed() > maxSpeed) {
@@ -271,6 +386,8 @@ public class CardioFragment extends Fragment implements HxMListener {
     }
 
     public void closeConnection(boolean saveToDB) {
+        minutes = 0;
+        seconds = 0;
         ((MainActivity) getActivity()).stopTracker();
         connect.setText("CONNECT");
         pressed = false;
@@ -279,7 +396,7 @@ public class CardioFragment extends Fragment implements HxMListener {
         historyChartFragment.resetValues();
         if (initialValue != -1 && saveToDB) {
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            GymDatabaseHelper.getInst().insertExercise(new History(UserUtils.getExerciseNumber(), df.format(startTime.getTime()), df.format(new Date().getTime())));
+            GymDatabaseHelper.getInst().insertExercise(new History(UserUtils.getExerciseNumber(), df.format(startTime.getTime()), df.format(new Date().getTime()), intermediateValue));
             UserUtils.setIsTracking();
         }
         try {
@@ -294,42 +411,63 @@ public class CardioFragment extends Fragment implements HxMListener {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-//        if (pressed) {
-//            mHxMConnection.findBT();
-//
-//            if (UserUtils.getDeviceBattery() < 0) {
-//                showBattery = true;
-//            } else {
-//                hxMBattery.setText(UserUtils.getDeviceBattery() + " %");
-//            }
-//            exerciseNumber.setText(UserUtils.getExerciseNumber() + "");
-//            date.setText(UserUtils.getDate());
-//        } else {
-//            resetValues();
-//        }
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.maps_menu, menu);
     }
 
+    @DebugLog
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_item_maps) {
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PathGoogleMapFragment())
-                    .addToBackStack("")
-                    .commit();
-            getActivity().getSupportFragmentManager().executePendingTransactions();
+            if (Utils.isNetworkAvailable()) {
+                mapShown = true;
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .add(R.id.container, new PathGoogleMapFragment())
+                        .addToBackStack("")
+                        .commit();
+                getActivity().getSupportFragmentManager().executePendingTransactions();
+            } else {
+                Toast.makeText(Utils.getContext(), "network unavailable!", Toast.LENGTH_LONG).show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    //    private final int HEART_RATE = 0;
+//    private void startTimer() {
+//        //Declare the timer
+//        Timer t = new Timer();
+//        //Set the schedule function and rate
+//        t.scheduleAtFixedRate(new TimerTask() {
+//
+//            @Override
+//            public void run() {
+//                getActivity().runOnUiThread(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//
+//                        LogUtils.LOGE("run", "seconds:" + seconds);
+//
+//                        ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.cardio_selection) + " - " + String.valueOf(minutes) + ":" + String.valueOf(seconds));
+//                        if (seconds == 59) {
+////                            ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.cardio_selection) + " - " + String.valueOf(minutes) + ":" + String.valueOf(seconds));
+////                            seconds = 60;
+//                            minutes += 1;
+//                            seconds = 0;
+////                            minutes = minutes - 1;
+//                        } else {
+//                            seconds += 1;
+//                        }
+//                    }
+//
+//                });
+//            }
+//
+//        }, 0, 1000);
+//    }
+
+//    private final int HEART_RATE = 0;
 //    private final int INSTANT_SPEED = 1;
 //    private final int DISTANCE = 2;
 //
@@ -446,7 +584,7 @@ public class CardioFragment extends Fragment implements HxMListener {
 //                                               e.printStackTrace();
 //                                           }
 
-    //FROM HERE USING HXM
+//FROM HERE USING HXM
 //                                               //BhMacID = btDevice.getAddress();
 //                                               BluetoothDevice Device = adapter.getRemoteDevice(BhMacID);
 //                                               String DeviceName = Device.getName();

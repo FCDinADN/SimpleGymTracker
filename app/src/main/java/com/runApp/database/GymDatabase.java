@@ -54,7 +54,8 @@ public class GymDatabase extends SQLiteOpenHelper {
                 .append("CREATE TABLE IF NOT EXISTS ").append(Tables.EXERCISES)
                 .append(" ( ").append(ExercisesColumns.ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ")
                 .append(ExercisesColumns.START_TIME).append(" TEXT, ")
-                .append(ExercisesColumns.END_TIME).append(" TEXT )")
+                .append(ExercisesColumns.END_TIME).append(" TEXT, ")
+                .append(ExercisesColumns.DISTANCE).append(" REAL )")
                 .toString();
 
         LogUtils.LOGE(TAG, "onCreate EXERCISES TABLE");

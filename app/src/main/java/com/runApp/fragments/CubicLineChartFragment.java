@@ -5,11 +5,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -21,6 +24,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.LimitLine;
+import com.runApp.MainActivity;
 import com.runApp.R;
 import com.runApp.database.GymDBContract;
 import com.runApp.database.QueryHeartRates;
@@ -104,10 +108,23 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
 
         if (fromHistory) {
             getLoaderManager().restartLoader(LOADER_HEART_RATES, null, this);
+            getActivity().getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+                @Override
+                public void onBackStackChanged() {
+                    if (getActivity() != null) {
+                        if (getActivity().getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                            setHasOptionsMenu(true);
+                            ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.history_selection));
+                        } else {//if (getActivity().getSupportFragmentManager().getBackStackEntryCount() == 2) {
+                            setHasOptionsMenu(false);
+                        }
+                    }
+                }
+            });
         } else if (!created) {
+//            setHasOptionsMenu(false);
             entryValues = getArguments().getIntegerArrayList(EXERCISE_VALUES);
             for (int i = 0; i < entryValues.size(); i++) {
-                Log.e(TAG, "values @ " + i + " -> " + entryValues.get(i));
                 Entry entry = new Entry(entryValues.get(i), i);
                 chartEntries1.add(entry);
             }
@@ -141,7 +158,7 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
                     while (cursor.moveToNext()) {
 //                        LogUtils.LOGE("got", cursor.getString(QueryHeartRates.VALUE));
                         float value = Float.parseFloat(cursor.getString(QueryHeartRates.VALUE));
-                        Log.e(TAG, "value " + value);
+//                        Log.e(TAG, "value " + value);
                         Entry entry = new Entry(value, counter);
 //                        if (value > 90.0f) {
 //                            colors.add(Color.RED);
@@ -199,7 +216,7 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
 
     public void addEntry(Float value) {
         if (created) {
-            Log.e(TAG, "new values @ " + counter + " -> " + value);
+//            Log.e(TAG, "new values @ " + counter + " -> " + value);
             Entry barEntry = new BarEntry(value, counter);
             chartEntries1.add(barEntry);
             counter++;
@@ -265,5 +282,27 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
     public void resetValues() {
         created = false;
         chartEntries1 = new ArrayList<>();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.maps_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_item_maps) {
+            PathGoogleMapFragment googleMapFragment = new PathGoogleMapFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(PathGoogleMapFragment.EXERCISE_NUMBER, exerciseNumber);
+            googleMapFragment.setArguments(bundle);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, googleMapFragment)
+                    .addToBackStack("")
+                    .commit();
+            getActivity().getSupportFragmentManager().executePendingTransactions();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

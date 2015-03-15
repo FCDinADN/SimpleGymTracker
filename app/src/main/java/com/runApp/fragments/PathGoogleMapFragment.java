@@ -37,6 +37,7 @@ import com.runApp.utils.DumbData;
 import com.runApp.utils.GPSLocationListener;
 import com.runApp.utils.GPSTracker;
 import com.runApp.utils.LogUtils;
+import com.runApp.utils.UserUtils;
 import com.runApp.utils.Utils;
 
 import org.json.JSONObject;
@@ -62,6 +63,7 @@ public class PathGoogleMapFragment extends Fragment implements GPSLocationListen
 
     private final String TAG = PathGoogleMapFragment.class.getSimpleName();
     private final int LOADER_LOCATIONS = 3000;
+    public static final String EXERCISE_NUMBER = "exercise_number";
 
     public static LatLng MY_LOCATION;
 
@@ -73,6 +75,7 @@ public class PathGoogleMapFragment extends Fragment implements GPSLocationListen
 
     private LatLngBounds.Builder bld;
     private SupportMapFragment supportMapFragment;
+    private int exerciseNumber;
 //    private HashMap<Integer, String> responses;
 
     @Override
@@ -85,6 +88,13 @@ public class PathGoogleMapFragment extends Fragment implements GPSLocationListen
         super.onViewCreated(view, savedInstanceState);
         supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
+        setHasOptionsMenu(false);
+        ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.map_selection));
+        if (getArguments() != null) {
+            exerciseNumber = getArguments().getInt(EXERCISE_NUMBER);
+        } else {
+            exerciseNumber = UserUtils.getExerciseNumber();
+        }
     }
 
     @Override
@@ -129,12 +139,13 @@ public class PathGoogleMapFragment extends Fragment implements GPSLocationListen
 
     private void recalculateMapBounds() {
         LatLngBounds bounds = bld.build();
-//        if (getActivity() != null)
+        if (getActivity() != null) {
 //            googleMap.moveCamera(
-        googleMap.animateCamera(
-                CameraUpdateFactory.newLatLngBounds(
-                        bounds,
-                        6 * getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin)));
+            googleMap.animateCamera(
+                    CameraUpdateFactory.newLatLngBounds(
+                            bounds,
+                            6 * getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin)));
+        }
     }
 
     private void getLocation() {
@@ -303,7 +314,7 @@ public class PathGoogleMapFragment extends Fragment implements GPSLocationListen
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Loader<Cursor> loader;
-        String selection = GymDBContract.LocationsColumns.NUMBER + " = 23";//+ UserUtils.getExerciseNumber();
+        String selection = GymDBContract.LocationsColumns.NUMBER + " = " + exerciseNumber;
         loader = new CursorLoader(Utils.getContext(), GymDBContract.Locations.CONTENT_URI, PROJECTION_SIMPLE, selection, null, GymDBContract.Locations.CONTENT_URI_DATE_ORDER);
         return loader;
     }
@@ -462,6 +473,7 @@ public class PathGoogleMapFragment extends Fragment implements GPSLocationListen
                     lineOptions.addAll(points);
                     lineOptions.width(5);
 
+                    LogUtils.LOGE(TAG, "speed " + latLngs.get(coordinateIndex).getSpeed());
                     if (latLngs.get(coordinateIndex).getSpeed() == 0.0f)
                         lineOptions.color(Color.BLUE);
                     else lineOptions.color(Color.YELLOW);
@@ -471,6 +483,7 @@ public class PathGoogleMapFragment extends Fragment implements GPSLocationListen
                 googleMap.addPolyline(lineOptions);
             }
         }
+
     }
 
     // Drawing Start and Stop locations

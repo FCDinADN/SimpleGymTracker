@@ -123,11 +123,15 @@ public class GPSTracker implements LocationListener {
         longitude = location.getLongitude();
         latitude = location.getLatitude();
         this.location = location;
-        ComplexLocation complexLocation = new ComplexLocation(location.getLatitude(), location.getLongitude(), UserUtils.getActualSpeed(), UserUtils.getExerciseNumber());
-        if (mLocationListener != null) {
-            mLocationListener.locationChanged(complexLocation);
+
+        //Add to DB only if it is tracking
+        if (UserUtils.isTracking()) {
+            ComplexLocation complexLocation = new ComplexLocation(location.getLatitude(), location.getLongitude(), UserUtils.getActualSpeed(), UserUtils.getExerciseNumber());
+            if (mLocationListener != null) {
+                mLocationListener.locationChanged(complexLocation);
+            }
+            GymDatabaseHelper.getInst().insertLocation(complexLocation);
         }
-        GymDatabaseHelper.getInst().insertLocation(complexLocation);
 //        }
         LogUtils.LOGE(TAG, "[onLocationChanged]: lat: " + latitude + " lon: " + longitude + " speed " + location.getSpeed() + " altitude " + location.getAltitude());
     }

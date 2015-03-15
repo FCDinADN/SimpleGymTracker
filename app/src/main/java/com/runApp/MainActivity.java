@@ -8,7 +8,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -28,6 +27,7 @@ import com.runApp.utils.UserUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 
 public class MainActivity extends ActionBarActivity
@@ -126,38 +126,37 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-//
-//        if (UserUtils.isTracking()) {
-//            DialogHandler.showSimpleDialog(this, R.string.dialog_tracking_will_stop_title, R.string.dialog_tracking_will_stop_text,
-//                    R.string.dialog_ok,
-//                    new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            //nothing happens
-//                        }
-//                    });
-//        } else {
-        // update the main content by replacing fragments
-        Fragment fragment = null;
 
-        Log.e("navigation called", "pos " + position);
+        if (currentFragment instanceof CardioFragment && UserUtils.isTracking()) {
+            DialogHandler.showSimpleDialog(this, R.string.dialog_tracking_will_stop_title, R.string.dialog_tracking_will_stop_text,
+                    R.string.dialog_ok,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //nothing happens
+                        }
+                    });
+        } else {
 
-        getSupportFragmentManager().popBackStackImmediate();
+//        update the main content by replacing fragments
+            Fragment fragment = null;
 
-        switch (position) {
+            getSupportFragmentManager().popBackStackImmediate();
+
+            switch (position) {
 //            case 1:
 //                fragment = new RoutinesFragment();
 //                mTitle = getString(R.string.routines_selection);
 //                getSupportActionBar().setTitle(mTitle);
 //                break;
-            case 0:
-                fragment = new CardioFragment();
-                mTitle = getString(R.string.cardio_selection);
-                break;
-            case 1:
-                fragment = new HistoryFragment();
-                mTitle = getString(R.string.history_selection);
-                break;
+                case 0:
+                    fragment = new CardioFragment();
+                    mTitle = getString(R.string.cardio_selection);
+                    break;
+                case 1:
+                    fragment = new HistoryFragment();
+                    mTitle = getString(R.string.history_selection);
+                    break;
 //            case 4:
 //                fragment = new HistoryFragment();
 //                mTitle = "Logs History";
@@ -168,23 +167,24 @@ public class MainActivity extends ActionBarActivity
 //                mTitle = "Your Best Trainer";
 //                getSupportActionBar().setTitle(mTitle);
 //                break;
-            default:
-                fragment = new CardioFragment();
-                mTitle = getString(R.string.cardio_selection);
-        }
+                default:
+                    fragment = new CardioFragment();
+                    mTitle = getString(R.string.cardio_selection);
+            }
 
-        if (currentFragment != null && currentFragment.equals(fragment.getClass().getSimpleName())) {
-            return;
-        }
+            if (currentFragment != null && currentFragment.equals(fragment.getClass().getSimpleName())) {
+                return;
+            }
 
-        currentFragment = fragment;
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
+            currentFragment = fragment;
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .commit();
 
-        setToolbarTitle(mTitle.toString());
+            setToolbarTitle(mTitle.toString());
 //        }
+        }
     }
 
     @Override
@@ -217,9 +217,11 @@ public class MainActivity extends ActionBarActivity
         } else if (currentFragment instanceof CardioFragment) {
             LogUtils.LOGE(TAG, "not in the main screen");
             super.onBackPressed();
-        } else {
+        } else if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             LogUtils.LOGE(TAG, "other");
             onNavigationDrawerItemSelected(Constants.HOME_FRAGMENT);
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -227,6 +229,12 @@ public class MainActivity extends ActionBarActivity
         if (toolbarTitle != null) {
             toolbarTitle.setText(title);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Crouton.cancelAllCroutons();
     }
 
     public void restoreActionBar() {

@@ -12,6 +12,14 @@ public class History {
     private int id;
     private String startTime;
     private String endTime;
+    private float distance;
+
+    public History(int id, String startTime, String endTime, float distance) {
+        this.id = id;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.distance = distance;
+    }
 
     public History(int id, String startTime, String endTime) {
         this.id = id;
@@ -66,5 +74,13 @@ public class History {
             e.printStackTrace();
         }
         return new Date();
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
     }
 }
