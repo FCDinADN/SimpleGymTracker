@@ -24,7 +24,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.LimitLine;
-import com.runApp.MainActivity;
 import com.runApp.R;
 import com.runApp.database.GymDBContract;
 import com.runApp.database.QueryHeartRates;
@@ -114,7 +113,8 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
                     if (getActivity() != null) {
                         if (getActivity().getSupportFragmentManager().getBackStackEntryCount() == 1) {
                             setHasOptionsMenu(true);
-                            ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.history_selection));
+                            //TODO set title from below
+//                            ((CardioActivity) getActivity()).setToolbarTitle(getString(R.string.history_selection));
                         } else {//if (getActivity().getSupportFragmentManager().getBackStackEntryCount() == 2) {
                             setHasOptionsMenu(false);
                         }

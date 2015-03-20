@@ -100,7 +100,7 @@
             android:background="@android:color/transparent"
             android:hint="..."
             android:gravity="center"
-            android:textColor="@color/actionbar_background"
+            android:textColor="@color/primary_color"
             android:textStyle="bold"
             android:inputType="number"/>
 
@@ -145,7 +145,7 @@
             android:background="@android:color/transparent"
             android:hint="..."
             android:gravity="center"
-            android:textColor="@color/actionbar_background"
+            android:textColor="@color/primary_color"
             android:textStyle="bold"
             android:inputType="number"/>
 

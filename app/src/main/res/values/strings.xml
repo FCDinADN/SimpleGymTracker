@@ -161,4 +161,7 @@ Eight words: Eat quality food. Increase your protein. Train hard."THE KEY IS FEE
     <string name="google_maps_activity">Google Maps</string>
     <string name="menu_maps">Map</string>
 
+    <!-- Start Activity Fragment -->
+    <string name="use_hxm_sensor">Use HxM Sensor</string>
+
 </resources>

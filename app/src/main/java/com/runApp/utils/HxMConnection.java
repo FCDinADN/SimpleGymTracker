@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.runApp.models.HxMMessage;
 
@@ -58,9 +59,13 @@ public class HxMConnection {
                 }
             }
         }
-        mConnectThread = new ConnectThread(mmDevice);
-        mConnectThread.start();
-        mHxMListener.setStatusMessage("Bluetooth Device Found");
+        if (mmDevice != null) {
+            mConnectThread = new ConnectThread(mmDevice);
+            mConnectThread.start();
+            mHxMListener.setStatusMessage("Bluetooth Device Found");
+        } else {
+            mHxMListener.socketClosed();
+        }
 //        return true;
     }
 
@@ -72,7 +77,9 @@ public class HxMConnection {
 //        mmOutputStream.close();
 //        mmInputStream.close();
 //        mmSocket.close();
-        mConnectThread.cancel();
+        if (mConnectThread != null) {
+            mConnectThread.cancel();
+        }
         mHxMListener.resetValues();
     }
 
@@ -192,7 +199,7 @@ public class HxMConnection {
             try {
                 while (!Thread.currentThread().isInterrupted() && (i = mmInputStream.read()) != -1) {
                     if (counter == 59) {
-//                        Log.e(TAG, "value from HXM " + readBuffer[12]);
+                        Log.e(TAG, "value from HXM " + readBuffer[12]);
                         mHxMListener.sendMessage(new HxMMessage(readBuffer));
                         readBuffer = new byte[1024];
                         counter = 0;

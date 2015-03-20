@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/cardio_top"
+        android:background="@color/primary_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardio_timer"
+            android:text="00:00:00"
+            android:layout_centerInParent="true"
+            android:paddingTop="3dp"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardio_show_map"
+            android:src="@drawable/menu_map_bg"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@null"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"/>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/cardio_container"/>
+
+</LinearLayout>

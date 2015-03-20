@@ -26,7 +26,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.runApp.MainActivity;
+import com.runApp.activities.CardioActivity;
+import com.runApp.activities.MainActivity;
 import com.runApp.R;
 import com.runApp.database.GymDBContract;
 import com.runApp.database.GymDatabaseHelper;
@@ -89,7 +90,7 @@ public class PathGoogleMapFragment extends Fragment implements GPSLocationListen
         supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
         setHasOptionsMenu(false);
-        ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.map_selection));
+//        ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.map_selection));
         if (getArguments() != null) {
             exerciseNumber = getArguments().getInt(EXERCISE_NUMBER);
         } else {
@@ -152,7 +153,8 @@ public class PathGoogleMapFragment extends Fragment implements GPSLocationListen
         Log.e(TAG, "getLocation");
 
         // Location stuff - start getting the location when user loads the map
-        GPSTracker tracker = ((MainActivity) getActivity()).getTracker();
+//        GPSTracker tracker = ((MainActivity) getActivity()).getTracker();
+        GPSTracker tracker = ((CardioActivity) getActivity()).getTracker();
 
         if (tracker != null) {
             Log.e("getLocation", "tracker not NULL");

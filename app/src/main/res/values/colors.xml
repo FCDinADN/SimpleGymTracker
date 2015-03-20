@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="actionbar_background">#FF26BFC5</color>
-    <color name="light_blue_pressed">#FF22959B</color>
+    <color name="primary_color">#FF26BFC5</color>
+    <color name="dark_primary_color">#FF22959B</color>
     <color name="actionbar_text_color">#BD101010</color>
     <color name="black">#000000</color>
     <color name="white">#fff</color>
@@ -15,6 +15,7 @@
     <color name="text">#2e2e2e</color>
     <color name="primary_text">#212121</color>
 
+    <color name="transparent_black">#5D000000</color>
     <color name="list_items_pressed">#B2EBF2</color>
 
 </resources>

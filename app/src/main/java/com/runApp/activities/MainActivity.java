@@ -1,4 +1,4 @@
-package com.runApp;
+package com.runApp.activities;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -12,11 +12,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.runApp.R;
 import com.runApp.database.GymDatabaseHelper;
 import com.runApp.fragments.CardioFragment;
 import com.runApp.fragments.HistoryFragment;
 import com.runApp.fragments.NavigationDrawerFragment;
 import com.runApp.fragments.PathGoogleMapFragment;
+import com.runApp.fragments.StartActivityFragment;
 import com.runApp.models.ComplexLocation;
 import com.runApp.utils.Constants;
 import com.runApp.utils.DialogHandler;
@@ -150,7 +152,7 @@ public class MainActivity extends ActionBarActivity
 //                getSupportActionBar().setTitle(mTitle);
 //                break;
                 case 0:
-                    fragment = new CardioFragment();
+                    fragment = new StartActivityFragment();
                     mTitle = getString(R.string.cardio_selection);
                     break;
                 case 1:
@@ -168,7 +170,7 @@ public class MainActivity extends ActionBarActivity
 //                getSupportActionBar().setTitle(mTitle);
 //                break;
                 default:
-                    fragment = new CardioFragment();
+                    fragment = new StartActivityFragment();
                     mTitle = getString(R.string.cardio_selection);
             }
 
@@ -194,31 +196,30 @@ public class MainActivity extends ActionBarActivity
             mNavigationDrawerFragment.closeDrawer();
             return;
         }
-        if (currentFragment instanceof CardioFragment && currentFragment.getFragmentManager().getBackStackEntryCount() == 0) {
-            LogUtils.LOGE(TAG, "in the main screen");
-            if (UserUtils.isTracking()) {
-                DialogHandler.showConfirmDialog(this,
-                        R.string.dialog_discard_workout_title,
-                        R.string.dialog_discard_workout_text,
-                        R.string.dialog_discard_workout_button,
-                        R.string.dialog_cancel,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (which == DialogInterface.BUTTON_POSITIVE) {
-                                    ((CardioFragment) currentFragment).closeConnection(false);
-                                    finish();
-                                }
-                            }
-                        });
-            } else {
-                super.onBackPressed();
-            }
-        } else if (currentFragment instanceof CardioFragment) {
-            LogUtils.LOGE(TAG, "not in the main screen");
+//        if (currentFragment instanceof CardioFragment && currentFragment.getFragmentManager().getBackStackEntryCount() == 0) {
+//            LogUtils.LOGE(TAG, "in the main screen");
+//            if (UserUtils.isTracking()) {
+//                DialogHandler.showConfirmDialog(this,
+//                        R.string.dialog_discard_workout_title,
+//                        R.string.dialog_discard_workout_text,
+//                        R.string.dialog_discard_workout_button,
+//                        R.string.dialog_cancel,
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                if (which == DialogInterface.BUTTON_POSITIVE) {
+//                                    ((CardioFragment) currentFragment).closeConnection(false);
+//                                    finish();
+//                                }
+//                            }
+//                        });
+//            } else {
+//                super.onBackPressed();
+//            }
+//        } else
+        if (currentFragment instanceof StartActivityFragment) {
             super.onBackPressed();
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            LogUtils.LOGE(TAG, "other");
             onNavigationDrawerItemSelected(Constants.HOME_FRAGMENT);
         } else {
             super.onBackPressed();

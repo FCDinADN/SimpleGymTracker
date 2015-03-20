@@ -179,7 +179,7 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
                     holder = new Holder(view);
                     if (type == TYPE_TODAY_FIRST) {
                         View background = view.findViewById(R.id.history_item_day_date_container);
-                        background.setBackgroundColor(mContext.getResources().getColor(R.color.actionbar_background));
+                        background.setBackgroundColor(mContext.getResources().getColor(R.color.primary_color));
                         holder.day.setTextColor(mContext.getResources().getColor(R.color.white));
                         holder.dayName.setTextColor(mContext.getResources().getColor(R.color.white));
                     } else {
@@ -196,7 +196,7 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
                     holder = new Holder(view);
                     if (type == TYPE_TODAY_OTHER) {
                         View background = view.findViewById(R.id.history_item_day_date_container);
-                        background.setBackgroundColor(mContext.getResources().getColor(R.color.actionbar_background));
+                        background.setBackgroundColor(mContext.getResources().getColor(R.color.primary_color));
                     } else {
                         View background = view.findViewById(R.id.history_item_day_date_container);
                         background.setBackgroundColor(mContext.getResources().getColor(R.color.calendar_day_background));
@@ -272,7 +272,7 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
 //                    holder.time.setText(getTime(sdf.format(wrapper.event.getStartTime()),sdf.format(wrapper.event.getEndTime())));
 //                    holder.time.setText(time);
                     if (type == TYPE_TODAY_OTHER) {
-                        holder.borderPadding.setBackgroundColor(Utils.getContext().getResources().getColor(R.color.actionbar_background));
+                        holder.borderPadding.setBackgroundColor(Utils.getContext().getResources().getColor(R.color.primary_color));
                         holder.border.setVisibility(View.VISIBLE);
                     } else {
                         holder.borderPadding.setBackgroundColor(Utils.getContext().getResources().getColor(R.color.calendar_day_background));

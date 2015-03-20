@@ -19,7 +19,7 @@
             android:layout_width="50dp"
             android:layout_height="fill_parent"
             android:padding="2dp"
-            android:background="@color/actionbar_background"/>
+            android:background="@color/primary_color"/>
 
         <TextView
             android:id="@+id/item_previous_log_set_exercises_number"

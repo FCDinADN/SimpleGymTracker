@@ -6,17 +6,15 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.runApp.MainActivity;
 import com.runApp.R;
+import com.runApp.activities.CardioActivity;
 import com.runApp.database.GymDatabaseHelper;
 import com.runApp.models.History;
 import com.runApp.models.HxMMessage;
@@ -43,7 +41,6 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import de.keyboardsurfer.android.widget.crouton.Configuration;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import hugo.weaving.DebugLog;
 
 /**
  * Created by Rares on 27/11/14.
@@ -88,6 +85,8 @@ public class CardioFragment extends Fragment implements HxMListener {
     private Timer timer;
     private TimerTask timerTask;
 
+    private ImageView showMapImage;
+
 
     //values used for chart
     private ArrayList<Integer> entryValues;
@@ -112,7 +111,7 @@ public class CardioFragment extends Fragment implements HxMListener {
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.inject(this, view);
-        setHasOptionsMenu(true);
+//        setHasOptionsMenu(true);
 
         historyChartFragment = new CubicLineChartFragment();
 
@@ -126,10 +125,10 @@ public class CardioFragment extends Fragment implements HxMListener {
                     if (getActivity().getSupportFragmentManager().getBackStackEntryCount() == 1) {
                         if (mapShown) {
                             setHasOptionsMenu(false);
-                            ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.map_selection));
+                            ((CardioActivity) getActivity()).setToolbarTitle(getString(R.string.map_selection));
                         } else {
                             setHasOptionsMenu(true);
-                            ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.cardio_selection));
+                            ((CardioActivity) getActivity()).setToolbarTitle(getString(R.string.cardio_selection));
                         }
                     } else if (getActivity().getSupportFragmentManager().getBackStackEntryCount() == 2) {
                         mapShown = false;
@@ -137,24 +136,53 @@ public class CardioFragment extends Fragment implements HxMListener {
                     } else {
                         mapShown = false;
                         setHasOptionsMenu(true);
-                        ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.cardio_selection));
+                        ((CardioActivity) getActivity()).setToolbarTitle(getString(R.string.cardio_selection));
                     }
+                }
+            }
+        });
+
+        showMapImage = ((ImageView) getActivity().findViewById(R.id.cardio_show_map));
+        showMapImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Utils.isNetworkAvailable()) {
+                    mapShown = true;
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .add(R.id.cardio_container, new PathGoogleMapFragment())
+                            .addToBackStack("")
+                            .commit();
+                    getActivity().getSupportFragmentManager().executePendingTransactions();
+                } else {
+                    Toast.makeText(Utils.getContext(), "network unavailable!", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!pressed) {
+            tryToConnectToHxM();
+        }
+    }
+
     @OnClick(R.id.connectButton)
     void connectClicked() {
         if (!pressed) {
-            ((MainActivity) getActivity()).startTracker();
-            mProgress.setVisibility(View.VISIBLE);
-            connect.setText("CONNECTING...");
-            pressed = true;
-            mHxMConnection.findBT();
+            tryToConnectToHxM();
         } else {
             closeConnection(true);
         }
+    }
+
+    private void tryToConnectToHxM() {
+//        ((MainActivity) getActivity()).startTracker();
+        mProgress.setVisibility(View.VISIBLE);
+        connect.setText("CONNECTING...");
+        pressed = true;
+        mHxMConnection.findBT();
     }
 
     private void initData() {
@@ -192,7 +220,7 @@ public class CardioFragment extends Fragment implements HxMListener {
         mBundle.putIntegerArrayList(CubicLineChartFragment.EXERCISE_VALUES, entryValues);
         historyChartFragment.setArguments(mBundle);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, historyChartFragment)
+                .add(R.id.cardio_container, historyChartFragment)
                 .addToBackStack("")
                 .commit();
         getActivity().getSupportFragmentManager().executePendingTransactions();
@@ -276,6 +304,7 @@ public class CardioFragment extends Fragment implements HxMListener {
 //                    crouton = Crouton.make(getActivity(), connect, R.id.connectButton, CONFIGURATION_INFINITE);
 //                    crouton.show();
 
+                    ((CardioActivity) getActivity()).setToolbarTitle(h + ":" + m + ":" + s);
 
                     //used for map
                     UserUtils.setActualSpeed(hxMMessage.getSpeed());
@@ -291,7 +320,6 @@ public class CardioFragment extends Fragment implements HxMListener {
                     }
 
                     if (showBattery) {
-                        initData();
                         showBattery = false;
                         hxMBattery.setText(hxMMessage.getBattery() + " %");
                     }
@@ -332,20 +360,20 @@ public class CardioFragment extends Fragment implements HxMListener {
     @Override
     public void socketClosed() {
         if (pressed) {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mProgress.setVisibility(View.GONE);
-                    DialogHandler.showSimpleDialog(getActivity(), R.string.dialog_socket_closed_title, R.string.dialog_socket_closed_text,
-                            R.string.dialog_ok,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    closeConnection(true);
-                                }
-                            });
-                }
-            });
+//            mHandler.post(new Runnable() {
+//                @Override
+//                public void run() {
+            mProgress.setVisibility(View.GONE);
+            DialogHandler.showSimpleDialog(getActivity(), R.string.dialog_socket_closed_title, R.string.dialog_socket_closed_text,
+                    R.string.dialog_ok,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            closeConnection(true);
+                        }
+                    });
+//                }
+//            });
         }
     }
 
@@ -388,7 +416,7 @@ public class CardioFragment extends Fragment implements HxMListener {
     public void closeConnection(boolean saveToDB) {
         minutes = 0;
         seconds = 0;
-        ((MainActivity) getActivity()).stopTracker();
+        ((CardioActivity) getActivity()).stopTracker();
         connect.setText("CONNECT");
         pressed = false;
         dataInitialised = false;
@@ -410,29 +438,29 @@ public class CardioFragment extends Fragment implements HxMListener {
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.maps_menu, menu);
-    }
-
-    @DebugLog
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_item_maps) {
-            if (Utils.isNetworkAvailable()) {
-                mapShown = true;
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .add(R.id.container, new PathGoogleMapFragment())
-                        .addToBackStack("")
-                        .commit();
-                getActivity().getSupportFragmentManager().executePendingTransactions();
-            } else {
-                Toast.makeText(Utils.getContext(), "network unavailable!", Toast.LENGTH_LONG).show();
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.maps_menu, menu);
+//    }
+//
+//    @DebugLog
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (item.getItemId() == R.id.menu_item_maps) {
+//            if (Utils.isNetworkAvailable()) {
+//                mapShown = true;
+//                getActivity().getSupportFragmentManager().beginTransaction()
+//                        .add(R.id.cardio_container, new PathGoogleMapFragment())
+//                        .addToBackStack("")
+//                        .commit();
+//                getActivity().getSupportFragmentManager().executePendingTransactions();
+//            } else {
+//                Toast.makeText(Utils.getContext(), "network unavailable!", Toast.LENGTH_LONG).show();
+//            }
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
 //    private void startTimer() {
 //        //Declare the timer
