@@ -90,11 +90,12 @@ public class PathGoogleMapFragment extends Fragment implements GPSLocationListen
         supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
         setHasOptionsMenu(false);
-//        ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.map_selection));
         if (getArguments() != null) {
             exerciseNumber = getArguments().getInt(EXERCISE_NUMBER);
+            ((MainActivity) getActivity()).setToolbarTitle(getString(R.string.map_selection));
         } else {
             exerciseNumber = UserUtils.getExerciseNumber();
+            ((CardioActivity) getActivity()).hideShowMap();
         }
     }
 
@@ -154,7 +155,12 @@ public class PathGoogleMapFragment extends Fragment implements GPSLocationListen
 
         // Location stuff - start getting the location when user loads the map
 //        GPSTracker tracker = ((MainActivity) getActivity()).getTracker();
-        GPSTracker tracker = ((CardioActivity) getActivity()).getTracker();
+        GPSTracker tracker;
+        if (getArguments() != null) {
+            tracker = ((MainActivity) getActivity()).getTracker();
+        } else {
+            tracker = ((CardioActivity) getActivity()).getTracker();
+        }
 
         if (tracker != null) {
             Log.e("getLocation", "tracker not NULL");
@@ -319,6 +325,16 @@ public class PathGoogleMapFragment extends Fragment implements GPSLocationListen
         String selection = GymDBContract.LocationsColumns.NUMBER + " = " + exerciseNumber;
         loader = new CursorLoader(Utils.getContext(), GymDBContract.Locations.CONTENT_URI, PROJECTION_SIMPLE, selection, null, GymDBContract.Locations.CONTENT_URI_DATE_ORDER);
         return loader;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (exerciseNumber == UserUtils.getExerciseNumber()) {
+            if (getArguments() == null) {
+                ((CardioActivity) getActivity()).showShowMap();
+            }
+        }
     }
 
     @Override

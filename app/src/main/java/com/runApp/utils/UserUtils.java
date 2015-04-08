@@ -14,6 +14,10 @@ public class UserUtils {
 
     private static final String PREFERENCES = "user_pref";
     private static final String USER_AGE = "user_age";
+    private static final String USER_WEIGHT = "user_weight";
+    private static final String USER_HEIGHT = "user_height";
+    private static final String USER_RESTING_HEART_RATE = "user_resting_heart_rate";
+    private static final String USER_MAXIMUM_HEART_RATE = "user_resting_heart_rate";
     private static final String EXERCISE_NUMBER = "exercise_number";
     private static final String DATE = "today_date";
     private static final String DEVICE_BATTERY = "device_battery";
@@ -21,8 +25,41 @@ public class UserUtils {
     private static final String HARD_LIMIT = "hard_limit";
     private static final String MODERATE_LIMIT = "moderate_limit";
     private static final String LIGHT_LIMIT = "light_limit";
-    private static final String ACTUAL_SPEED = "actual_speed";
+    //    private static final String ACTUAL_SPEED = "actual_speed";
     private static final String IS_TRACKING = "is_tracking_now";
+    private static final String STEPS_NUMBER = "steps_number";
+    private static final String BURNT_CALORIES = "calories";
+    private static final String IS_SERVICE_RUNNING = "is_service_running";
+
+    public static boolean isServiceRunning() {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(IS_SERVICE_RUNNING, false);
+    }
+
+    public static void setIsServiceRunning(boolean isServiceRunning) {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(IS_SERVICE_RUNNING, isServiceRunning).apply();
+    }
+
+    public static float getBurntCalories() {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        return sharedPreferences.getFloat(BURNT_CALORIES, 0);
+    }
+
+    public static void setBurntCalories(float calories) {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putFloat(BURNT_CALORIES, calories).apply();
+    }
+
+    public static int getStepsNumber() {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(STEPS_NUMBER, 0);
+    }
+
+    public static void setStepsNumber(int stepsNumber) {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt(STEPS_NUMBER, stepsNumber).apply();
+    }
 
     public static int getExerciseNumber() {
         SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
@@ -36,6 +73,7 @@ public class UserUtils {
 
     public static int getUserAge() {
         SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        //TODO change default value
         return sharedPreferences.getInt(USER_AGE, 23);
     }
 
@@ -46,6 +84,50 @@ public class UserUtils {
         setHardLimit();
         setModerateLimit();
         setLightLimit();
+    }
+
+    public static int getUserWeight() {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        //TODO change default value
+        return sharedPreferences.getInt(USER_WEIGHT, 70);
+    }
+
+    public static void setUserWeight(int weight) {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt(USER_WEIGHT, weight).apply();
+    }
+
+    public static int getUserHeight() {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        //TODO change default value
+        return sharedPreferences.getInt(USER_HEIGHT, 175);
+    }
+
+    public static void setUserHeight(int height) {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt(USER_HEIGHT, height).apply();
+    }
+
+    public static int getUserRestingHeartHeartRate() {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        //TODO change default value
+        return sharedPreferences.getInt(USER_RESTING_HEART_RATE, 70);
+    }
+
+    public static void setUserRestingHeartRate(int restingHeartRate) {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putFloat(USER_RESTING_HEART_RATE, restingHeartRate).apply();
+    }
+
+    public static float getUserMaximumHeartRate() {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        //TODO change default value
+        return sharedPreferences.getFloat(USER_MAXIMUM_HEART_RATE, 200);
+    }
+
+    public static void setUserMaximumHeartRate() {
+        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putFloat(USER_MAXIMUM_HEART_RATE, (208 - (0.7f * getUserAge()))).apply();
     }
 
     public static String getDate() {
@@ -83,7 +165,7 @@ public class UserUtils {
     }
 
     private static void setVeryHardLimit() {
-        float veryHardLimit = (90 * (220 - getUserAge()) / 100.0f);
+        float veryHardLimit = (90 * getUserMaximumHeartRate() / 100.0f);
         SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         sharedPreferences.edit().putFloat(VERY_HARD_LIMIT, veryHardLimit).apply();
     }
@@ -94,7 +176,7 @@ public class UserUtils {
     }
 
     private static void setHardLimit() {
-        float veryHardLimit = (80 * (220 - getUserAge()) / 100.0f);
+        float veryHardLimit = (80 * getUserMaximumHeartRate() / 100.0f);
         SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         sharedPreferences.edit().putFloat(HARD_LIMIT, veryHardLimit).apply();
     }
@@ -105,7 +187,7 @@ public class UserUtils {
     }
 
     private static void setModerateLimit() {
-        float veryHardLimit = (70 * (220 - getUserAge()) / 100.0f);
+        float veryHardLimit = (70 * getUserMaximumHeartRate() / 100.0f);
         SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         sharedPreferences.edit().putFloat(MODERATE_LIMIT, veryHardLimit).apply();
     }
@@ -116,21 +198,22 @@ public class UserUtils {
     }
 
     private static void setLightLimit() {
-        float veryHardLimit = (60 * (220 - getUserAge()) / 100.0f);
+        float veryHardLimit = (60 * getUserMaximumHeartRate() / 100.0f);
         SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         sharedPreferences.edit().putFloat(LIGHT_LIMIT, veryHardLimit).apply();
     }
 
-    public static float getActualSpeed() {
-        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        return sharedPreferences.getFloat(ACTUAL_SPEED, 0.0f);
-    }
+//    public static float getActualSpeed() {
+//        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+//        return sharedPreferences.getFloat(ACTUAL_SPEED, 0.0f);
+//    }
+//
+//    public static void setActualSpeed(float speed) {
+//        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+//        sharedPreferences.edit().putFloat(ACTUAL_SPEED, speed).apply();
+//    }
 
-    public static void setActualSpeed(float speed) {
-        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putFloat(ACTUAL_SPEED, speed).apply();
-    }
-
+    //used for inserting from GPS Tracker
     public static boolean isTracking() {
         SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean(IS_TRACKING, false);

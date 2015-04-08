@@ -44,9 +44,45 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:id="@+id/linearLayout1"
+        android:id="@+id/linearLayout0"
         android:layout_marginTop="24dp"
         android:layout_below="@+id/view"
+        android:layout_alignLeft="@+id/linearLayout1"
+        android:layout_alignStart="@+id/linearLayout1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Calories"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/calories"
+            android:textIsSelectable="false"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="25sp"
+            android:gravity="bottom"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/caloriesValue"
+            android:padding="7dp"
+            android:gravity="center_vertical|end"
+            android:textSize="30sp"
+            android:layout_marginLeft="50dp"
+            android:textColor="@android:color/holo_red_light"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:id="@+id/linearLayout1"
+        android:layout_marginTop="24dp"
+        android:layout_below="@+id/linearLayout0"
         android:layout_centerHorizontal="true">
 
         <TextView
@@ -72,7 +108,6 @@
             android:layout_marginLeft="50dp"
             android:textColor="@android:color/holo_red_light"
             android:textStyle="bold"/>
-
     </LinearLayout>
 
     <ImageButton
@@ -127,6 +162,17 @@
 
     <TextView
         android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:id="@+id/cardio_device_status"
+        android:text="status:disconnected."
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_alignLeft="@+id/connectButton"
+        android:layout_alignStart="@+id/connectButton"/>
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
@@ -170,27 +216,20 @@
             android:gravity="center_vertical|end"/>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:id="@+id/cardio_device_status"
-        android:text="status:disconnected."
-        android:layout_above="@+id/connectButton"
-        android:gravity="center_horizontal"
-        android:textColor="@android:color/black"
-        android:layout_centerInParent="true"/>
-
-    <TextView
+    <com.runApp.ui.FontMerriweatherTextView
         android:layout_alignParentBottom="true"
         android:id="@+id/connectButton"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
+        android:minWidth="148dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:textSize="@dimen/abc_text_size_medium_material"
+        android:textSize="20sp"
         android:text="CONNECT"
-        android:background="@drawable/light_blue_bg"
+        android:textColor="@color/white"
+        android:background="@drawable/item_rounded_primary_color_button_bg"
         android:layout_above="@+id/mapButton"
         android:gravity="center"/>
 

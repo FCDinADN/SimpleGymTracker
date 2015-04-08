@@ -139,12 +139,12 @@ public class HistoryChartFragment extends Fragment implements LoaderManager.Load
                     ll.setLineColor(Color.GREEN);
                     ll.setLineWidth(4f);
                     // .. and more styling options
-                    mLineData.addLimitLine(ll);
+//                    mLineData.addLimitLine(ll);
 
                     // Add data to the chart
                     mLineChart.setData(mLineData);
                     mLineChart.animateX(1500);
-                    mLineChart.setDrawLegend(false);
+//                    mLineChart.setDrawLegend(false);
 
                     created = true;
                     break;

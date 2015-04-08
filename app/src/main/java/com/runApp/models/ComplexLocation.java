@@ -29,6 +29,12 @@ public class ComplexLocation {
         this.exerciseNumber = exerciseNumber;
     }
 
+    public ComplexLocation(double latitude, double longitude, int exerciseNumber) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.exerciseNumber = exerciseNumber;
+    }
+
     public ComplexLocation(int id, double latitude, double longitude, float speed, int exerciseNumber, String google_url) {
         this.id = id;
         this.latitude = latitude;

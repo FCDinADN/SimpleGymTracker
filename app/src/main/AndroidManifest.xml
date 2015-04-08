@@ -9,12 +9,15 @@
         android:name="com.company.app.permission.MAPS_RECEIVE"
         android:protectionLevel="signature"/>
 
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -22,11 +25,26 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/icon_cardio"
+        android:icon="@drawable/running_icon"
         android:name=".RunAppApplication"
         android:hardwareAccelerated="true"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".pedometer.Pedometer"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN"/>-->
+            <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        </activity>
+        <activity
+            android:name=".pedometer.Settings"
+            android:label="@string/activity_settings">
+        </activity>
+
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
@@ -51,8 +69,25 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
 
-        <activity android:name=".activities.CardioActivity"/>
+        <activity
+            android:name=".activities.CardioActivity"
+            android:screenOrientation="portrait"/>
 
+        <service
+            android:enabled="true"
+            android:name=".services.CaloriesService"
+            />
+
+        <service
+            android:enabled="true"
+            android:name=".pedometer.StepService"
+            />
+
+        <receiver android:name=".receivers.BootCompletedIntentReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -6,7 +6,7 @@
                                    android:layout_width="match_parent"
                                    android:layout_height="wrap_content"
                                    android:minHeight="?attr/actionBarSize"
-                                   android:background="@color/primary_color"
+                                   android:background="@color/actionbar_background"
                                    app:theme="@style/ToolBarStyle"
                                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                                    tools:showIn="@layout/activity_main">
@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:paddingTop="3dp"
-        android:textColor="@color/white"
+        android:textColor="@color/actionbar_text_color"
         android:textSize="22sp"
         android:id="@+id/toolbar_title"/>
 

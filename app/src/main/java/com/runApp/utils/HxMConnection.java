@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import com.runApp.models.HxMMessage;
 
@@ -95,7 +94,7 @@ public class HxMConnection {
 //                try {
 //                    while (!Thread.currentThread().isInterrupted() && (i = mmInputStream.read()) != -1) {
 //                        if (counter == 59) {
-//                            mHxMListener.sendMessage(new HxMMessage(readBuffer), handler);
+//                            mHxMListener.receiveValues(new HxMMessage(readBuffer), handler);
 //                            readBuffer = new byte[1024];
 //                            counter = 0;
 //                        } else {
@@ -199,8 +198,7 @@ public class HxMConnection {
             try {
                 while (!Thread.currentThread().isInterrupted() && (i = mmInputStream.read()) != -1) {
                     if (counter == 59) {
-                        Log.e(TAG, "value from HXM " + readBuffer[12]);
-                        mHxMListener.sendMessage(new HxMMessage(readBuffer));
+                        mHxMListener.receiveValues(new HxMMessage(readBuffer));
                         readBuffer = new byte[1024];
                         counter = 0;
                     } else {

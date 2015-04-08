@@ -1,15 +1,21 @@
 package com.runApp.activities;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.runApp.R;
@@ -18,8 +24,11 @@ import com.runApp.fragments.CardioFragment;
 import com.runApp.fragments.HistoryFragment;
 import com.runApp.fragments.NavigationDrawerFragment;
 import com.runApp.fragments.PathGoogleMapFragment;
+import com.runApp.fragments.SettingsFragment;
 import com.runApp.fragments.StartActivityFragment;
 import com.runApp.models.ComplexLocation;
+import com.runApp.pedometer.Utils;
+import com.runApp.services.CaloriesService;
 import com.runApp.utils.Constants;
 import com.runApp.utils.DialogHandler;
 import com.runApp.utils.DumbData;
@@ -29,7 +38,6 @@ import com.runApp.utils.UserUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 
 public class MainActivity extends ActionBarActivity
@@ -42,6 +50,13 @@ public class MainActivity extends ActionBarActivity
     Toolbar toolbar;
 
     TextView toolbarTitle;
+
+    /**
+     * True, when service is running.
+     */
+    private boolean mIsRunning;
+
+    private Utils mUtils;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -63,6 +78,12 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
 
         ButterKnife.inject(this);
+
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(getResources().getColor(R.color.actionbar_background_dark));
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
         toolbarTitle = ((TextView) toolbar.findViewById(R.id.toolbar_title));
@@ -77,7 +98,7 @@ public class MainActivity extends ActionBarActivity
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.icon_cardio);
+        getSupportActionBar().setLogo(R.drawable.ic_running);
 
 
 //        restoreActionBar();
@@ -89,6 +110,14 @@ public class MainActivity extends ActionBarActivity
 
         //insert dumb data
 //        inserLocations();
+
+//        mUtils = Utils.getInstance();
+    }
+
+    @Override
+    protected void onStart() {
+        Log.i(TAG, "[ACTIVITY] onStart");
+        super.onStart();
     }
 
     public GPSTracker getTracker() {
@@ -107,6 +136,21 @@ public class MainActivity extends ActionBarActivity
     protected void onResume() {
         super.onResume();
         UserUtils.checkDate();
+
+        // Read from preferences if the service was running on the last onPause
+        mIsRunning = UserUtils.isServiceRunning();
+        LogUtils.LOGE(TAG, "[ACTIVITY] running? " + mIsRunning);
+
+        // Start the service if this is considered to be an application start (last onPause was long ago)
+        if (!mIsRunning) {// && mPedometerSettings.isNewStart()) {
+            startStepService();
+            bindStepService();
+        } else if (mIsRunning) {
+            bindStepService();
+        }
+
+        UserUtils.setIsServiceRunning(false);
+
         //TODO remove the tracker from here
 //        startTracker();
     }
@@ -158,6 +202,10 @@ public class MainActivity extends ActionBarActivity
                 case 1:
                     fragment = new HistoryFragment();
                     mTitle = getString(R.string.history_selection);
+                    break;
+                case 2:
+                    fragment = new SettingsFragment();
+                    mTitle = getString(R.string.settings_selection);
                     break;
 //            case 4:
 //                fragment = new HistoryFragment();
@@ -232,12 +280,6 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Crouton.cancelAllCroutons();
-    }
-
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -246,119 +288,98 @@ public class MainActivity extends ActionBarActivity
         actionBar.setTitle(mTitle);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-//            restoreActionBar();
-            return true;
+    private CaloriesService mService;
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            mService = ((CaloriesService.CaloriesBinder) service).getService();
+
+            mService.registerCallback(mCallback);
+//            mService.reloadSettings();
         }
-        return super.onCreateOptionsMenu(menu);
+
+        public void onServiceDisconnected(ComponentName className) {
+            mService = null;
+        }
+    };
+
+    private CaloriesService.ICallback mCallback = new CaloriesService.ICallback() {
+        @Override
+        public void stepsChanged(int value) {
+            LogUtils.LOGE(TAG, "stepsChanged " + value);
+        }
+
+        @Override
+        public void caloriesChanged(float value) {
+
+        }
+    };
+
+    @Override
+    protected void onPause() {
+        if (mIsRunning) {
+            unbindStepService();
+        }
+        LogUtils.LOGE(TAG, "[ACTIVITY] onPause service running? " + mIsRunning);
+        UserUtils.setIsServiceRunning(mIsRunning);
+        super.onPause();
+    }
+
+    private void startStepService() {
+        Log.i(TAG, "[ACTIVITY] startStepService");
+        if (!mIsRunning) {
+            Log.i(TAG, "[SERVICE] Start");
+            mIsRunning = true;
+            startService(new Intent(MainActivity.this,
+                    CaloriesService.class));
+        }
+    }
+
+    private void bindStepService() {
+        Log.i(TAG, "[SERVICE] Bind");
+        bindService(new Intent(MainActivity.this,
+                CaloriesService.class), mConnection, Context.BIND_AUTO_CREATE + Context.BIND_DEBUG_UNBIND);
+    }
+
+    private void unbindStepService() {
+        Log.i(TAG, "[ACTIVITY] Unbind");
+        unbindService(mConnection);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        return super.onOptionsItemSelected(item);
-    }
-
-//    /**
-//     * A placeholder fragment containing a simple view.
-//     */
-//    public static class PlaceholderFragment extends Fragment {
-//        /**
-//         * The fragment argument representing the section number for this
-//         * fragment.
-//         */
-//        private static final String ARG_SECTION_NUMBER = "section_number";
-//
-//        /**
-//         * Returns a new instance of this fragment for the given section
-//         * number.
-//         */
-//        public static PlaceholderFragment newInstance(int sectionNumber) {
-//            PlaceholderFragment fragment = new PlaceholderFragment();
-//            Bundle args = new Bundle();
-//            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-//            fragment.setArguments(args);
-//            return fragment;
-//        }
-//
-//        public PlaceholderFragment() {
-//        }
-//
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                                 Bundle savedInstanceState) {
-//            View rootView = inflater.inflate(R.layout.fragment_cardio, container, false);
-//            return rootView;
-//        }
-//
-//        @Override
-//        public void onAttach(Activity activity) {
-//            super.onAttach(activity);
-//            ((MainActivity) activity).onSectionAttached(
-//                    getArguments().getInt(ARG_SECTION_NUMBER));
-//        }
-//    }
-
-   /* @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        initNavigationDrawer();
-        ButterKnife.inject(this);
-
-        int actionBar = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
-        TextView actionBarTextView = (TextView) getWindow().findViewById(actionBar);
-
-        contentFrame.setVisibility(View.VISIBLE);
-    }
-
-    private void initNavigationDrawer() {
-        NavigationDrawerFragment navigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-//        Set up the drawer.
-        navigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
-
-        onNavigationDrawerItemSelected(RoutinesFragment.class);
+    protected void onDestroy() {
+        Log.i(TAG, "[ACTIVITY] onDestroy");
+        super.onDestroy();
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(final Class<?> fragment) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-//                Update the main content by replacing fragments
-                if (fragment != null) {
-                    android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.container, Fragment.instantiate(getApplicationContext(), fragment.getName()));
-                    transaction.commit();
-                }
-            }
-        });
+    protected void onStop() {
+        Log.i(TAG, "[ACTIVITY] onStop");
+        super.onStop();
     }
 
-    public void closeKeyBoard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        View v = getCurrentFocus();
-        if (v == null)
-            return;
-        imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-    }*/
+    private void stopStepService() {
+        Log.i(TAG, "[SERVICE] Stop");
+        if (mService != null) {
+            Log.i(TAG, "[SERVICE] stopService");
+            stopService(new Intent(MainActivity.this,
+                    CaloriesService.class));
+        }
+        mIsRunning = false;
+    }
+
+//    private static final int STEPS_MSG = 1;
+//    private static final int CALORIES_MSG = 2;
+//
+//    private Handler mHandler = new Handler() {
+//        @Override
+//        public void handleMessage(Message message) {
+//            switch (message.what) {
+//                case STEPS_MSG:
+//                    LogUtils.LOGE(TAG, "value " + (int) message.arg1);
+//                    break;
+//            }
+//        }
+//    };
 
 }

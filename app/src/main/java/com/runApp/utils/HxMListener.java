@@ -9,7 +9,7 @@ import com.runApp.models.HxMMessage;
  */
 public interface HxMListener {
 
-    public void sendMessage(final HxMMessage hxMMessage);
+    public void receiveValues(final HxMMessage hxMMessage);
 
     public void socketClosed();
 

@@ -18,12 +18,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.runApp.R;
 import com.runApp.adapters.NavigationDrawerAdapter;
 import com.runApp.utils.Constants;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnItemClick;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -53,8 +56,10 @@ public class NavigationDrawerFragment extends Fragment {
      */
     private ActionBarDrawerToggle mDrawerToggle;
 
+    @InjectView(R.id.navigation_drawer_list)
+    ListView mDrawerListView;
+
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerListView;
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = Constants.HOME_FRAGMENT;
@@ -90,16 +95,18 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-//        mDrawerListView.setAdapter(new NavigationAdapter());
-        return mDrawerListView;
+        return inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.inject(this, view);
+    }
+
+    @OnItemClick(R.id.navigation_drawer_list)
+    void listItemClicked(int position) {
+        selectItem(position);
     }
 
     public boolean isDrawerOpen() {

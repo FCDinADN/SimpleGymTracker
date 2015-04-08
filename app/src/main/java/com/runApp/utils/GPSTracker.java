@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 
+import com.runApp.R;
 import com.runApp.database.GymDatabaseHelper;
 import com.runApp.models.ComplexLocation;
 
@@ -90,7 +91,8 @@ public class GPSTracker implements LocationListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ComplexLocation(latitude, longitude, UserUtils.getActualSpeed(), UserUtils.getExerciseNumber());
+//        return new ComplexLocation(latitude, longitude, UserUtils.getActualSpeed(), UserUtils.getExerciseNumber());
+        return new ComplexLocation(latitude, longitude, UserUtils.getExerciseNumber());
     }
 
     public void stopUsingGPS() {
@@ -126,7 +128,8 @@ public class GPSTracker implements LocationListener {
 
         //Add to DB only if it is tracking
         if (UserUtils.isTracking()) {
-            ComplexLocation complexLocation = new ComplexLocation(location.getLatitude(), location.getLongitude(), UserUtils.getActualSpeed(), UserUtils.getExerciseNumber());
+//            ComplexLocation complexLocation = new ComplexLocation(location.getLatitude(), location.getLongitude(), UserUtils.getActualSpeed(), UserUtils.getExerciseNumber());
+            ComplexLocation complexLocation = new ComplexLocation(location.getLatitude(), location.getLongitude(), UserUtils.getExerciseNumber());
             if (mLocationListener != null) {
                 mLocationListener.locationChanged(complexLocation);
             }
@@ -156,8 +159,8 @@ public class GPSTracker implements LocationListener {
     public void showSettingsDialog(final ActionBarActivity activity) {
         LogUtils.LOGE(TAG, "showDialog");
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-        alertDialog.setTitle("dialog title");
-        alertDialog.setMessage("dialog message");
+        alertDialog.setTitle(activity.getString(R.string.dialog_no_location_title));
+        alertDialog.setMessage(activity.getString(R.string.dialog_no_location_text));
         alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

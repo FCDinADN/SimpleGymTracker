@@ -110,7 +110,7 @@ public class GymDatabaseHelper {
 
         insertBuilder.withValue(GymDBContract.LocationsColumns.LATITUDE, complexLocation.getLatitude());
         insertBuilder.withValue(GymDBContract.LocationsColumns.LONGITUDE, complexLocation.getLongitude());
-        insertBuilder.withValue(GymDBContract.LocationsColumns.SPEED, complexLocation.getSpeed());
+//        insertBuilder.withValue(GymDBContract.LocationsColumns.SPEED, complexLocation.getSpeed());
         insertBuilder.withValue(GymDBContract.LocationsColumns.NUMBER, complexLocation.getExerciseNumber());
         insertBuilder.withValue(GymDBContract.LocationsColumns.GOOGLE_RESPONSE, complexLocation.getGoogle_url());
 

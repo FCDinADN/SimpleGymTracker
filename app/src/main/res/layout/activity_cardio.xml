@@ -8,9 +8,8 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="48dp"
-        android:layout_alignParentTop="true"
         android:id="@+id/cardio_top"
-        android:background="@color/primary_color">
+        android:background="@color/actionbar_background">
 
         <TextView
             android:layout_width="wrap_content"
@@ -19,7 +18,7 @@
             android:text="00:00:00"
             android:layout_centerInParent="true"
             android:paddingTop="3dp"
-            android:textColor="@color/white"
+            android:textColor="@color/actionbar_text_color"
             android:textSize="22sp"
             />
 
@@ -33,7 +32,8 @@
             android:contentDescription="@null"
             android:layout_centerVertical="true"
             android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginRight="5dp"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <FrameLayout

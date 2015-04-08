@@ -4,8 +4,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.provider.Settings;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.NumberPicker;
+import android.widget.TextView;
+
+import com.runApp.R;
 
 /**
  * Created by Rares on 13.12.14.
@@ -193,6 +201,43 @@ public class DialogHandler {
         progress.setCancelable(false);
         progress.show();
         return progress;
+    }
+
+    public static void showNoBluetoothDialog(final Activity activity) {
+        showConfirmDialog(activity,
+                R.string.dialog_no_bluetooth_title,
+                R.string.dialog_no_bluetooth_text,
+                R.string.dialog_ok,
+                R.string.dialog_cancel,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+                            activity.startActivity(intent);
+                        }
+                    }
+                });
+    }
+
+    public static void showNumberPickerDialog(final Activity activity, int title, int maxValue, int minValue, int value, DialogInterface.OnClickListener callback, NumberPicker.OnValueChangeListener valueCallback) {
+        if (activity != null) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            final View v = LayoutInflater.from(activity).inflate(R.layout.number_picker, null);
+            final NumberPicker np = (NumberPicker) v.findViewById(R.id.numberPicker1);
+            final TextView titleView = ((TextView) v.findViewById(R.id.number_picker_title));
+            np.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+            builder.setView(v);
+            builder.setPositiveButton(R.string.dialog_ok, callback);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            np.setMaxValue(maxValue);
+            np.setMinValue(minValue);
+            np.setWrapSelectorWheel(false);
+            np.setValue(value);
+            np.setOnValueChangedListener(valueCallback);
+            titleView.setText(title);
+        }
     }
 
 }

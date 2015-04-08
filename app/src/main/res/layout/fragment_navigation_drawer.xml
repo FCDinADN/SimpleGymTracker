@@ -1,11 +1,18 @@
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:layout_width="fill_parent"
-          android:layout_height="match_parent"
-          android:choiceMode="singleChoice"
-          android:divider="@color/primary_color"
-          android:dividerHeight="1dp"
-          android:background="@color/actionbar_text_color"
-          android:listSelector="@drawable/nav_item_selector"
-          android:cacheColorHint="@android:color/transparent"
-          tools:context=".NavigationDrawerFragment"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_height="match_parent"
+              android:layout_width="@dimen/navigation_drawer_width"
+              android:background="@color/actionbar_text_color">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/navigation_drawer_list"
+        android:choiceMode="singleChoice"
+        android:divider="@color/primary_color"
+        android:dividerHeight="-1dp"
+        android:listSelector="@drawable/nav_item_selector"
+        android:cacheColorHint="@android:color/transparent"
+        android:background="@color/actionbar_text_color"
+        tools:context=".NavigationDrawerFragment"/>
+</LinearLayout>
