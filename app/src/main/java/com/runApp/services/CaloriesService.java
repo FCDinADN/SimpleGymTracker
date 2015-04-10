@@ -1,13 +1,10 @@
 package com.runApp.services;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Binder;
@@ -17,7 +14,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.runApp.R;
-import com.runApp.activities.MainActivity;
 import com.runApp.pedometer.StepDetecterWithAPI;
 import com.runApp.utils.LogUtils;
 
@@ -27,8 +23,8 @@ import com.runApp.utils.LogUtils;
 public class CaloriesService extends Service {
     private static final String TAG = CaloriesService.class.getSimpleName();
 
-    private PowerManager.WakeLock wakeLock;
-    private NotificationManager mNM;
+    //    private PowerManager.WakeLock wakeLock;
+//    private NotificationManager mNM;
     private StepDetecterWithAPI mStepDetecterWithAPI;
     private SensorManager mSensorManager;
 
@@ -47,9 +43,9 @@ public class CaloriesService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        acquireWakeLock();
+//        acquireWakeLock();
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mStepDetecterWithAPI = new StepDetecterWithAPI(mSensorManager);
@@ -59,8 +55,8 @@ public class CaloriesService extends Service {
 
         // Register our receiver for the ACTION_SCREEN_OFF action. This will make our receiver
         // code be called whenever the phone enters standby mode.
-//        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
-//        registerReceiver(mReceiver, filter);
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(mReceiver, filter);
 
         // Tell the user we started.
         Toast.makeText(this, getText(R.string.started), Toast.LENGTH_SHORT).show();
@@ -78,11 +74,11 @@ public class CaloriesService extends Service {
         Log.i(TAG, "[SERVICE] onDestroy");
 
         // Unregister our receiver.
-//        unregisterReceiver(mReceiver);
-//        unregisterDetector();
-        mNM.cancel(R.string.app_name);
+        unregisterReceiver(mReceiver);
+        unregisterDetector();
+//        mNM.cancel(R.string.app_name);
 
-        wakeLock.release();
+//        wakeLock.release();
 
         super.onDestroy();
 
@@ -150,8 +146,8 @@ public class CaloriesService extends Service {
                 // Unregisters the listener and registers it again.
                 CaloriesService.this.unregisterDetector();
                 CaloriesService.this.registerDetector();
-                wakeLock.release();
-                acquireWakeLock();
+//                wakeLock.release();
+//                acquireWakeLock();
             }
         }
     };
@@ -160,39 +156,40 @@ public class CaloriesService extends Service {
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         int wakeFlags;
         wakeFlags = PowerManager.FULL_WAKE_LOCK;
-        wakeLock = pm.newWakeLock(wakeFlags, TAG);
-        wakeLock.acquire();
+//        wakeLock = pm.newWakeLock(wakeFlags, TAG);
+//        wakeLock.acquire();
     }
 
     /**
      * Show a notification while this service is running.
+     * //
      */
-    private void showNotification(int value, float calories) {
-        CharSequence text = getText(R.string.app_name);
-        Notification notification = new Notification(R.drawable.ic_notification, null,
-                System.currentTimeMillis());
-        notification.flags = Notification.FLAG_AUTO_CANCEL;
-        //TODO uncomment the following lines
-//        notification.defaults = Notification.DEFAULT_SOUND
-//                | Notification.DEFAULT_LIGHTS
-//                | Notification.DEFAULT_VIBRATE;
-        Intent pedometerIntent = new Intent();
-        pedometerIntent.setComponent(new ComponentName(this, MainActivity.class));
-        pedometerIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                pedometerIntent, 0);
-        notification.setLatestEventInfo(this, text,
-                (getText(R.string.notification_subtitle) + "[" + value + "] " + calories), contentIntent);
-
-        mNM.notify(R.string.app_name, notification);
-    }
+//    private void showNotification(int value, float calories) {
+//        CharSequence text = getText(R.string.app_name);
+//        Notification notification = new Notification(R.drawable.ic_notification, null,
+//                System.currentTimeMillis());
+//        notification.flags = Notification.FLAG_AUTO_CANCEL;
+//        //TODO uncomment the following lines
+////        notification.defaults = Notification.DEFAULT_SOUND
+////                | Notification.DEFAULT_LIGHTS
+////                | Notification.DEFAULT_VIBRATE;
+//        Intent pedometerIntent = new Intent();
+//        pedometerIntent.setComponent(new ComponentName(this, MainActivity.class));
+//        pedometerIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+//                pedometerIntent, 0);
+//        notification.setLatestEventInfo(this, text,
+//                (getText(R.string.notification_subtitle) + "[" + value + "] " + calories), contentIntent);
+//
+//        mNM.notify(R.string.app_name, notification);
+//    }
 
     private StepDetecterWithAPI.Listener mListener = new StepDetecterWithAPI.Listener() {
         @Override
         public void stepsChanged(int value, float calories) {
             LogUtils.LOGE(TAG, "[SERVICE] stepsChanged");
-            if (value % 100 == 0)
-                showNotification(value, calories);
+//            if (value % 100 == 0)
+//                showNotification(value, calories);
         }
 
         @Override
@@ -200,4 +197,6 @@ public class CaloriesService extends Service {
 
         }
     };
+
+
 }

@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.runApp.R;
-import com.runApp.fragments.AddCommentFragment;
+import com.runApp.ui.fragments.AddCommentFragment;
 import com.runApp.models.Log;
 
 import java.util.ArrayList;

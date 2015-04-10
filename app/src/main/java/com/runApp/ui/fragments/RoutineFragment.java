@@ -1,4 +1,4 @@
-package com.runApp.fragments;
+package com.runApp.ui.fragments;
 
 /**
  * Created by Rares on 28/11/14.

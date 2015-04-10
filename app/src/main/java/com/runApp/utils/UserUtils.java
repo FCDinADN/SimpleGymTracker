@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Rares on 20/02/15.
@@ -30,6 +32,18 @@ public class UserUtils {
     private static final String STEPS_NUMBER = "steps_number";
     private static final String BURNT_CALORIES = "calories";
     private static final String IS_SERVICE_RUNNING = "is_service_running";
+    private static final String ALARM_TIME = "alarm_time";
+
+    private static SharedPreferences mUserPrefs;
+    private static Date alarmTime = null;
+
+    private static SharedPreferences getPrefs() {
+        if (mUserPrefs == null) {
+            mUserPrefs = Utils.getContext().getSharedPreferences(PREFERENCES,
+                    Context.MODE_PRIVATE);
+        }
+        return mUserPrefs;
+    }
 
     public static boolean isServiceRunning() {
         SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
@@ -222,6 +236,32 @@ public class UserUtils {
     public static void setIsTracking() {
         SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         sharedPreferences.edit().putBoolean(IS_TRACKING, !isTracking()).apply();
+    }
+
+    public static void setAlarmTime(String alarmTimeSet) {
+        SharedPreferences.Editor editor = getPrefs().edit();
+        if (alarmTimeSet != null && !"".equals(alarmTimeSet)) {
+            try {
+                alarmTime = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).parse(alarmTimeSet);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            editor.putString(ALARM_TIME, alarmTimeSet).apply();
+        } else {
+            alarmTime = null;
+        }
+    }
+
+    public static Date getAlarmTime() {
+        if (alarmTime == null) {
+            try {
+                alarmTime = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).parse(
+                        getPrefs().getString(ALARM_TIME, ""));
+            } catch (ParseException e) {
+                return null;
+            }
+        }
+        return alarmTime;
     }
 
 }

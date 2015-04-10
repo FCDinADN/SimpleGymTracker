@@ -1,4 +1,4 @@
-package com.runApp.fragments;
+package com.runApp.ui.fragments;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -16,8 +16,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.runApp.R;
-import com.runApp.activities.CardioActivity;
-import com.runApp.activities.MainActivity;
+import com.runApp.ui.activities.CardioActivity;
+import com.runApp.ui.activities.MainActivity;
 import com.runApp.models.ComplexLocation;
 import com.runApp.utils.DialogHandler;
 import com.runApp.utils.GPSTracker;

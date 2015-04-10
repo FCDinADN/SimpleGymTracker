@@ -14,8 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.runApp.R;
-import com.runApp.fragments.AddCommentFragment;
-import com.runApp.fragments.FriendFullProfileFragment;
+import com.runApp.ui.fragments.AddCommentFragment;
+import com.runApp.ui.fragments.FriendFullProfileFragment;
 import com.runApp.models.Routine;
 import com.runApp.utils.FontUtils;
 

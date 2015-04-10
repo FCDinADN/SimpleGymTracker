@@ -30,6 +30,23 @@
         <com.runApp.ui.FontLatoTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/edit_profile_alarm"
+            android:hint="SET ALARM"
+            android:textColorHint="@color/white"
+            android:minHeight="30dp"
+            android:paddingStart="5dp"
+            android:paddingLeft="5dp"
+            android:singleLine="true"
+            android:paddingBottom="13dp"
+            android:layout_marginBottom="19dp"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:background="@drawable/edittext_underline"
+            android:gravity="center"/>
+
+        <com.runApp.ui.FontLatoTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/edit_profile_age"
             android:hint="Age"
             android:textColorHint="@color/white"

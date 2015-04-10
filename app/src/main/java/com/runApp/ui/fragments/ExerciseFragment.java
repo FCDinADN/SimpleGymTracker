@@ -1,4 +1,4 @@
-package com.runApp.fragments;
+package com.runApp.ui.fragments;
 
 import android.content.Context;
 import android.database.Cursor;

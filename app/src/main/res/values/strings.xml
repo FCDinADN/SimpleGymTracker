@@ -89,10 +89,11 @@
     <string name="dialog_discard_workout_title">Discard Activity</string>
     <string name="dialog_discard_workout_text">Are you sure you want to discard this activity?</string>
     <string name="dialog_discard_workout_button">DISCARD</string>
-    <string name="dialog_no_bluetooth_title">WARNING</string>
+    <string name="dialog_no_bluetooth_title">Enable Bluetooth</string>
     <string name="dialog_no_bluetooth_text">Please turn on your bluetooth and pair the device before starting an activity.</string>
     <string name="dialog_no_location_title">WARNING</string>
     <string name="dialog_no_location_text">Please turn on your location before starting an activity.</string>
+    <string name="dialog_go_to_settings">Go to Settings</string>
 
     <!-- Workout -->
     <string name="routine_workout_exercises">Exercises</string>

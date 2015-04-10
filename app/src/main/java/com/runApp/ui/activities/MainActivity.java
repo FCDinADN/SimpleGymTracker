@@ -1,4 +1,4 @@
-package com.runApp.activities;
+package com.runApp.ui.activities;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -20,12 +20,12 @@ import android.widget.TextView;
 
 import com.runApp.R;
 import com.runApp.database.GymDatabaseHelper;
-import com.runApp.fragments.CardioFragment;
-import com.runApp.fragments.HistoryFragment;
-import com.runApp.fragments.NavigationDrawerFragment;
-import com.runApp.fragments.PathGoogleMapFragment;
-import com.runApp.fragments.SettingsFragment;
-import com.runApp.fragments.StartActivityFragment;
+import com.runApp.ui.fragments.CardioFragment;
+import com.runApp.ui.fragments.HistoryFragment;
+import com.runApp.ui.fragments.NavigationDrawerFragment;
+import com.runApp.ui.fragments.PathGoogleMapFragment;
+import com.runApp.ui.fragments.SettingsFragment;
+import com.runApp.ui.fragments.StartActivityFragment;
 import com.runApp.models.ComplexLocation;
 import com.runApp.pedometer.Utils;
 import com.runApp.services.CaloriesService;

@@ -1,4 +1,4 @@
-package com.runApp.fragments;
+package com.runApp.ui.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.runApp.R;
-import com.runApp.activities.CardioActivity;
+import com.runApp.ui.activities.CardioActivity;
 import com.runApp.database.GymDatabaseHelper;
 import com.runApp.models.History;
 import com.runApp.models.HxMMessage;

@@ -1,4 +1,4 @@
-package com.runApp.activities;
+package com.runApp.ui.activities;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.runApp.R;
-import com.runApp.fragments.CardioFragment;
-import com.runApp.fragments.PathGoogleMapFragment;
+import com.runApp.ui.fragments.CardioFragment;
+import com.runApp.ui.fragments.PathGoogleMapFragment;
 import com.runApp.utils.DialogHandler;
 import com.runApp.utils.GPSTracker;
 

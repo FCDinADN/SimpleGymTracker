@@ -3,9 +3,9 @@ package com.runApp.utils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.provider.Settings;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -207,14 +207,14 @@ public class DialogHandler {
         showConfirmDialog(activity,
                 R.string.dialog_no_bluetooth_title,
                 R.string.dialog_no_bluetooth_text,
-                R.string.dialog_ok,
+                R.string.dialog_go_to_settings,
                 R.string.dialog_cancel,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == DialogInterface.BUTTON_POSITIVE) {
-                            Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
-                            activity.startActivity(intent);
+                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            activity.startActivity(enableBtIntent);
                         }
                     }
                 });

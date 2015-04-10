@@ -99,6 +99,8 @@ public class StepDetecterWithAPI implements SensorEventListener {
         actualCalories = calories;
         LogUtils.LOGE("altitude", altitude + " actualCalories " + /*actualCalories + */" new caloeries " + calories + " VO2max " + VO2max + " distance " + distance + " slope " + ((altitude - previousAltitude) / distance));
         previousAltitude = altitude;
+
+        UserUtils.setBurntCalories(calories);
         return calories;
     }
 

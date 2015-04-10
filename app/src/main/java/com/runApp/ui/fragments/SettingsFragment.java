@@ -1,5 +1,6 @@
-package com.runApp.fragments;
+package com.runApp.ui.fragments;
 
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,11 +11,20 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.runApp.R;
+import com.runApp.receivers.AlarmReceiver;
 import com.runApp.utils.Constants;
 import com.runApp.utils.DialogHandler;
 import com.runApp.utils.UserUtils;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -27,6 +37,8 @@ import butterknife.OnClick;
 public class SettingsFragment extends Fragment {
     private static final String TAG = SettingsFragment.class.getSimpleName();
 
+    @InjectView(R.id.edit_profile_alarm)
+    TextView alarmTime;
     @InjectView(R.id.edit_profile_age)
     TextView age;
     @InjectView(R.id.edit_profile_weight)
@@ -60,6 +72,27 @@ public class SettingsFragment extends Fragment {
         weight.setTag(false);
         height.setTag(false);
         age.setTag(false);
+
+        if (UserUtils.getAlarmTime() != null) {
+            alarmTime.setText(SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).format(UserUtils.getAlarmTime()));
+        }
+    }
+
+    @OnClick(R.id.edit_profile_alarm)
+    void setAlarm() {
+        AlarmReceiver.cancelAlarm();
+        final TimePickerDialogFragment timePickerDialogFragment = new TimePickerDialogFragment();
+        timePickerDialogFragment.setOnTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                Calendar calendar = new GregorianCalendar();
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+                calendar.set(Calendar.SECOND, 0);
+                alarmTime.setText(SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).format(calendar.getTime()));
+            }
+        });
+        timePickerDialogFragment.show(getActivity().getSupportFragmentManager(), "time");
     }
 
     @OnClick(R.id.edit_profile_age)
@@ -161,5 +194,8 @@ public class SettingsFragment extends Fragment {
         UserUtils.setUserAge(tempAgeValue);
         UserUtils.setUserHeight(tempHeightValue);
         UserUtils.setUserWeight(tempWeightValue);
+        UserUtils.setAlarmTime(alarmTime.getText().toString());
+        AlarmReceiver.setAlarm(getActivity());
+        Toast.makeText(getActivity(), "Profile saved!", Toast.LENGTH_SHORT).show();
     }
 }

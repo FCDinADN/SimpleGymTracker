@@ -1,4 +1,4 @@
-package com.runApp.fragments;
+package com.runApp.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

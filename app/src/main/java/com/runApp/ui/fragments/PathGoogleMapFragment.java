@@ -1,4 +1,4 @@
-package com.runApp.fragments;
+package com.runApp.ui.fragments;
 
 import android.database.Cursor;
 import android.graphics.Color;
@@ -26,8 +26,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.runApp.activities.CardioActivity;
-import com.runApp.activities.MainActivity;
+import com.runApp.ui.activities.CardioActivity;
+import com.runApp.ui.activities.MainActivity;
 import com.runApp.R;
 import com.runApp.database.GymDBContract;
 import com.runApp.database.GymDatabaseHelper;
