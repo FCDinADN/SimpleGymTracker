@@ -4,9 +4,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.widget.Toast;
 
-import com.runApp.utils.LogUtils;
-import com.runApp.utils.UserUtils;
+import com.runApp.utils.*;
 
 import java.util.ArrayList;
 
@@ -59,7 +59,7 @@ public class StepDetecterWithAPI implements SensorEventListener {
                 LogUtils.LOGE("API stepCounter", stepCounter + "");
                 getPressure = true;
 
-                UserUtils.setStepsNumber(stepCounter);
+                Toast.makeText(com.runApp.utils.Utils.getContext(), "steps:" + stepCounter, Toast.LENGTH_SHORT).show();
                 break;
             case Sensor.TYPE_PRESSURE:
                 if (getPressure) {
@@ -69,7 +69,7 @@ public class StepDetecterWithAPI implements SensorEventListener {
 
                     pressure = sensorEvent.values[0];
                     if (previousAltitude == 0) {
-                        previousAltitude = sensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure);
+                        previousAltitude = (float) Math.round(sensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure) * 100.0f) / 100.0f;
                         LogUtils.LOGE("FIRST TIME PREVIOUS", "" + previousAltitude);
                     }
                     getPressure = false;
@@ -91,8 +91,9 @@ public class StepDetecterWithAPI implements SensorEventListener {
         if (distance == 0)
             return 0;//0;
 
-        float altitude = sensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure);
-        LogUtils.LOGE("ALTITUDE", "previous " + previousAltitude + " actual " + altitude + " slope " + ((altitude - previousAltitude) / distance));
+        float altitude = (float) Math.round(sensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure) * 100.0f) / 100.0f;
+        float slope = Float.valueOf(String.format("%.2f", (altitude - previousAltitude) / distance));
+        LogUtils.LOGE("ALTITUDE", "previous " + previousAltitude + " actual " + altitude + " slope " + slope);
         float calories = (0.05f * ((altitude - previousAltitude) / distance) + 0.95f) * UserUtils.getUserWeight() + TREADMILL_FACTOR;
         calories *= (distance / 1000);
         float VO2max = 15.3f * (UserUtils.getUserMaximumHeartRate() / UserUtils.getUserRestingHeartHeartRate());
@@ -100,7 +101,6 @@ public class StepDetecterWithAPI implements SensorEventListener {
         LogUtils.LOGE("altitude", altitude + " actualCalories " + /*actualCalories + */" new caloeries " + calories + " VO2max " + VO2max + " distance " + distance + " slope " + ((altitude - previousAltitude) / distance));
         previousAltitude = altitude;
 
-        UserUtils.setBurntCalories(calories);
         return calories;
     }
 
@@ -123,5 +123,9 @@ public class StepDetecterWithAPI implements SensorEventListener {
         for (Listener listener : mListeners) {
             listener.stepsChanged(stepCounter, actualCalories);
         }
+    }
+
+    public void resetCounterStep(){
+        counterSteps = 0;
     }
 }

@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.runApp.R;
 import com.runApp.database.GymDatabaseHelper;
+import com.runApp.receivers.AlarmReceiver;
 import com.runApp.ui.fragments.CardioFragment;
 import com.runApp.ui.fragments.HistoryFragment;
 import com.runApp.ui.fragments.NavigationDrawerFragment;
@@ -135,7 +136,15 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onResume() {
         super.onResume();
+
         UserUtils.checkDate();
+
+        if (UserUtils.isFirstTime()) {
+            LogUtils.LOGE(TAG,"setResetAlarm");
+            AlarmReceiver.setResetAlarm(this);
+            //TODO remove below line
+            UserUtils.setIsFirstTime(false);
+        }
 
         // Read from preferences if the service was running on the last onPause
         mIsRunning = UserUtils.isServiceRunning();
@@ -218,7 +227,7 @@ public class MainActivity extends ActionBarActivity
 //                getSupportActionBar().setTitle(mTitle);
 //                break;
                 default:
-                    fragment = new StartActivityFragment();
+                    fragment = new SettingsFragment();
                     mTitle = getString(R.string.cardio_selection);
             }
 

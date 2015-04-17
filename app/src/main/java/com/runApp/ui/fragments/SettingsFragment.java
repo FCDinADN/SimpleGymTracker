@@ -7,8 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -28,7 +26,6 @@ import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 /**
@@ -46,15 +43,16 @@ public class SettingsFragment extends Fragment {
     @InjectView(R.id.edit_profile_height)
     TextView height;
     @InjectView(R.id.edit_profile_man)
-    CheckBox man;
+    TextView man;
     @InjectView(R.id.edit_profile_woman)
-    CheckBox woman;
+    TextView woman;
     @InjectView(R.id.edit_profile_save)
     TextView save;
 
     private int tempHeightValue = -1;
     private int tempWeightValue = -1;
     private int tempAgeValue = -1;
+    private boolean isUserMan = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,15 +64,36 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.inject(this, view);
 
-        man.setTag(false);
-        woman.setTag(false);
+        setValues();
+    }
 
-        weight.setTag(false);
-        height.setTag(false);
-        age.setTag(false);
-
+    private void setValues() {
+        tempAgeValue = UserUtils.getUserAge();
+        tempWeightValue = UserUtils.getUserWeight();
+        tempHeightValue = UserUtils.getUserHeight();
+        age.setText(tempAgeValue + " years old");
+        weight.setText(tempWeightValue + " kg");
+        height.setText(tempHeightValue + " cm");
+        if (!UserUtils.getUserGender().equals("Man")) {
+            changeUserGender();
+        }
         if (UserUtils.getAlarmTime() != null) {
             alarmTime.setText(SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).format(UserUtils.getAlarmTime()));
+        }
+    }
+
+    private void changeUserGender() {
+        isUserMan = !isUserMan;
+        if (isUserMan) {
+            man.setBackground(getResources().getDrawable(R.drawable.edittext_underline));
+            man.setTextColor(getResources().getColor(R.color.white));
+            woman.setBackground(null);
+            woman.setTextColor(getResources().getColor(R.color.almost_light_grey));
+        } else {
+            woman.setBackground(getResources().getDrawable(R.drawable.edittext_underline));
+            woman.setTextColor(getResources().getColor(R.color.white));
+            man.setBackground(null);
+            man.setTextColor(getResources().getColor(R.color.almost_light_grey));
         }
     }
 
@@ -101,18 +120,12 @@ public class SettingsFragment extends Fragment {
         DialogHandler.showNumberPickerDialog(getActivity(), R.string.settings_age, Constants.MAXIMUM_AGE, Constants.MINIMUM_AGE, defaultAge, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (((boolean) age.getTag())) {
-                    age.setText(tempAgeValue + " years old");
-                    age.setTag(false);
-                } else {
-                    age.setText(UserUtils.getUserAge() + " years old");
-                }
+                age.setText(tempAgeValue + " years old");
             }
         }, new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int i, int i1) {
                 tempAgeValue = numberPicker.getValue();
-                age.setTag(true);
             }
         });
     }
@@ -123,18 +136,12 @@ public class SettingsFragment extends Fragment {
         DialogHandler.showNumberPickerDialog(getActivity(), R.string.settings_height, Constants.MAXIMUM_HEIGHT, Constants.MINIMUM_HEIGHT, defaultHeight, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (((boolean) height.getTag())) {
-                    height.setText(tempHeightValue + " cm");
-                    height.setTag(false);
-                } else {
-                    height.setText(UserUtils.getUserHeight() + " cm");
-                }
+                height.setText(tempHeightValue + " cm");
             }
         }, new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int i, int i1) {
                 tempHeightValue = numberPicker.getValue();
-                height.setTag(true);
             }
         });
     }
@@ -145,48 +152,19 @@ public class SettingsFragment extends Fragment {
         DialogHandler.showNumberPickerDialog(getActivity(), R.string.settings_weight, Constants.MAXIMUM_WEIGHT, Constants.MINIMUM_WEIGHT, defaultWeight, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (((boolean) weight.getTag())) {
-                    weight.setText(tempWeightValue + " kg");
-                    weight.setTag(false);
-                } else {
-                    weight.setText(UserUtils.getUserWeight() + " kg");
-                }
+                weight.setText(tempWeightValue + " kg");
             }
         }, new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int i, int i1) {
                 tempWeightValue = numberPicker.getValue();
-                weight.setTag(true);
             }
         });
     }
 
-    @OnCheckedChanged({R.id.edit_profile_man, R.id.edit_profile_woman})
-    void genderChanged(CompoundButton view) {
-        switch (view.getId()) {
-            case R.id.edit_profile_man:
-                if (!(boolean) woman.getTag()) {
-                    man.setTag(true);
-                    if (woman.isChecked()) {
-                        woman.setChecked(false);
-                        man.setChecked(true);
-                    }
-                } else {
-                    woman.setTag(false);
-                }
-                break;
-            case R.id.edit_profile_woman:
-                if (!(boolean) man.getTag()) {
-                    woman.setTag(true);
-                    if (man.isChecked()) {
-                        man.setChecked(false);
-                        woman.setChecked(true);
-                    }
-                } else {
-                    man.setTag(false);
-                }
-                break;
-        }
+    @OnClick({R.id.edit_profile_man, R.id.edit_profile_woman})
+    void genderChanged() {
+        changeUserGender();
     }
 
     @OnClick(R.id.edit_profile_save)
@@ -195,6 +173,11 @@ public class SettingsFragment extends Fragment {
         UserUtils.setUserHeight(tempHeightValue);
         UserUtils.setUserWeight(tempWeightValue);
         UserUtils.setAlarmTime(alarmTime.getText().toString());
+        if (isUserMan) {
+            UserUtils.setUserGender("Man");
+        } else {
+            UserUtils.setUserGender("Woman");
+        }
         AlarmReceiver.setAlarm(getActivity());
         Toast.makeText(getActivity(), "Profile saved!", Toast.LENGTH_SHORT).show();
     }

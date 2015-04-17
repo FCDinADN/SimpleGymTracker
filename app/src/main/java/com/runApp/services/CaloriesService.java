@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Binder;
@@ -16,6 +15,7 @@ import android.widget.Toast;
 import com.runApp.R;
 import com.runApp.pedometer.StepDetecterWithAPI;
 import com.runApp.utils.LogUtils;
+import com.runApp.utils.UserUtils;
 
 /**
  * Created by Rares on 03/04/15.
@@ -55,8 +55,8 @@ public class CaloriesService extends Service {
 
         // Register our receiver for the ACTION_SCREEN_OFF action. This will make our receiver
         // code be called whenever the phone enters standby mode.
-        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(mReceiver, filter);
+//        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+//        registerReceiver(mReceiver, filter);
 
         // Tell the user we started.
         Toast.makeText(this, getText(R.string.started), Toast.LENGTH_SHORT).show();
@@ -74,7 +74,7 @@ public class CaloriesService extends Service {
         Log.i(TAG, "[SERVICE] onDestroy");
 
         // Unregister our receiver.
-        unregisterReceiver(mReceiver);
+//        unregisterReceiver(mReceiver);
         unregisterDetector();
 //        mNM.cancel(R.string.app_name);
 
@@ -187,7 +187,9 @@ public class CaloriesService extends Service {
     private StepDetecterWithAPI.Listener mListener = new StepDetecterWithAPI.Listener() {
         @Override
         public void stepsChanged(int value, float calories) {
-            LogUtils.LOGE(TAG, "[SERVICE] stepsChanged");
+            LogUtils.LOGE(TAG, "[SERVICE] stepsChanged to " + value);
+            UserUtils.setStepsNumber(value);
+            UserUtils.setBurntCalories(calories);
 //            if (value % 100 == 0)
 //                showNotification(value, calories);
         }

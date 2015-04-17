@@ -220,7 +220,7 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
         caloriesValue.setText("0.0");
         UserUtils.setExerciseNumber(UserUtils.getExerciseNumber() + 1);
         exerciseNumber.setText(UserUtils.getExerciseNumber() + "");
-        date.setText(UserUtils.getDate());
+        date.setText(UserUtils.getTodayDateString());
         startTime = new Date();
         entryValues = new ArrayList<>();
 
@@ -240,7 +240,7 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
     void statsClicked() {
         Bundle mBundle = new Bundle();
         mBundle.putInt(CubicLineChartFragment.EXERCISE_NUMBER, UserUtils.getExerciseNumber());
-        mBundle.putString(CubicLineChartFragment.EXERCISE_DATE, UserUtils.getDate());
+        mBundle.putString(CubicLineChartFragment.EXERCISE_DATE, UserUtils.getTodayDateString());
         mBundle.putIntegerArrayList(CubicLineChartFragment.EXERCISE_VALUES, entryValues);
         historyChartFragment.setArguments(mBundle);
         getActivity().getSupportFragmentManager().beginTransaction()

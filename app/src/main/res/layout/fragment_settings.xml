@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
     >
@@ -8,12 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/background"/>
+        android:src="@drawable/background"
+        android:contentDescription="@null"/>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@color/white_25p_transparent"/>
+        android:src="@color/white_25p_transparent"
+        android:contentDescription="@null"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,13 +34,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_profile_alarm"
-            android:hint="SET ALARM"
+            android:hint="@string/settgins_set_alarm"
             android:textColorHint="@color/white"
             android:minHeight="30dp"
             android:paddingStart="5dp"
-            android:paddingLeft="5dp"
+            android:paddingEnd="5dp"
             android:singleLine="true"
-            android:paddingBottom="13dp"
+            android:paddingBottom="10dp"
             android:layout_marginBottom="19dp"
             android:textSize="18sp"
             android:textColor="@color/white"
@@ -48,13 +51,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_profile_age"
-            android:hint="Age"
+            android:hint="@string/settings_age"
             android:textColorHint="@color/white"
             android:minHeight="30dp"
             android:paddingStart="5dp"
-            android:paddingLeft="5dp"
+            android:paddingEnd="5dp"
             android:singleLine="true"
-            android:paddingBottom="13dp"
+            android:paddingBottom="10dp"
             android:layout_marginBottom="19dp"
             android:textSize="18sp"
             android:textColor="@color/white"
@@ -65,13 +68,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_profile_weight"
-            android:hint="Weight"
+            android:hint="@string/settings_weight"
             android:textColorHint="@color/white"
             android:minHeight="30dp"
             android:paddingStart="5dp"
-            android:paddingLeft="5dp"
+            android:paddingEnd="5dp"
             android:singleLine="true"
-            android:paddingBottom="13dp"
+            android:paddingBottom="10dp"
             android:layout_marginBottom="19dp"
             android:textColor="@color/white"
             android:textSize="18sp"
@@ -82,15 +85,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_profile_height"
-            android:text="Height"
+            android:text="@string/settings_height"
             android:inputType="number"
             android:textColorHint="@color/white"
             android:minHeight="30dp"
             android:paddingStart="5dp"
-            android:paddingLeft="5dp"
+            android:paddingEnd="5dp"
+            app:paddingStart="5dp"
             android:singleLine="true"
             android:textSize="18sp"
-            android:paddingBottom="13dp"
+            android:paddingBottom="10dp"
             android:textColor="@color/white"
             android:background="@drawable/edittext_underline"
             android:gravity="center"/>
@@ -103,23 +107,30 @@
             android:layout_marginTop="19dp"
             android:weightSum="2">
 
-            <CheckBox
+            <com.runApp.ui.FontLatoTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/edit_profile_man"
                 android:textSize="8pt"
                 android:layout_weight="1"
                 android:textColor="@color/white"
-                android:text="Man"/>
+                android:gravity="center"
+                android:layout_marginEnd="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/edittext_underline"
+                android:text="@string/settings_man"/>
 
-            <CheckBox
+            <com.runApp.ui.FontLatoTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/edit_profile_woman"
                 android:layout_weight="1"
                 android:textSize="8pt"
-                android:textColor="@color/white"
-                android:text="Woman"/>
+                android:textColor="@color/almost_light_grey"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:text="@string/settings_woman"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -129,7 +140,7 @@
         android:id="@+id/edit_profile_save"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="SAVE"
+        android:text="@string/settings_save"
         android:gravity="center"
         android:textColor="@color/save_btn_text_color"
         android:textSize="20sp"
