@@ -265,12 +265,19 @@ Eight words: Eat quality food. Increase your protein. Train hard."THE KEY IS FEE
     <string name="quit">Quit</string>
 
     <!-- SETTINGS -->
-    <string name="settgins_set_alarm">Set Alarm</string>
+    <string name="settgins_set_alarm">Notification Time</string>
+    <string name="settings_gender">Gender</string>
     <string name="settings_height">Height</string>
     <string name="settings_weight">Weight</string>
     <string name="settings_age">Age</string>
     <string name="settings_man">Man</string>
     <string name="settings_woman">Woman</string>
     <string name="settings_save">SAVE</string>
+    <string name="settings_cm">cm</string>
+    <string name="settings_kg">kg</string>
+    <string name="settings_yo">years old</string>
+    <string name="settings_activity_level">Activity Level</string>
+    <string name="settings_goal">Goal</string>
+    <string name="settings_needed_calories_title">Your daily needed calories.</string>
 
 </resources>

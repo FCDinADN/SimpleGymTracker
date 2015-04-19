@@ -28,7 +28,6 @@ import com.runApp.ui.fragments.PathGoogleMapFragment;
 import com.runApp.ui.fragments.SettingsFragment;
 import com.runApp.ui.fragments.StartActivityFragment;
 import com.runApp.models.ComplexLocation;
-import com.runApp.pedometer.Utils;
 import com.runApp.services.CaloriesService;
 import com.runApp.utils.Constants;
 import com.runApp.utils.DialogHandler;
@@ -56,8 +55,6 @@ public class MainActivity extends ActionBarActivity
      * True, when service is running.
      */
     private boolean mIsRunning;
-
-    private Utils mUtils;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -91,9 +88,6 @@ public class MainActivity extends ActionBarActivity
         toolbarTitle.setText(R.string.cardio_selection);
 
         mPathGoogleMapFragment = new PathGoogleMapFragment();
-
-        //TODO remove user's age from here
-        UserUtils.setUserAge(23);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);

@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.runApp.R;
+import com.runApp.pedometer.StepDetecterWithAPI;
 import com.runApp.utils.LogUtils;
 import com.runApp.utils.UserUtils;
 
@@ -34,50 +35,21 @@ public class AlarmReceiver extends BroadcastReceiver {
     private static AlarmManager alarmMgr;
     // The pending intent that is triggered when the alarm fires.
     private static PendingIntent notificationAlarmIntent;
-    private static PendingIntent resetAlarmIntent;
 
     private NotificationManager mNM;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        mNM = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        LogUtils.LOGE(TAG, "received! [intent] ");
-        LogUtils.LOGE(TAG, "received! [intent] " + intent.getExtras().getInt(ALARM_EXTRAS));
-
         switch (intent.getExtras().getInt(ALARM_EXTRAS)) {
             case NOTIFICATION_ALARM_ID:
-                LogUtils.LOGE(TAG, "! ! show notifications ! !");
+                mNM = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
                 showNotification(UserUtils.getStepsNumber(), UserUtils.getBurntCalories());
                 break;
             case RESET_ALARM_ID:
-                LogUtils.LOGE(TAG, "! ! ! reseting values ! ! !");
-                UserUtils.setBurntCalories(0);
-                UserUtils.setStepsNumber(0);
-                //TODO announce stepDetector that values have been reset
+                //Send broadcast to reset stepsNumber and burntCalories
+                context.sendBroadcast(new Intent(StepDetecterWithAPI.RESET_VALUES));
                 break;
         }
-
-//        if (intent.getAction().equals(RESET_ALARM)) {
-//            LogUtils.LOGE(TAG, "! ! ! reseting values ! ! !");
-//            UserUtils.setBurntCalories(0);
-//            UserUtils.setStepsNumber(0);
-//        } else {
-//            LogUtils.LOGE(TAG, "! ! show notifications ! !");
-//            showNotification(UserUtils.getStepsNumber(), UserUtils.getBurntCalories());
-//        }
-
-        //check date to reset calories and steps
-//        UserUtils.checkDate();
-
-//        LogUtils.LOGE(TAG, "received! [todayDate] " + UserUtils.getTodayDateString());
-//        if (new Date().equals(UserUtils.getTodayDate())) {
-//            LogUtils.LOGE(TAG, "! ! ! reseting values ! ! !");
-//            UserUtils.setBurntCalories(0);
-//            UserUtils.setStepsNumber(0);
-//        } else {
-//        LogUtils.LOGE(TAG, "! ! show notifications ! !");
-//        showNotification(UserUtils.getStepsNumber(), UserUtils.getBurntCalories());
-//        }
     }
 
     public static void setAlarm(Context context) {
@@ -88,7 +60,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Date alarmDate = UserUtils.getAlarmTime();
         if (alarmDate != null) {
-            LogUtils.LOGE(TAG, "setting for " + SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).format(UserUtils.getAlarmTime()));
+//            LogUtils.LOGE(TAG, "setting for " + new SimpleDateFormat(Constants.DATE_FORMAT).format(UserUtils.getAlarmTime()));
             alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), AlarmManager.INTERVAL_DAY, notificationAlarmIntent);
         }
 
@@ -103,7 +75,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent resetIntent = new Intent(context, AlarmReceiver.class);
         resetIntent.putExtra(ALARM_EXTRAS, RESET_ALARM_ID);
-        resetAlarmIntent = PendingIntent.getBroadcast(context, RESET_ALARM_ID, resetIntent, 0);
+        PendingIntent resetAlarmIntent = PendingIntent.getBroadcast(context, RESET_ALARM_ID, resetIntent, 0);
 
         //set alarm for resetting calories and steps
         Date resetAlarmDate = UserUtils.getTodayDate();

@@ -20,6 +20,9 @@ public class UserUtils {
     private static final String USER_WEIGHT = "user_weight";
     private static final String USER_HEIGHT = "user_height";
     private static final String USER_GENDER = "user_gender";
+    private static final String USER_ACTIVITY_LEVEL = "user_activity_level";
+    private static final String USER_GOAL = "user_goal";
+    private static final String USER_NEEDED_CALORIES = "user_needed_calories";
     private static final String USER_RESTING_HEART_RATE = "user_resting_heart_rate";
     private static final String USER_MAXIMUM_HEART_RATE = "user_resting_heart_rate";
     private static final String EXERCISE_NUMBER = "exercise_number";
@@ -37,10 +40,17 @@ public class UserUtils {
     private static final String ALARM_TIME = "alarm_time";
 
     private static SharedPreferences mUserPrefs;
+    private static int userAge = 0;
     private static String userGender;
+    private static String userActivityLevel;
+    private static String userGoal;
+    private static int stepsNumber = 0;
+    private static float caloriesCounter = 0;
+    private static float userNeededCalories = 0;
     private static Date alarmTime = null;
     private static String todayDateString = null;
     private static Date todayDate = null;
+    private static SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
 
     private static SharedPreferences getPrefs() {
         if (mUserPrefs == null) {
@@ -71,27 +81,40 @@ public class UserUtils {
     }
 
     public static float getBurntCalories() {
-        LogUtils.LOGE("UserUtils", "getBurntCalories");
-        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        return sharedPreferences.getFloat(BURNT_CALORIES, 0);
+        if (caloriesCounter == 0) {
+            caloriesCounter = getPrefs().getFloat(BURNT_CALORIES, 0);
+        }
+        return caloriesCounter;
     }
 
     public static void setBurntCalories(float calories) {
-        LogUtils.LOGE("UserUtils", "setBurntCalories" + calories);
-        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putFloat(BURNT_CALORIES, calories).apply();
+        UserUtils.caloriesCounter = calories;
+        getPrefs().edit().putFloat(BURNT_CALORIES, calories).apply();
+    }
+
+    public static float getUserNeededCalories() {
+        if (userNeededCalories == 0) {
+            userNeededCalories = getPrefs().getFloat(USER_NEEDED_CALORIES, 0);
+        }
+        return userNeededCalories;
+    }
+
+    public static void setUserNeededCalories(float calories) {
+        UserUtils.userNeededCalories = calories;
+        getPrefs().edit().putFloat(USER_NEEDED_CALORIES, calories).apply();
     }
 
     public static int getStepsNumber() {
-        LogUtils.LOGE("UserUtils", "getStepsNumber");
-        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        return sharedPreferences.getInt(STEPS_NUMBER, 0);
+        if (stepsNumber == 0) {
+            stepsNumber = getPrefs().getInt(STEPS_NUMBER, 0);
+        }
+        LogUtils.LOGE("UserUtils", "getStepsNumber " + stepsNumber);
+        return stepsNumber;
     }
 
     public static void setStepsNumber(int stepsNumber) {
-        LogUtils.LOGE("UserUtils", "setStepsNumber " + stepsNumber);
-        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putInt(STEPS_NUMBER, stepsNumber).apply();
+        UserUtils.stepsNumber = stepsNumber;
+        getPrefs().edit().putInt(STEPS_NUMBER, stepsNumber).apply();
     }
 
     public static int getExerciseNumber() {
@@ -105,14 +128,15 @@ public class UserUtils {
     }
 
     public static int getUserAge() {
-        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        //TODO change default value
-        return sharedPreferences.getInt(USER_AGE, 23);
+        if (userAge == 0) {
+            userAge = getPrefs().getInt(USER_AGE, 23);
+        }
+        return userAge;
     }
 
     public static void setUserAge(int userAge) {
-        SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putInt(USER_AGE, userAge).apply();
+        UserUtils.userAge = userAge;
+        getPrefs().edit().putInt(USER_AGE, userAge).apply();
         setVeryHardLimit();
         setHardLimit();
         setModerateLimit();
@@ -152,6 +176,32 @@ public class UserUtils {
             userGender = getPrefs().getString(USER_GENDER, "Man");
         }
         return userGender;
+    }
+
+    public static String getUserActivityLevel() {
+        if (userActivityLevel == null) {
+            userActivityLevel = getPrefs().getString(USER_ACTIVITY_LEVEL, "Sedentary (little or no exercise, desk job)");
+        }
+        return userActivityLevel;
+    }
+
+    public static void setUserActivityLevel(String activityLevel) {
+        SharedPreferences.Editor editor = getPrefs().edit();
+        userActivityLevel = activityLevel;
+        editor.putString(USER_ACTIVITY_LEVEL, activityLevel).apply();
+    }
+
+    public static String getUserGoal() {
+        if (userGoal == null) {
+            userGoal = getPrefs().getString(USER_GOAL, "Maintain your weight");
+        }
+        return userGoal;
+    }
+
+    public static void setUserGoal(String goal) {
+        SharedPreferences.Editor editor = getPrefs().edit();
+        userGoal = goal;
+        editor.putString(USER_GOAL, goal).apply();
     }
 
     public static int getUserRestingHeartHeartRate() {
@@ -207,27 +257,27 @@ public class UserUtils {
 
     public static void checkDate() {
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-//        Date today = new Date();
-//        try {
-//            Date todayWithZeroTime = formatter.parse(formatter.format(today));
-//            String dateString = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).format(todayWithZeroTime);
-//            if (!dateString.equals(getTodayDateString())) {
-//                setTodayDateString(dateString);
-//            }
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-        String dateInString = "11/4/2015 19:56";
+        Date today = new Date();
         try {
-            Date date = sdf.parse(dateInString);
-            String dateString = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).format(date);
+            Date todayWithZeroTime = formatter.parse(formatter.format(today));
+            String dateString = formatter.format(todayWithZeroTime);
             if (!dateString.equals(getTodayDateString())) {
                 setTodayDateString(dateString);
             }
         } catch (ParseException e) {
             e.printStackTrace();
         }
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+//        String dateInString = "19/4/2015 14:48";
+//        try {
+//            Date date = sdf.parse(dateInString);
+//            String dateString = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).format(date);
+//            if (!dateString.equals(getTodayDateString())) {
+//                setTodayDateString(dateString);
+//            }
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static int getDeviceBattery() {
@@ -309,7 +359,7 @@ public class UserUtils {
         SharedPreferences.Editor editor = getPrefs().edit();
         if (alarmTimeSet != null && !"".equals(alarmTimeSet)) {
             try {
-                alarmTime = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).parse(alarmTimeSet);
+                alarmTime = sdf.parse(alarmTimeSet);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -322,13 +372,22 @@ public class UserUtils {
     public static Date getAlarmTime() {
         if (alarmTime == null) {
             try {
-                alarmTime = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).parse(
-                        getPrefs().getString(ALARM_TIME, ""));
+                alarmTime = sdf.parse(getPrefs().getString(ALARM_TIME, UserUtils.getTodayDateString().substring(0, 10) + " 18:00"));
             } catch (ParseException e) {
+                e.printStackTrace();
                 return null;
             }
         }
         return alarmTime;
+    }
+
+    public static void clear() {
+        getPrefs().edit().clear().commit();
+        mUserPrefs = null;
+        userGender = null;
+        alarmTime = null;
+        todayDateString = null;
+        todayDate = null;
     }
 
 }

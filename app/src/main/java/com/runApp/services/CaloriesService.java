@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.runApp.R;
 import com.runApp.pedometer.StepDetecterWithAPI;
+import com.runApp.ui.fragments.StartActivityFragment;
 import com.runApp.utils.LogUtils;
 import com.runApp.utils.UserUtils;
 
@@ -49,7 +50,7 @@ public class CaloriesService extends Service {
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mStepDetecterWithAPI = new StepDetecterWithAPI(mSensorManager);
-        mStepDetecterWithAPI.addListener(mListener);
+        mStepDetecterWithAPI.setListener(mListener);
 
         registerDetector();
 
@@ -187,16 +188,16 @@ public class CaloriesService extends Service {
     private StepDetecterWithAPI.Listener mListener = new StepDetecterWithAPI.Listener() {
         @Override
         public void stepsChanged(int value, float calories) {
-            LogUtils.LOGE(TAG, "[SERVICE] stepsChanged to " + value);
             UserUtils.setStepsNumber(value);
             UserUtils.setBurntCalories(calories);
-//            if (value % 100 == 0)
-//                showNotification(value, calories);
+            //send broadcast to fragment
+            sendBroadcast(new Intent(StartActivityFragment.UPDATE_VALUES));
         }
 
         @Override
-        public void passValue() {
-
+        public void resetValues() {
+            UserUtils.setStepsNumber(0);
+            UserUtils.setBurntCalories(0);
         }
     };
 

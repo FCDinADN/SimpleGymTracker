@@ -21,92 +21,21 @@
         <!--<item>@drawable/configurator_icon</item>-->
     </array>
 
-    <!-- STEP -->
-    <string-array name="sensitivity_preference">
-        <item>@string/extra_high</item>
-        <item>@string/very_high</item>
-        <item>@string/high</item>
-        <item>@string/higher</item>
-        <item>@string/medium</item>
-        <item>@string/lower</item>
-        <item>@string/low</item>
-        <item>@string/very_low</item>
-        <item>@string/extra_low</item>
-    </string-array>
+    <!-- SETTINGS -->
+    <array name="activity_levels">
+        <item>Sedentary (little or no exercise, desk job)</item>
+        <item>Lightly Active (light exercise/sports 1-3 days/week)</item>
+        <item>Moderately Active (moderate exercise/sports 3-5 days/week)</item>
+        <item>Very Active (hard exercise/sports 6-7 days per week)</item>
+        <item>Extremely Active (very hard daily exercise/sports and physical job or 2/day training)</item>
+    </array>
 
-    <string-array name="sensitivity_preference_values">
-        <item>1.9753</item>
-        <item>2.9630</item>
-        <item>4.4444</item>
-        <!-- 10 * 1.5^(-2) -->
-        <item>6.6667</item>
-        <!-- 10 * 1.5^(-1) -->
-        <item>10</item>
-        <item>15</item>
-        <!--     10 * 1.5      -->
-        <item>22.5</item>
-        <!--   10 * 1.5^2    -->
-        <item>33.75</item>
-        <item>50.625</item>
-    </string-array>
-
-    <string-array name="operation_level_preference">
-        <item>@string/run_in_background</item>
-        <item>@string/keep_screen_on</item>
-        <item>@string/wake_up</item>
-    </string-array>
-
-    <string-array name="operation_level_preference_values">
-        <item>run_in_background</item>
-        <item>keep_screen_on</item>
-        <item>wake_up</item>
-    </string-array>
-
-    <string-array name="units_preference">
-        <item>@string/units_metric</item>
-        <item>@string/units_imperial</item>
-    </string-array>
-
-    <string-array name="units_preference_values">
-        <item>metric</item>
-        <item>imperial</item>
-    </string-array>
-
-    <string-array name="exercise_type_preference">
-        <item>@string/exercise_type_running</item>
-        <item>@string/exercise_type_walking</item>
-    </string-array>
-    <string-array name="exercise_type_preference_values">
-        <item>running</item>
-        <item>walking</item>
-    </string-array>
-
-    <string-array name="maintain_preference">
-        <item>@string/maintain_nothing</item>
-        <item>@string/maintain_pace</item>
-        <item>@string/maintain_speed</item>
-    </string-array>
-    <string-array name="maintain_preference_values">
-        <item>none</item>
-        <item>pace</item>
-        <item>speed</item>
-    </string-array>
-
-    <string-array name="speaking_interval_preference">
-        <item>@string/interval_15_seconds</item>
-        <item>@string/interval_30_seconds</item>
-        <item>@string/interval_1_minute</item>
-        <item>@string/interval_2_minutes</item>
-        <item>@string/interval_5_minutes</item>
-        <item>@string/interval_10_minutes</item>
-    </string-array>
-    <string-array name="speaking_interval_preference_values">
-        <item>0.25</item>
-        <item>0.5</item>
-        <item>1</item>
-        <item>2</item>
-        <item>5</item>
-        <item>10</item>
-    </string-array>
+    <array name="goals">
+        <item>Lose 1 kg per week</item>
+        <item>Lose 0.5 kg per week</item>
+        <item>Maintain your weight</item>
+        <item>Gain 0.5 per week</item>
+        <item>Gain 1 kg per week</item>
+    </array>
 
 </resources>

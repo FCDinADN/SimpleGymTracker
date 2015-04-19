@@ -32,6 +32,17 @@ public class DialogHandler {
         }
     }
 
+    public static void showSimpleDialog(Activity activity, int title, String text, int posBtn, DialogInterface.OnClickListener callback) {
+        if (activity != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle(title);
+            builder.setMessage(text);
+            builder.setPositiveButton(posBtn, callback);
+            builder.setCancelable(false);
+            builder.create().show();
+        }
+    }
+
     public static void showSimpleCancelableDialog(Activity activity, int title, int text, int posBtn, DialogInterface.OnClickListener callback) {
         if (activity != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -174,9 +185,11 @@ public class DialogHandler {
 //        }
 //    }
 
-    public static void showSimpleSelectionDialog(@NonNull Activity activity, @ArrayRes int array, DialogInterface.OnClickListener listener) {
+    public static void showSimpleSelectionDialog(@NonNull Activity activity, int title, @ArrayRes int array,int posBtn, int selection, DialogInterface.OnClickListener listener, DialogInterface.OnClickListener buttonListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setItems(array, listener);
+        builder.setTitle(title);
+        builder.setSingleChoiceItems(array, selection, listener);
+        builder.setPositiveButton(posBtn, buttonListener);
         builder.create().show();
     }
 
@@ -220,12 +233,13 @@ public class DialogHandler {
                 });
     }
 
-    public static void showNumberPickerDialog(final Activity activity, int title, int maxValue, int minValue, int value, DialogInterface.OnClickListener callback, NumberPicker.OnValueChangeListener valueCallback) {
+    public static void showNumberPickerDialog(final Activity activity, int maxValue, int minValue, int value, DialogInterface.OnClickListener callback, NumberPicker.OnValueChangeListener valueCallback) {
         if (activity != null) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             final View v = LayoutInflater.from(activity).inflate(R.layout.number_picker, null);
             final NumberPicker np = (NumberPicker) v.findViewById(R.id.numberPicker1);
             final TextView titleView = ((TextView) v.findViewById(R.id.number_picker_title));
+            final TextView unitView = ((TextView) v.findViewById(R.id.number_picker_unit));
             np.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
             builder.setView(v);
             builder.setPositiveButton(R.string.dialog_ok, callback);
@@ -236,8 +250,20 @@ public class DialogHandler {
             np.setWrapSelectorWheel(false);
             np.setValue(value);
             np.setOnValueChangedListener(valueCallback);
-            titleView.setText(title);
+            switch (minValue) {
+                case Constants.MINIMUM_AGE:
+                    unitView.setText(R.string.settings_yo);
+                    titleView.setText(R.string.settings_age);
+                    break;
+                case Constants.MINIMUM_HEIGHT:
+                    unitView.setText(R.string.settings_cm);
+                    titleView.setText(R.string.settings_height);
+                    break;
+                case Constants.MINIMUM_WEIGHT:
+                    unitView.setText(R.string.settings_kg);
+                    titleView.setText(R.string.settings_weight);
+                    break;
+            }
         }
     }
-
 }

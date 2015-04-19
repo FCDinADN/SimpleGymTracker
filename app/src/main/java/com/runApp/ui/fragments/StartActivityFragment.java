@@ -1,13 +1,17 @@
 package com.runApp.ui.fragments;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,9 +26,11 @@ import com.runApp.models.ComplexLocation;
 import com.runApp.utils.DialogHandler;
 import com.runApp.utils.GPSTracker;
 import com.runApp.utils.LogUtils;
+import com.runApp.utils.UserUtils;
 import com.runApp.utils.Utils;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import butterknife.OnClick;
 
 /**
@@ -32,8 +38,15 @@ import butterknife.OnClick;
  */
 public class StartActivityFragment extends Fragment implements OnMapReadyCallback {
 
+    public static final String UPDATE_VALUES = "update_values";
+
     private GoogleMap googleMap;
     private SupportMapFragment supportMapFragment;
+
+    @InjectView(R.id.start_activity_steps)
+    TextView steps;
+    @InjectView(R.id.start_activity_calories)
+    TextView calories;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,11 +59,21 @@ public class StartActivityFragment extends Fragment implements OnMapReadyCallbac
         ButterKnife.inject(this, view);
         supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
+
+        steps.setText(UserUtils.getStepsNumber() + " steps today");
+        calories.setText(UserUtils.getBurntCalories() + " calories burnt");
     }
 
     @Override
     public void onResume() {
+        getActivity().registerReceiver(mReceiver, new IntentFilter(UPDATE_VALUES));
         super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(mReceiver);
     }
 
     private void getLocation() {
@@ -98,4 +121,12 @@ public class StartActivityFragment extends Fragment implements OnMapReadyCallbac
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         return mBluetoothAdapter.isEnabled();
     }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            calories.setText(UserUtils.getBurntCalories() + " calories burnt");
+            steps.setText(UserUtils.getStepsNumber() + " steps today");
+        }
+    };
 }

@@ -1,155 +1,286 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
     >
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/background"
-        android:contentDescription="@null"/>
+    <!--<ImageView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:scaleType="centerCrop"-->
+    <!--android:src="@drawable/background"-->
+    <!--android:contentDescription="@null"/>-->
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@color/white_25p_transparent"
-        android:contentDescription="@null"/>
+    <!--<ImageView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:src="@color/white_25p_transparent"-->
+    <!--android:contentDescription="@null"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="visible"
-        android:layout_above="@+id/edit_profile_save"
-        android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_vertical_margin"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginBottom="19dp">
-
-        <com.runApp.ui.FontLatoTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edit_profile_alarm"
-            android:hint="@string/settgins_set_alarm"
-            android:textColorHint="@color/white"
-            android:minHeight="30dp"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:singleLine="true"
-            android:paddingBottom="10dp"
-            android:layout_marginBottom="19dp"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:background="@drawable/edittext_underline"
-            android:gravity="center"/>
-
-        <com.runApp.ui.FontLatoTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edit_profile_age"
-            android:hint="@string/settings_age"
-            android:textColorHint="@color/white"
-            android:minHeight="30dp"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:singleLine="true"
-            android:paddingBottom="10dp"
-            android:layout_marginBottom="19dp"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:background="@drawable/edittext_underline"
-            android:gravity="center"/>
-
-        <com.runApp.ui.FontLatoTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edit_profile_weight"
-            android:hint="@string/settings_weight"
-            android:textColorHint="@color/white"
-            android:minHeight="30dp"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:singleLine="true"
-            android:paddingBottom="10dp"
-            android:layout_marginBottom="19dp"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:background="@drawable/edittext_underline"
-            android:gravity="center"/>
-
-        <com.runApp.ui.FontLatoTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edit_profile_height"
-            android:text="@string/settings_height"
-            android:inputType="number"
-            android:textColorHint="@color/white"
-            android:minHeight="30dp"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            app:paddingStart="5dp"
-            android:singleLine="true"
-            android:textSize="18sp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/white"
-            android:background="@drawable/edittext_underline"
-            android:gravity="center"/>
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="7dp"
-            android:layout_marginTop="19dp"
-            android:weightSum="2">
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:layout_above="@+id/edit_profile_save"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="19dp">
 
-            <com.runApp.ui.FontLatoTextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/edit_profile_man"
-                android:textSize="8pt"
-                android:layout_weight="1"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:layout_marginEnd="10dp"
-                android:paddingBottom="10dp"
-                android:background="@drawable/edittext_underline"
-                android:text="@string/settings_man"/>
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:id="@+id/edit_profile_age_layout">
 
-            <com.runApp.ui.FontLatoTextView
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_age"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="5dp"/>
+
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_profile_age"
+                    android:hint="@string/settings_age"
+                    android:textColorHint="@color/black"
+                    android:minHeight="25dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/black"
+                    android:background="@drawable/edittext_underline"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/edit_profile_woman"
-                android:layout_weight="1"
-                android:textSize="8pt"
-                android:textColor="@color/almost_light_grey"
-                android:gravity="center"
-                android:paddingBottom="10dp"
-                android:layout_marginStart="10dp"
-                android:text="@string/settings_woman"/>
+                android:orientation="vertical"
+                android:id="@+id/edit_profile_weight_layout">
+
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_weight"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="5dp"/>
+
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_profile_weight"
+                    android:hint="@string/settings_weight"
+                    android:textColorHint="@color/black"
+                    android:minHeight="25dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/black"
+                    android:background="@drawable/edittext_underline"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/edit_profile_height_layout">
+
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_height"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="5dp"/>
+
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_profile_height"
+                    android:text="@string/settings_height"
+                    android:inputType="number"
+                    android:textColorHint="@color/black"
+                    android:minHeight="25dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/black"
+                    android:background="@drawable/edittext_underline"
+                    android:gravity="center_vertical"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/edit_profile_gender_layout">
+
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_gender"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="5dp"/>
+
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_profile_gender"
+                    android:text="@string/settings_man"
+                    android:inputType="number"
+                    android:textColorHint="@color/black"
+                    android:minHeight="25dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/black"
+                    android:background="@drawable/edittext_underline"
+                    android:gravity="center_vertical"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/edit_profile_activity_level_layout">
+
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_activity_level"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="5dp"/>
+
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_profile_activity_level"
+                    android:textColorHint="@color/black"
+                    android:minHeight="25dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textColor="@color/black"
+                    android:background="@drawable/edittext_underline"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/edit_profile_goal_layout">
+
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_goal"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="5dp"/>
+
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_profile_goal"
+                    android:textColorHint="@color/black"
+                    android:minHeight="25dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/black"
+                    android:background="@drawable/edittext_underline"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/edit_profile_set_alarm_layout">
+
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settgins_set_alarm"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="5dp"/>
+
+                <com.runApp.ui.FontLatoTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_profile_alarm"
+                    android:textColorHint="@color/black"
+                    android:minHeight="25dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/black"
+                    android:background="@drawable/edittext_underline"/>
+            </LinearLayout>
+
         </LinearLayout>
+
+        <com.runApp.ui.FontMerriweatherTextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_default_height"
+            android:id="@+id/edit_profile_save"
+            android:layout_centerHorizontal="true"
+            android:text="@string/settings_save"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:background="@drawable/start_activity_btn_bk"
+            android:layout_marginBottom="12dp"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_above="@+id/edit_profile_reset"
+            />
+
+        <com.runApp.ui.FontLatoTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:id="@+id/edit_profile_reset"
+            android:text="Reset"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:visibility="gone"
+            />
     </LinearLayout>
 
-    <com.runApp.ui.FontMerriweatherTextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_default_height"
-        android:id="@+id/edit_profile_save"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/settings_save"
-        android:gravity="center"
-        android:textColor="@color/save_btn_text_color"
-        android:textSize="20sp"
-        android:background="@drawable/save_btn_bg"
-        android:layout_marginBottom="24dp"
-        android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_vertical_margin"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        />
-
-</RelativeLayout>
+</ScrollView>

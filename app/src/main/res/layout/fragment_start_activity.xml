@@ -12,6 +12,35 @@
         android:layout_height="match_parent"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="@color/save_btn_background">
+
+        <com.runApp.ui.FontLatoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/start_activity_steps"
+            android:text="Steps"
+            android:textSize="25sp"
+            android:textColor="@color/black"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/start_activity_calories"
+            android:layout_marginBottom="5dp"/>
+
+        <com.runApp.ui.FontLatoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/start_activity_calories"
+            android:text="Calories:"
+            android:textSize="25sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="5dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
     <com.runApp.ui.FontMerriweatherTextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_default_height"
