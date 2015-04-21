@@ -11,13 +11,17 @@ import android.content.Intent;
 
 import com.runApp.R;
 import com.runApp.pedometer.StepDetecterWithAPI;
+import com.runApp.utils.Constants;
 import com.runApp.utils.LogUtils;
 import com.runApp.utils.UserUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import hugo.weaving.DebugLog;
 
 import static com.runApp.utils.Utils.getContext;
 
@@ -52,6 +56,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
     }
 
+    @DebugLog
     public static void setAlarm(Context context) {
         alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent notificationIntent = new Intent(context, AlarmReceiver.class);
@@ -61,14 +66,22 @@ public class AlarmReceiver extends BroadcastReceiver {
         Date alarmDate = UserUtils.getAlarmTime();
         if (alarmDate != null) {
 //            LogUtils.LOGE(TAG, "setting for " + new SimpleDateFormat(Constants.DATE_FORMAT).format(UserUtils.getAlarmTime()));
+
+            /* Check if alarm time is set to time before actual time
+            If the time is before, a notification is shown BUG */
+            Date now = new Date();
+            if (now.after(alarmDate)){
+                Calendar c = Calendar.getInstance();
+                c.setTime(alarmDate);
+                c.add(Calendar.DATE, 1);
+                alarmDate = c.getTime();
+                LogUtils.LOGE(TAG, "changing " + UserUtils.getAlarmTime() + " -> " + new SimpleDateFormat(Constants.DATE_FORMAT).format(alarmDate));
+            }
             alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), AlarmManager.INTERVAL_DAY, notificationAlarmIntent);
         }
-
-        // Enable {@code UpdateWakeupReceiver} to automatically restart the alarm when the
-        // device is rebooted.
-//        UpdateWakeupReceiver.enableReceiver(context);
     }
 
+    @DebugLog
     public static void setResetAlarm(Context context) {
         LogUtils.LOGE("UserUtils", "setResetAlarm");
 
@@ -83,10 +96,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             LogUtils.LOGE(TAG, "setting for reseting " + SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).format(UserUtils.getTodayDate()) + " == " + UserUtils.getTodayDateString());
             alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, resetAlarmDate.getTime(), AlarmManager.INTERVAL_DAY, resetAlarmIntent);
         }
-
-        // Enable {@code UpdateWakeupReceiver} to automatically restart the alarm when the
-        // device is rebooted.
-//        UpdateWakeupReceiver.enableReceiver(context);
     }
 
     public static void cancelAlarm() {
@@ -105,7 +114,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         Notification notification = new Notification(R.drawable.ic_notification, null,
                 System.currentTimeMillis());
         notification.flags = Notification.FLAG_AUTO_CANCEL;
-        //TODO uncomment the following lines
         notification.defaults = Notification.DEFAULT_SOUND
                 | Notification.DEFAULT_LIGHTS
                 | Notification.DEFAULT_VIBRATE;

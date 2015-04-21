@@ -20,9 +20,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.runApp.R;
+import com.runApp.models.ComplexLocation;
 import com.runApp.ui.activities.CardioActivity;
 import com.runApp.ui.activities.MainActivity;
-import com.runApp.models.ComplexLocation;
 import com.runApp.utils.DialogHandler;
 import com.runApp.utils.GPSTracker;
 import com.runApp.utils.LogUtils;
@@ -100,6 +100,7 @@ public class StartActivityFragment extends Fragment implements OnMapReadyCallbac
 
     @OnClick(R.id.start_long_activity_btn)
     void startLongActivity() {
+        //TODO uncomment below
         if (isBlueetoothEnabled()) {
             Intent intent = new Intent(getActivity(), CardioActivity.class);
             intent.putExtra(CardioActivity.SHORT_ACTIVITY, false);

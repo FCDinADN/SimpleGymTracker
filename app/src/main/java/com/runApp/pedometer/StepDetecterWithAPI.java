@@ -133,7 +133,7 @@ public class StepDetecterWithAPI implements SensorEventListener {
         int altitude = Math.round(sensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure));
         float slope = Float.valueOf(String.format("%.2f", (altitude - previousAltitude) / distance));
         LogUtils.LOGE("ALTITUDE", "previous " + previousAltitude + " actual " + altitude + " slope " + slope);
-        float calories = (0.05f * ((altitude - previousAltitude) / distance) + 0.95f) * UserUtils.getUserWeight() + TREADMILL_FACTOR;
+        float calories = (0.05f * slope + 0.95f) * UserUtils.getUserWeight() + TREADMILL_FACTOR;
         calories *= (distance / 1000);
         float VO2max = 15.3f * (UserUtils.getUserMaximumHeartRate() / UserUtils.getUserRestingHeartHeartRate());
         actualCalories += (float) Math.round(calories * 100.0f) / 100.0f;

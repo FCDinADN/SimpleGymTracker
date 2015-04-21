@@ -15,7 +15,7 @@ public interface HxMListener {
 
     public void setHandler(Handler handler);
 
-    public void setStatusMessage(String s);
+//    public void setStatusMessage(String s);
 
     public void resetValues();
 

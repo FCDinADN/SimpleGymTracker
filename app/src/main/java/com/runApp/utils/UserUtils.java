@@ -268,7 +268,7 @@ public class UserUtils {
             e.printStackTrace();
         }
 //        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-//        String dateInString = "19/4/2015 14:48";
+//        String dateInString = "21/4/2015 19:22";
 //        try {
 //            Date date = sdf.parse(dateInString);
 //            String dateString = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).format(date);

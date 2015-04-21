@@ -22,7 +22,6 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.LimitLine;
 import com.runApp.R;
 import com.runApp.database.GymDBContract;
@@ -61,6 +60,7 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
     private boolean fromHistory;
     private int counter;
     private boolean created;
+    private float maxValue = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -158,6 +158,10 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
                     while (cursor.moveToNext()) {
 //                        LogUtils.LOGE("got", cursor.getString(QueryHeartRates.VALUE));
                         float value = Float.parseFloat(cursor.getString(QueryHeartRates.VALUE));
+
+                        if (value > maxValue) {
+                            maxValue = value;
+                        }
 //                        Log.e(TAG, "value " + value);
                         Entry entry = new Entry(value, counter);
 //                        if (value > 90.0f) {
@@ -224,25 +228,27 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
             mProgress.setVisibility(View.GONE);
             mLineChart.setVisibility(View.VISIBLE);
             mLineChart.invalidate();
+            if (value > maxValue) {
+                maxValue = value;
+            }
         }
     }
 
     private void setData(ArrayList<Entry> entries) {
         LineDataSet mLineDataSet1 = new LineDataSet(entries, "DataSet 1");
         ArrayList<String> xVals = new ArrayList<>();
-
         for (Entry ignored : entries) {
             xVals.add("");
         }
 
-        mLineDataSet1.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        mLineDataSet1.setColors(new int[]{Color.parseColor("#D5B855")});
         mLineDataSet1.setDrawCubic(true);
         mLineDataSet1.setCubicIntensity(0.2f);
         mLineDataSet1.setDrawFilled(true);
         mLineDataSet1.setDrawCircles(false);
         mLineDataSet1.setLineWidth(2f);
         mLineDataSet1.setCircleSize(5f);
-        mLineDataSet1.setHighLightColor(Color.rgb(244, 117, 117));
+        mLineDataSet1.setHighLightColor(Color.parseColor("#133860"));
 
         //array to hold the data sets
         ArrayList<LineDataSet> lineDataSets = new ArrayList<>();
@@ -258,25 +264,35 @@ public class CubicLineChartFragment extends Fragment implements LoaderManager.Lo
     }
 
     private void setLimitLines(LineData mLineData) {
-        LimitLine ll = new LimitLine(UserUtils.getVeryHardLimit());
-        ll.setLineColor(Color.RED);
-        ll.setLineWidth(2f);
-        mLineData.addLimitLine(ll);
+        //subtract 10 to show lines before values reach the limit
+        maxValue -= 10;
 
-        ll = new LimitLine(UserUtils.getHardLimit());
-        ll.setLineColor(Color.MAGENTA);
-        ll.setLineWidth(2f);
-        mLineData.addLimitLine(ll);
-
-        ll = new LimitLine(UserUtils.getModerateLimit());
-        ll.setLineColor(Color.GREEN);
-        ll.setLineWidth(2f);
-        mLineData.addLimitLine(ll);
-
-        ll = new LimitLine(UserUtils.getLightLimit());
-        ll.setLineColor(Color.BLUE);
-        ll.setLineWidth(2f);
-        mLineData.addLimitLine(ll);
+        float veryHardLimit = UserUtils.getVeryHardLimit();
+        float hardLimit = UserUtils.getHardLimit();
+        float moderateLimit = UserUtils.getModerateLimit();
+        float lightLimit = UserUtils.getLightLimit();
+        LimitLine ll;
+        if (maxValue > veryHardLimit) {
+            ll = new LimitLine(veryHardLimit);
+            ll.setLineColor(Color.RED);
+            ll.setLineWidth(2f);
+            mLineData.addLimitLine(ll);
+        } else if (maxValue > hardLimit) {
+            ll = new LimitLine(hardLimit);
+            ll.setLineColor(Color.MAGENTA);
+            ll.setLineWidth(2f);
+            mLineData.addLimitLine(ll);
+        } else if (maxValue > moderateLimit) {
+            ll = new LimitLine(moderateLimit);
+            ll.setLineColor(Color.GREEN);
+            ll.setLineWidth(2f);
+            mLineData.addLimitLine(ll);
+        } else if (maxValue > lightLimit) {
+            ll = new LimitLine(lightLimit);
+            ll.setLineColor(Color.BLUE);
+            ll.setLineWidth(2f);
+            mLineData.addLimitLine(ll);
+        }
     }
 
     public void resetValues() {

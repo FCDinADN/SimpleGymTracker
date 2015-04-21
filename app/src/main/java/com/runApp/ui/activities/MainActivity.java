@@ -38,6 +38,7 @@ import com.runApp.utils.UserUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import hugo.weaving.DebugLog;
 
 
 public class MainActivity extends ActionBarActivity
@@ -127,6 +128,7 @@ public class MainActivity extends ActionBarActivity
         tracker.stopUsingGPS();
     }
 
+    @DebugLog
     @Override
     protected void onResume() {
         super.onResume();
@@ -134,7 +136,7 @@ public class MainActivity extends ActionBarActivity
         UserUtils.checkDate();
 
         if (UserUtils.isFirstTime()) {
-            LogUtils.LOGE(TAG,"setResetAlarm");
+            LogUtils.LOGE(TAG, "setResetAlarm");
             AlarmReceiver.setResetAlarm(this);
             //TODO remove below line
             UserUtils.setIsFirstTime(false);
@@ -351,7 +353,10 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onDestroy() {
-        Log.i(TAG, "[ACTIVITY] onDestroy");
+        mIsRunning = UserUtils.isServiceRunning();
+        if (!mIsRunning) {
+            startStepService();
+        }
         super.onDestroy();
     }
 

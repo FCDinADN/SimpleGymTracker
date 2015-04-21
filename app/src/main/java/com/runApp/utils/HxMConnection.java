@@ -39,7 +39,7 @@ public class HxMConnection {
         BluetoothDevice mmDevice = null;
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
-            mHxMListener.setStatusMessage("No bluetooth adapter available");
+//            mHxMListener.setStatusMessage("No bluetooth adapter available");
             return;
         }
 
@@ -61,7 +61,7 @@ public class HxMConnection {
         if (mmDevice != null) {
             mConnectThread = new ConnectThread(mmDevice);
             mConnectThread.start();
-            mHxMListener.setStatusMessage("Bluetooth Device Found");
+//            mHxMListener.setStatusMessage("Bluetooth Device Found");
         } else {
             mHxMListener.socketClosed();
         }
@@ -167,7 +167,9 @@ public class HxMConnection {
 
         public void cancel() {
             try {
-                mConnectedThread.cancel();
+                if (mConnectedThread != null) {
+                    mConnectedThread.cancel();
+                }
                 mmSockect.close();
             } catch (IOException e) {
                 e.printStackTrace();

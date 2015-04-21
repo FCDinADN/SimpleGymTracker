@@ -14,6 +14,7 @@ import com.runApp.ui.fragments.CardioFragment;
 import com.runApp.ui.fragments.PathGoogleMapFragment;
 import com.runApp.utils.DialogHandler;
 import com.runApp.utils.GPSTracker;
+import com.runApp.utils.LogUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -90,6 +91,8 @@ public class CardioActivity extends ActionBarActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (which == DialogInterface.BUTTON_POSITIVE) {
+                                //TODO start service
+
                                 mCardioFragment.closeConnection(false);
                                 finish();
                             }
@@ -117,7 +120,6 @@ public class CardioActivity extends ActionBarActivity {
     long timeSwapBuff = 0L;
     long updatedTime = 0L;
 
-
     public void startTimer() {
         startTime = SystemClock.uptimeMillis();
         customHandler.postDelayed(updateTimerThread, 0);
@@ -143,5 +145,9 @@ public class CardioActivity extends ActionBarActivity {
         }
     };
 
-
+    @Override
+    protected void onDestroy() {
+        LogUtils.LOGE("CardioActivity","[onDestroy]");
+        super.onDestroy();
+    }
 }

@@ -1,5 +1,6 @@
 package com.runApp.ui.fragments;
 
+import android.content.Intent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.hardware.Sensor;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.runApp.R;
+import com.runApp.services.CaloriesService;
 import com.runApp.ui.activities.CardioActivity;
 import com.runApp.database.GymDatabaseHelper;
 import com.runApp.models.History;
@@ -65,18 +67,12 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
     TextView distanceValue;
     @InjectView(R.id.speed_value)
     TextView speedValue;
-    @InjectView(R.id.connectButton)
+    @InjectView(R.id.finish_intense_activity)
     TextView connect;
     @InjectView(R.id.linlaHeaderProgress)
     LinearLayout mProgress;
-    @InjectView(R.id.cardio_device_status)
+    @InjectView(R.id.intense_activity_status)
     TextView status;
-    @InjectView(R.id.cardio_date)
-    TextView date;
-    @InjectView(R.id.cardio_exercise_number)
-    TextView exerciseNumber;
-    @InjectView(R.id.cardio_battery)
-    TextView hxMBattery;
 
     private boolean isShort;
 
@@ -115,7 +111,7 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_cardio, container, false);
+        return inflater.inflate(R.layout.new_intense_activity_fragment, container, false);
     }
 
     @Override
@@ -131,6 +127,7 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
 
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
 
+//        TODO connect to HxM
         tryToConnectToHxM();
 
         isShort = getArguments().getBoolean(CardioActivity.SHORT_ACTIVITY);
@@ -187,29 +184,32 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
         }
     }
 
-    @OnClick(R.id.connectButton)
-    void connectClicked() {
-        if (!pressed) {
-            tryToConnectToHxM();
-        } else {
-            closeConnection(true);
-        }
+    @OnClick(R.id.finish_intense_activity)
+    void finishActivity() {
+//        if (!pressed) {
+//            tryToConnectToHxM();
+//        } else {
+        closeConnection(true);
+//        }
     }
 
     private void tryToConnectToHxM() {
 //        ((MainActivity) getActivity()).startTracker();
         mProgress.setVisibility(View.VISIBLE);
-        connect.setText("CONNECTING...");
+//        connect.setText("CONNECTING...");
+        status.setText("STATUS:CONNECTING...");
+        status.setBackgroundColor(getResources().getColor(R.color.save_btn_background));
+        status.setTextColor(getResources().getColor(R.color.black));
         pressed = true;
         mHxMConnection.findBT();
     }
 
     private void initData() {
-        if (UserUtils.getDeviceBattery() < 0) {
-            showBattery = true;
-        } else {
-            hxMBattery.setText(UserUtils.getDeviceBattery() + " %");
-        }
+//        if (UserUtils.getDeviceBattery() < 0) {
+//            showBattery = true;
+//        } else {
+//            hxMBattery.setText(UserUtils.getDeviceBattery() + " %");
+//        }
 //        ((CardioActivity) getActivity()).showShowMap();
         ((CardioActivity) getActivity()).startTimer();
         maxSpeed = -1;
@@ -219,12 +219,15 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
         intermediateValue = 0;
         caloriesValue.setText("0.0");
         UserUtils.setExerciseNumber(UserUtils.getExerciseNumber() + 1);
-        exerciseNumber.setText(UserUtils.getExerciseNumber() + "");
-        date.setText(UserUtils.getTodayDateString());
+//        exerciseNumber.setText(UserUtils.getExerciseNumber() + "");
+//        date.setText(UserUtils.getTodayDateString());
         startTime = new Date();
         entryValues = new ArrayList<>();
 
         previousAltitude = mSensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure);
+
+        UserUtils.setIsServiceRunning(false);
+        getActivity().stopService(new Intent(getActivity(), CaloriesService.class));
     }
 
 //    @OnClick(R.id.mapButton)
@@ -236,7 +239,7 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
 //        getActivity().getSupportFragmentManager().executePendingTransactions();
 //    }
 
-    @OnClick(R.id.cardio_stats)
+    @OnClick(R.id.intense_activity_show_graph)
     void statsClicked() {
         Bundle mBundle = new Bundle();
         mBundle.putInt(CubicLineChartFragment.EXERCISE_NUMBER, UserUtils.getExerciseNumber());
@@ -265,7 +268,10 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
                     dataInitialised = true;
                 } else {
                     mProgress.setVisibility(View.GONE);
-                    connect.setText("FINISH");
+                    status.setText("STATUS:CONNECTED.");
+                    status.setBackgroundColor(getResources().getColor(R.color.actionbar_text_color));
+                    status.setTextColor(getResources().getColor(R.color.white));
+//                    connect.setText("FINISH");
                     new HandleValues().execute(hxMMessage);
                 }
             }
@@ -298,20 +304,20 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
         mHandler = handler;
     }
 
-    @Override
-    public void setStatusMessage(String s) {
-        status.setText(s);
-    }
+//    @Override
+//    public void setStatusMessage(String s) {
+//        status.setText(s);
+//    }
 
     @Override
     public void resetValues() {
         caloriesValue.setText("?");
-        heartRateValue.setText("?");
-        distanceValue.setText("?");
-        speedValue.setText("?");
-        exerciseNumber.setText("");
-        date.setText("");
-        hxMBattery.setText("");
+        heartRateValue.setText(getString(R.string.nothing_sign));
+        distanceValue.setText(getString(R.string.nothing_sign));
+        speedValue.setText(getString(R.string.nothing_sign));
+//        exerciseNumber.setText("");
+//        date.setText("");
+//        hxMBattery.setText("");
     }
 
     @Override
@@ -353,6 +359,11 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
                 UserUtils.setIsTracking();
             }
             getActivity().finish();
+            LogUtils.LOGE(TAG, "burnt calories: " + (UserUtils.getBurntCalories() + actualCalories)
+                    + "new steps " + UserUtils.getStepsNumber() + " <- "
+                    + (UserUtils.getStepsNumber() + (int) Math.round(intermediateValue / 1.32)));
+            UserUtils.setBurntCalories(UserUtils.getBurntCalories() + actualCalories);
+            UserUtils.setStepsNumber(UserUtils.getStepsNumber() + (int) Math.round(intermediateValue / 1.32));
 //            }
         } catch (IOException e) {
             e.printStackTrace();
@@ -360,16 +371,22 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
     }
 
     public float getCalories(float distance) {
+        LogUtils.LOGE("getCalories", "distance " + distance);
         if (distance == 0)
             return actualCalories;//0;
 
-        float altitude = mSensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure);
-        float calories = (0.05f * ((altitude - previousAltitude) / distance) + 0.95f) * UserUtils.getUserWeight() + TREADMILL_FACTOR;
+        int altitude = Math.round(mSensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure));
+        float slope = Float.valueOf(String.format("%.2f", (altitude - previousAltitude) / distance));
+        float calories = (0.05f * slope + 0.95f) * UserUtils.getUserWeight() + TREADMILL_FACTOR;
         calories *= (distance / 1000);
         float VO2max = 15.3f * (UserUtils.getUserMaximumHeartRate() / UserUtils.getUserRestingHeartHeartRate());
-        actualCalories += calories;
+        actualCalories += (float) Math.round(calories * 100.0f) / 100.0f;
         LogUtils.LOGE("altitude", altitude + " actualCalories " + actualCalories + " new caloeries " + calories + " VO2max " + VO2max + " distance " + distance + " slope " + ((altitude - previousAltitude) / distance));
         previousAltitude = altitude;
+
+        //change intermediate distance value
+        distanceToBeSubtracted = intermediateValue;
+
         return actualCalories;
     }
 
@@ -385,6 +402,7 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
     private class HandleValues extends AsyncTask<HxMMessage, Void, Void> {
         private HxMMessage hxMMessage;
         private boolean updateCalories;
+        private float intermediateDistance;
 
         @Override
         protected Void doInBackground(HxMMessage... hxMMessages) {
@@ -426,7 +444,6 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
             if (secondsCounter == TIME_TO_UPDATE_CALORIES_COUNTER) {
                 secondsCounter = 0;
                 updateCalories = true;
-                distanceToBeSubtracted = intermediateValue;
 
                 //do insertion to DB
                 GymDatabaseHelper.getInst().insertHeartRate(hxMMessage);
@@ -461,21 +478,34 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            heartRateValue.setText(hxMMessage.getHeartRate() + "");
-            distanceValue.setText(new DecimalFormat("##.##").format(intermediateValue));
+            heartRateValue.setText(hxMMessage.getHeartRate() + " bmp");
+            distanceValue.setText(new DecimalFormat("##.##").format(intermediateValue) + " m");
 
             historyChartFragment.addEntry((float) hxMMessage.getHeartRate());
             entryValues.add(hxMMessage.getHeartRate());
 
-            if (showBattery) {
-                showBattery = false;
-                hxMBattery.setText(hxMMessage.getBattery() + " %");
-            }
-            speedValue.setText(new DecimalFormat("##.##").format(hxMMessage.getSpeed()));
+//            if (showBattery) {
+//                showBattery = false;
+//                hxMBattery.setText(hxMMessage.getBattery() + " %");
+//            }
+            speedValue.setText(new DecimalFormat("##.##").format(hxMMessage.getSpeed()) + " m/s");
             if (updateCalories) {
                 caloriesValue.setText(getCalories(intermediateValue - distanceToBeSubtracted) + "");
             }
-            status.setText("maximum speed " + new DecimalFormat("##.##").format(maxSpeed));
+//            status.setText("maximum speed " + new DecimalFormat("##.##").format(maxSpeed));
+            status.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onStop() {
+        LogUtils.LOGE(TAG,"onStop");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        LogUtils.LOGE(TAG,"onDestroy");
+        super.onDestroy();
     }
 }
