@@ -35,6 +35,7 @@ public class CardioActivity extends ActionBarActivity {
     private GPSTracker tracker;
 
     private CardioFragment mCardioFragment;
+    private String totalTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +127,7 @@ public class CardioActivity extends ActionBarActivity {
     }
 
     public void stopTimer() {
-        setToolbarTitle("FINISHED");
+        totalTime = timer.getText().toString();
         customHandler.removeCallbacks(updateTimerThread);
     }
 
@@ -149,5 +150,9 @@ public class CardioActivity extends ActionBarActivity {
     protected void onDestroy() {
         LogUtils.LOGE("CardioActivity","[onDestroy]");
         super.onDestroy();
+    }
+
+    public String getTotalTime(){
+        return totalTime;
     }
 }

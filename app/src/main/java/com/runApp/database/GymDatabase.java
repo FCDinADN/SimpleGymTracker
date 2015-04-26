@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 
 import com.runApp.utils.LogUtils;
 
@@ -61,6 +62,18 @@ public class GymDatabase extends SQLiteOpenHelper {
         LogUtils.LOGE(TAG, "onCreate EXERCISES TABLE");
         db.execSQL(exercisesTable);
 
+        /* STEPS AND CALORIES TABLE */
+        final String stepsAndCaloriesTable = new StringBuffer()
+                .append("CREATE TABLE IF NOT EXISTS ").append(Tables.STEPS_AND_CALORIES)
+                .append(" ( ").append(BaseColumns._ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ")
+                .append(StepsAndCaloriesColumns.STEPS).append(" INTEGER, ")
+                .append(StepsAndCaloriesColumns.CALORIES).append(" REAL, ")
+                .append(StepsAndCaloriesColumns.DATE).append(" TEXT)")
+                .toString();
+
+        LogUtils.LOGE(TAG, "onCreate STEPS AND CALORIES TABLE");
+        db.execSQL(stepsAndCaloriesTable);
+
         /* EXERCISES TABLE */
 //        final String exercisesTable = new StringBuffer()
 //                .append("CREATE TABLE IF NOT EXISTS ").append(Tables.EXERCISES)
@@ -113,10 +126,10 @@ public class GymDatabase extends SQLiteOpenHelper {
         String WORKOUTS = "WORKOUTS";
         String HEART_RATES = "HEART_RATES";
         String LOCATIONS = "LOCATIONS_TABLE";
-
         String HEARTRATES_WITH_EXERCISE = HEART_RATES + " JOIN "
                 + EXERCISES + " ON " + HEART_RATES + "." + HeartRatesColumns.EXERCISE_ID
                 + "=" + EXERCISES + "." + ExercisesColumns.ID;
+        String STEPS_AND_CALORIES = "STEPS_AND_CALORIES";
     }
 
     private boolean checkDataBase() {

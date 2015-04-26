@@ -101,7 +101,6 @@
     <orderEntry type="library" exported="" name="play-services-wallet-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="butterknife-5.1.2" level="project" />
-    <orderEntry type="library" exported="" name="HxMBT" level="project" />
     <orderEntry type="library" exported="" name="play-services-cast-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-maps-7.0.0" level="project" />
@@ -113,6 +112,7 @@
     <orderEntry type="library" exported="" name="play-services-drive-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-analytics-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-games-7.0.0" level="project" />
+    <orderEntry type="library" exported="" name="android-times-square-1.5.0" level="project" />
     <orderEntry type="library" exported="" name="mpandroidchartlibrary-1-7-4" level="project" />
     <orderEntry type="library" exported="" name="hugo-runtime-1.2.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-nearby-7.0.0" level="project" />

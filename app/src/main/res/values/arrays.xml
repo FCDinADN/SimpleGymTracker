@@ -38,4 +38,9 @@
         <item>Gain 1 kg per week</item>
     </array>
 
+    <array name="history_tabs">
+        <item>Everyday Activity</item>
+        <item>Intense Activity</item>
+    </array>
+
 </resources>

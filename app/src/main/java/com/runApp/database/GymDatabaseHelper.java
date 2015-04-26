@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.RemoteException;
 
 import com.runApp.models.ComplexLocation;
+import com.runApp.models.EverydayActivity;
 import com.runApp.models.History;
 import com.runApp.models.HxMMessage;
 import com.runApp.utils.Lists;
@@ -135,6 +136,24 @@ public class GymDatabaseHelper {
         insertBuilder.withValue(GymDBContract.Exercises.START_TIME, history.getStartTime());
         insertBuilder.withValue(GymDBContract.Exercises.END_TIME, history.getEndTime());
         insertBuilder.withValue(GymDBContract.Exercises.DISTANCE, history.getDistance());
+
+        batch.add(insertBuilder.build());
+        LogUtils.LOGE(TAG, "Database insert");
+        ContentResolver resolver = Utils.getContext().getContentResolver();
+        try {
+            resolver.applyBatch(GymDBContract.CONTENT_AUTHORITY, batch);
+        } catch (RemoteException | OperationApplicationException e) {
+            LogUtils.LOGE(TAG, "Database insert Exercise", e);
+        }
+    }
+
+    public void insertEverydayActivity(EverydayActivity activity){
+        ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
+        ContentProviderOperation.Builder insertBuilder = ContentProviderOperation.newInsert(GymDBContract.StepsAndCalories.CONTENT_URI);
+
+        insertBuilder.withValue(GymDBContract.StepsAndCalories.STEPS, activity.getSteps());
+        insertBuilder.withValue(GymDBContract.StepsAndCalories.CALORIES, activity.getCalories());
+        insertBuilder.withValue(GymDBContract.StepsAndCalories.DATE, activity.getDate());
 
         batch.add(insertBuilder.build());
         LogUtils.LOGE(TAG, "Database insert");

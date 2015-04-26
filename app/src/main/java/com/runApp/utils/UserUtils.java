@@ -3,11 +3,9 @@ package com.runApp.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Rares on 20/02/15.
@@ -51,6 +49,7 @@ public class UserUtils {
     private static String todayDateString = null;
     private static Date todayDate = null;
     private static SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
+    private static SimpleDateFormat sdf_without_hour = new SimpleDateFormat(Constants.DATE_FORMAT_WITHOUT_HOUR);
 
     private static SharedPreferences getPrefs() {
         if (mUserPrefs == null) {
@@ -76,6 +75,7 @@ public class UserUtils {
     }
 
     public static void setIsServiceRunning(boolean isServiceRunning) {
+        LogUtils.LOGE("setIsServiceRunning", isServiceRunning + " <- " + isServiceRunning);
         SharedPreferences sharedPreferences = Utils.getContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         sharedPreferences.edit().putBoolean(IS_SERVICE_RUNNING, isServiceRunning).apply();
     }
@@ -230,13 +230,15 @@ public class UserUtils {
         if (todayDateString == null) {
             todayDateString = getPrefs().getString(TODAY_DATE_STRING, "");
         }
+        LogUtils.LOGE("UserUtils", "getTodayDateString " + todayDateString);
         return todayDateString;
     }
 
     public static Date getTodayDate() {
         if (todayDate == null) {
             try {
-                todayDate = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).parse(getTodayDateString());
+                todayDate = sdf_without_hour.parse(getTodayDateString());
+                LogUtils.LOGE("User", "getTodayDate " + todayDate);
             } catch (ParseException e) {
                 return null;
             }
@@ -256,22 +258,22 @@ public class UserUtils {
     }
 
     public static void checkDate() {
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date today = new Date();
         try {
-            Date todayWithZeroTime = formatter.parse(formatter.format(today));
-            String dateString = formatter.format(todayWithZeroTime);
-            if (!dateString.equals(getTodayDateString())) {
+            Date todayWithZeroTime = sdf_without_hour.parse(sdf_without_hour.format(today));
+            String dateString = sdf_without_hour.format(todayWithZeroTime);
+            if (!dateString.equals(getTodayDateString()) || todayDateString == null) {
+                LogUtils.LOGE("USER", dateString);
                 setTodayDateString(dateString);
             }
         } catch (ParseException e) {
             e.printStackTrace();
         }
 //        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-//        String dateInString = "21/4/2015 19:22";
+//        String dateInString = "26/4/2015 12:50";
 //        try {
 //            Date date = sdf.parse(dateInString);
-//            String dateString = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).format(date);
+//            String dateString = sdf.format(date);
 //            if (!dateString.equals(getTodayDateString())) {
 //                setTodayDateString(dateString);
 //            }

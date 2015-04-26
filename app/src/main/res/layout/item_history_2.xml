@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="70dp"
-                android:background="@drawable/item_light_blue_bg">
+                android:minHeight="70dp">
 
     <View
         android:layout_width="60dp"
@@ -67,6 +66,7 @@
             android:paddingTop="3dp"
             android:orientation="horizontal"
             android:visibility="visible"
+            android:id="@+id/history_time_layout"
             android:layout_alignParentTop="true">
 
             <ImageView
@@ -115,6 +115,30 @@
             android:background="@drawable/item_delete_bg"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/history_item_arrow_down"
+            android:contentDescription="@null"
+            android:background="@drawable/arrow_down"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone"
+            android:layout_marginEnd="7dp"
+            android:layout_centerVertical="true"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/history_item_arrow_up"
+            android:contentDescription="@null"
+            android:background="@drawable/arrow_up"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone"
+            android:layout_marginEnd="7dp"
             android:layout_centerVertical="true"
             />
 

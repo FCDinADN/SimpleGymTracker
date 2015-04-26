@@ -20,15 +20,15 @@ import android.widget.TextView;
 
 import com.runApp.R;
 import com.runApp.database.GymDatabaseHelper;
+import com.runApp.models.ComplexLocation;
 import com.runApp.receivers.AlarmReceiver;
+import com.runApp.services.CaloriesService;
+import com.runApp.ui.fragments.BaseTabContainerFragment;
 import com.runApp.ui.fragments.CardioFragment;
-import com.runApp.ui.fragments.HistoryFragment;
 import com.runApp.ui.fragments.NavigationDrawerFragment;
 import com.runApp.ui.fragments.PathGoogleMapFragment;
 import com.runApp.ui.fragments.SettingsFragment;
 import com.runApp.ui.fragments.StartActivityFragment;
-import com.runApp.models.ComplexLocation;
-import com.runApp.services.CaloriesService;
 import com.runApp.utils.Constants;
 import com.runApp.utils.DialogHandler;
 import com.runApp.utils.DumbData;
@@ -205,7 +205,7 @@ public class MainActivity extends ActionBarActivity
                     mTitle = getString(R.string.cardio_selection);
                     break;
                 case 1:
-                    fragment = new HistoryFragment();
+                    fragment = new BaseTabContainerFragment();
                     mTitle = getString(R.string.history_selection);
                     break;
                 case 2:
@@ -354,6 +354,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onDestroy() {
         mIsRunning = UserUtils.isServiceRunning();
+        LogUtils.LOGE(TAG,"[onDestroy] " + mIsRunning);
         if (!mIsRunning) {
             startStepService();
         }

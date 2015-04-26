@@ -16,6 +16,7 @@ public class GymDBContract {
     protected static final String PATH_LOCATIONS = "locations_table_path";
     protected static final String PATH_EXERCISES = "exercises_path";
     protected static final String PATH_HEART_RATE_WITH_EXERCISE = "heart_rate_with_exercise_path";
+    protected static final String PATH_STEPS_AND_CALORIES = "steps_and_calories__path";
 //    protected static final String PATH_ROUTINES = "routines_path";
 //    protected static final String PATH_WORKOUTS = "workouts_path";
 
@@ -73,6 +74,12 @@ public class GymDBContract {
         String DISTANCE = "exercise_distance";
     }
 
+    public interface StepsAndCaloriesColumns {
+        String STEPS = "steps";
+        String CALORIES = "calories";
+        String DATE = "date";
+    }
+
     public static class HeartRates implements HeartRatesColumns, BaseColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_HEART_RATE).build();
@@ -97,6 +104,14 @@ public class GymDBContract {
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.runApp.exercises";
         public static final String CONTENT_URI_ID_ORDER = GymDatabase.Tables.EXERCISES
                 + "." + Exercises.ID + " DESC";
+    }
+
+    public static class StepsAndCalories implements StepsAndCaloriesColumns, BaseColumns {
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_STEPS_AND_CALORIES).build();
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.runApp.stepsAndCalories";
+        public static final String CONTENT_URI_ID_ORDER= GymDatabase.Tables.STEPS_AND_CALORIES
+                + "." + BaseColumns._ID + " DESC";
     }
 
 //    public static class Exercises implements ExercisesColumns, BaseColumns {

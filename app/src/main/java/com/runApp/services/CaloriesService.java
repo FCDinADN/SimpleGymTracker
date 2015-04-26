@@ -13,10 +13,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.runApp.R;
+import com.runApp.database.GymDatabaseHelper;
+import com.runApp.models.EverydayActivity;
 import com.runApp.pedometer.StepDetecterWithAPI;
+import com.runApp.receivers.AlarmReceiver;
 import com.runApp.ui.fragments.StartActivityFragment;
 import com.runApp.utils.LogUtils;
 import com.runApp.utils.UserUtils;
+import com.runApp.utils.Utils;
 
 /**
  * Created by Rares on 03/04/15.
@@ -195,11 +199,16 @@ public class CaloriesService extends Service {
         }
 
         @Override
-        public void resetValues() {
+        public void resetValues(int steps, float calories) {
+            GymDatabaseHelper.getInst().insertEverydayActivity(new EverydayActivity(steps, calories, UserUtils.getTodayDateString()));
             UserUtils.setStepsNumber(0);
             UserUtils.setBurntCalories(0);
+            //CHECK DATE HERE TO SAVE THE NEW DATA IN PREFS
+            UserUtils.checkDate();
+            //send broadcast to fragment
+            sendBroadcast(new Intent(StartActivityFragment.UPDATE_VALUES));
+            AlarmReceiver.setResetAlarm(Utils.getContext());
         }
     };
-
 
 }

@@ -15,5 +15,6 @@ public class Constants {
     public static final int MAXIMUM_WEIGHT = 270;
     public static final int MINIMUM_WEIGHT = 30;
     public static final String DATE_FORMAT = "dd/MM/yyyy HH:mm";
+    public static final String DATE_FORMAT_WITHOUT_HOUR = "dd/MM/yyyy";
 
 }

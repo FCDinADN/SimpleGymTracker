@@ -21,14 +21,9 @@ import java.util.UUID;
 public class HxMConnection {
     private final String TAG = HxMConnection.class.getSimpleName();
 
-    //    private BluetoothSocket mmSocket;
-//    private BluetoothDevice mmDevice;
-    //    private OutputStream mmOutputStream;
     private BluetoothAdapter bluetoothAdapter;
-    //    private InputStream mmInputStream;
     private Fragment mFragment;
     private HxMListener mHxMListener;
-    private byte[] readBuffer;
     private ConnectThread mConnectThread;
 
     public HxMConnection(Fragment fragment) {
@@ -68,72 +63,16 @@ public class HxMConnection {
 //        return true;
     }
 
-    public void openBT() {
-//        new OpenBt().doInBackground();
-    }
-
     public void closeBT() throws IOException {
-//        mmOutputStream.close();
-//        mmInputStream.close();
-//        mmSocket.close();
         if (mConnectThread != null) {
             mConnectThread.cancel();
         }
-        mHxMListener.resetValues();
+//        mHxMListener.resetValues();
     }
-
-//    private void beginListenForData() {
-//        final Handler handler = new Handler();
-//        readBuffer = new byte[1024];
-//        mHxMListener.setProgressVisibility(View.GONE);
-//        Thread workerThread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                int i;
-//                int counter = 0;
-//                try {
-//                    while (!Thread.currentThread().isInterrupted() && (i = mmInputStream.read()) != -1) {
-//                        if (counter == 59) {
-//                            mHxMListener.receiveValues(new HxMMessage(readBuffer), handler);
-//                            readBuffer = new byte[1024];
-//                            counter = 0;
-//                        } else {
-//                            readBuffer[counter] = (byte) i;
-//                            counter++;
-//                        }
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//        workerThread.start();
-//    }
 
     public void setHxMListener(HxMListener hxMListener) {
         this.mHxMListener = hxMListener;
     }
-
-//    class OpenBt extends AsyncTask<Void, Void, Void> {
-//
-//        @Override
-//        protected Void doInBackground(Void... params) {
-//            UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); //Standard SerialPortService ID
-//            try {
-//                mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
-//                mmSocket.connect();
-//                mmInputStream = mmSocket.getInputStream();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-////            mmOutputStream = mmSocket.getOutputStream();
-//
-//            beginListenForData();
-//
-//            mHxMListener.setStatusMessage("Bluetooth Opened");
-//            return null;
-//        }
-//    }
 
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSockect;
@@ -222,5 +161,4 @@ public class HxMConnection {
     }
 
     private Handler mHandler = new Handler();
-
 }

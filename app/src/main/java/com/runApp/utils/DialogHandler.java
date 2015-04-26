@@ -193,6 +193,14 @@ public class DialogHandler {
         builder.create().show();
     }
 
+    public static void showSimpleSelectionDialog(@NonNull Activity activity, int title, CharSequence[] array,int posBtn, int selection, DialogInterface.OnClickListener listener, DialogInterface.OnClickListener buttonListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(title);
+        builder.setSingleChoiceItems(array, selection, listener);
+        builder.setPositiveButton(posBtn, buttonListener);
+        builder.create().show();
+    }
+
     public static void showMultiSelectionDialog(Activity activity, int title, int array, boolean[] checkedItems, int posBtn, DialogInterface.OnClickListener posListnener, DialogInterface.OnMultiChoiceClickListener selectionListener) {
         if (activity != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);

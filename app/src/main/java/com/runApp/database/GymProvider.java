@@ -9,6 +9,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.provider.BaseColumns;
 
 import com.runApp.utils.SelectionBuilder;
 import com.runApp.utils.Utils;
@@ -25,6 +26,7 @@ import static com.runApp.database.GymDBContract.PATH_EXERCISES;
 import static com.runApp.database.GymDBContract.PATH_HEART_RATE;
 import static com.runApp.database.GymDBContract.PATH_HEART_RATE_WITH_EXERCISE;
 import static com.runApp.database.GymDBContract.PATH_LOCATIONS;
+import static com.runApp.database.GymDBContract.PATH_STEPS_AND_CALORIES;
 import static com.runApp.database.GymDatabase.Tables;
 
 /**
@@ -40,6 +42,7 @@ public class GymProvider extends ContentProvider {
     private static final int LOCATIONS = 1001;
     private static final int EXERCISES = 1002;
     private static final int HEARTRATES_WITH_EXERCISE = 1003;
+    private static final int STEPS_AND_CALORIES = 1004;
 //    private static final int ROUTINES = 1004;
 //    private static final int WORKOUTS = 1005;
 
@@ -58,6 +61,9 @@ public class GymProvider extends ContentProvider {
 
          /* HEARTRATES WITH EXERCISE TABLE TABLE */
         matcher.addURI(authority, PATH_HEART_RATE + "/" + PATH_HEART_RATE_WITH_EXERCISE, HEARTRATES_WITH_EXERCISE);
+
+        /* STEPS AND CALORIES TABLE */
+        matcher.addURI(authority, PATH_STEPS_AND_CALORIES, STEPS_AND_CALORIES);
 
         /* ROUTINES TABLE */
 //        matcher.addURI(authority, PATH_ROUTINES, ROUTINES);
@@ -97,6 +103,8 @@ public class GymProvider extends ContentProvider {
 //                return Routines.CONTENT_TYPE;
 //            case WORKOUTS:
 //                return Workouts.CONTENT_TYPE;
+            case STEPS_AND_CALORIES:
+                return GymDBContract.StepsAndCalories.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -128,6 +136,9 @@ public class GymProvider extends ContentProvider {
 //                insertOrUpdateById(db, uri, Tables.WORKOUTS, values, WorkoutsColumns.ROUTINE);
 //                getContext().getContentResolver().notifyChange(uri, null, false);
 //                return Workouts.CONTENT_URI;
+            case STEPS_AND_CALORIES:
+                insertOrUpdateById(db, uri, Tables.STEPS_AND_CALORIES, values, BaseColumns._ID);
+                return GymDBContract.StepsAndCalories.CONTENT_URI;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -201,6 +212,8 @@ public class GymProvider extends ContentProvider {
                         .mapToTable(ExercisesColumns.ID, Tables.EXERCISES);
 //            case WORKOUTS:
 //                return builder.table(Tables.WORKOUTS);
+            case STEPS_AND_CALORIES:
+                return builder.table(Tables.STEPS_AND_CALORIES);
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

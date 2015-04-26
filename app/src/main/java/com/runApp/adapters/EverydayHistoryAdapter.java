@@ -1,17 +1,24 @@
 package com.runApp.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
 import com.runApp.R;
-import com.runApp.models.EventWrapper;
-import com.runApp.models.History;
+import com.runApp.models.EverydayActivity;
+import com.runApp.models.EverydayEventWrapper;
 import com.runApp.utils.LogUtils;
 import com.runApp.utils.Utils;
 
@@ -27,9 +34,9 @@ import butterknife.InjectView;
 import butterknife.Optional;
 
 /**
- * Created by Rares on 04/01/15.
+ * Created by Rares on 25/04/15.
  */
-public class HistoryAdapter extends BaseExpandableListAdapter {
+public class EverydayHistoryAdapter extends BaseExpandableListAdapter {
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_TODAY_FIRST = 1;
@@ -37,66 +44,58 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
     private static final int TYPE_FIRST = 3;
     private static final int TYPE_OTHER = 4;
 
-    private final List<EventWrapper> wrappedEventsHeader;
+    private final List<EverydayEventWrapper> wrappedEventsHeader;
     private ExpandableListView mExpandableListView;
     private final LayoutInflater inflater;
     private final Context mContext;
-    private CallBack mCallBack;
+    //Index used to animate only the piechart opened
+    private int animateMeIndex = -10000;
 
-    private boolean intenseActivity;
-
-    public HistoryAdapter(Context context, ArrayList<History> histories, ExpandableListView expandableListView) {
+    public EverydayHistoryAdapter(Context context, ArrayList<EverydayActivity> everydayActivities, ExpandableListView expandableListView) {
         inflater = LayoutInflater.from(context);
         mContext = context;
         mExpandableListView = expandableListView;
-        wrappedEventsHeader = new ArrayList<EventWrapper>();
-
-        Date today = new Date();
+        wrappedEventsHeader = new ArrayList<>();
 
         Date lastDay = null;
-        for (int i = 0; i < histories.size(); i++) {
-            History history = histories.get(i);
-            Date date = history.getStartTimeDate();
+        for (int i = 0; i < everydayActivities.size(); i++) {
+            EverydayActivity everydayActivity = everydayActivities.get(i);
+            Date date = everydayActivity.getDateDateFormat();
             if (date != null) {
-                EventWrapper eventWrapper = new EventWrapper();
+                EverydayEventWrapper eventWrapper = new EverydayEventWrapper();
                 String month = new SimpleDateFormat("MMMM yyyy").format(date);
                 if (wrappedEventsHeader.size() > 0) {
-                    EventWrapper lastItem = wrappedEventsHeader.get(wrappedEventsHeader.size() - 1);
+                    EverydayEventWrapper lastItem = wrappedEventsHeader.get(wrappedEventsHeader.size() - 1);
                     if (!lastItem.headerTitle.equals(month)) {
-                        EventWrapper header = new EventWrapper();
+                        EverydayEventWrapper header = new EverydayEventWrapper();
                         header.isHeader = true;
                         header.headerTitle = month;
                         wrappedEventsHeader.add(header);
 //                        Log.e(TAG, "add header: " + date.toString() + "; " + eventModel.getId() + ", " + header.headerTitle + "/" + lastItem.headerTitle);
                     }
                 } else {
-                    EventWrapper header = new EventWrapper();
+                    EverydayEventWrapper header = new EverydayEventWrapper();
                     header.isHeader = true;
                     header.headerTitle = month;
                     wrappedEventsHeader.add(header);
                 }
                 eventWrapper.headerTitle = month;
-                eventWrapper.history = history;
+                eventWrapper.mEverydayActivity = everydayActivity;
                 try {
                     eventWrapper.day = new SimpleDateFormat("yyyy-MM-dd").parse(new SimpleDateFormat("yyyy-MM-dd").format(date));
                 } catch (ParseException ignored) {
                 }
                 if (lastDay == null) {
                     eventWrapper.isFirst = true;
-                } else if (lastDay.compareTo(eventWrapper.day) == 0) {
-                    eventWrapper.isFirst = false;
-                } else {
-                    eventWrapper.isFirst = true;
-                }
+                } else eventWrapper.isFirst = lastDay.compareTo(eventWrapper.day) != 0;
                 lastDay = eventWrapper.day;
-                eventWrapper.today = new SimpleDateFormat("yyyy-MM-dd").format(today).equals(new SimpleDateFormat("yyyy-MM-dd").format(eventWrapper.day));
-
                 wrappedEventsHeader.add(eventWrapper);
             }
         }
         mExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long id) {
+                animateMeIndex = groupPosition;
                 return wrappedEventsHeader.get(groupPosition).isHeader;
             }
         });
@@ -113,7 +112,7 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public EventWrapper getGroup(int groupPosition) {
+    public Object getGroup(int groupPosition) {
         return wrappedEventsHeader.get(groupPosition);
     }
 
@@ -144,7 +143,7 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupType(int groupPosition) {
-        EventWrapper wrapper = getGroup(groupPosition);
+        EverydayEventWrapper wrapper = (EverydayEventWrapper) getGroup(groupPosition);
         if (wrapper.isHeader) {
             return TYPE_HEADER;
         } else if (wrapper.today) {
@@ -163,7 +162,7 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(final int position, boolean isExpanded, View view, ViewGroup viewGroup) {
         int type = getGroupType(position);
-        final EventWrapper wrapper = getGroup(position);
+        final EverydayEventWrapper wrapper = ((EverydayEventWrapper) getGroup(position));
         Holder holder = null;
         if (view == null) {
             switch (type) {
@@ -176,30 +175,18 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
                 case TYPE_TODAY_FIRST:
                     view = inflater.inflate(R.layout.item_history_2, viewGroup, false);
                     holder = new Holder(view);
-                    if (type == TYPE_TODAY_FIRST) {
-                        View background = view.findViewById(R.id.history_item_day_date_container);
-                        background.setBackgroundColor(mContext.getResources().getColor(R.color.primary_color));
-                        holder.day.setTextColor(mContext.getResources().getColor(R.color.white));
-                        holder.dayName.setTextColor(mContext.getResources().getColor(R.color.white));
-                    } else {
-                        View background = view.findViewById(R.id.history_item_day_date_container);
-                        background.setBackgroundColor(mContext.getResources().getColor(R.color.calendar_day_background));
-                        holder.day.setTextColor(mContext.getResources().getColor(R.color.primary_text));
-                        holder.dayName.setTextColor(mContext.getResources().getColor(R.color.primary_text));
-                    }
+                    View background = view.findViewById(R.id.history_item_day_date_container);
+                    background.setBackgroundColor(mContext.getResources().getColor(R.color.calendar_day_background));
+                    holder.day.setTextColor(mContext.getResources().getColor(R.color.primary_text));
+                    holder.dayName.setTextColor(mContext.getResources().getColor(R.color.primary_text));
                     view.setTag(holder);
                     break;
                 case TYPE_OTHER:
                 case TYPE_TODAY_OTHER:
                     view = inflater.inflate(R.layout.item_history_2, viewGroup, false);
                     holder = new Holder(view);
-                    if (type == TYPE_TODAY_OTHER) {
-                        View background = view.findViewById(R.id.history_item_day_date_container);
-                        background.setBackgroundColor(mContext.getResources().getColor(R.color.primary_color));
-                    } else {
-                        View background = view.findViewById(R.id.history_item_day_date_container);
-                        background.setBackgroundColor(mContext.getResources().getColor(R.color.calendar_day_background));
-                    }
+                    View container = view.findViewById(R.id.history_item_day_date_container);
+                    container.setBackgroundColor(mContext.getResources().getColor(R.color.calendar_day_background));
                     view.setTag(holder);
                     break;
             }
@@ -207,13 +194,13 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
             holder = (Holder) view.getTag();
         }
         if (holder != null) {
-//            if (mExpandableListView.isGroupExpanded(position) && type != TYPE_HEADER) {
-//                holder.arrowDown.setVisibility(View.GONE);
-//                holder.arrowUp.setVisibility(View.VISIBLE);
-//            } else if (type != TYPE_HEADER) {
-//                holder.arrowUp.setVisibility(View.GONE);
-//                holder.arrowDown.setVisibility(View.VISIBLE);
-//            }
+            if (mExpandableListView.isGroupExpanded(position) && type != TYPE_HEADER) {
+                holder.arrowDown.setVisibility(View.GONE);
+                holder.arrowUp.setVisibility(View.VISIBLE);
+            } else if (type != TYPE_HEADER) {
+                holder.arrowUp.setVisibility(View.GONE);
+                holder.arrowDown.setVisibility(View.VISIBLE);
+            }
             switch (type) {
                 case TYPE_HEADER: {
                     holder.title.setText(wrapper.headerTitle);
@@ -223,70 +210,23 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
                 case TYPE_FIRST:
                 case TYPE_TODAY_FIRST: {
                     holder.borderPadding.setVisibility(View.GONE);
-                    if (type == TYPE_TODAY_FIRST) {
-                        holder.border.setVisibility(View.GONE);
-                    }
-                    holder.title.setText("You run " + wrapper.history.getDistance() + " m");
-                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                    holder.time.setText(sdf.format(wrapper.history.getStartTimeDate()) + " - " + sdf.format(wrapper.history.getEntTimeDate()));
-//                    SimpleDateFormat sdf;// = new SimpleDateFormat("HH:mm", Locale.getDefault());
-//                    holder.time.setText(getTime(sdf.format(wrapper.event.getStartTime()),sdf.format(wrapper.event.getEndTime())));
-//                    String time = sdf.format(wrapper.event.getStartTime());
-//                    holder.time.setText(getTime(sdf.format(wrapper.event.getStartTime()),sdf.format(wrapper.event.getEndTime())));
-//                    holder.time.setText(time);
-                    sdf = new SimpleDateFormat("d");
-                    LogUtils.LOGE("convert", wrapper.history.getStartTime());
-                    holder.day.setText(sdf.format(wrapper.history.getStartTimeDate()));
+                    holder.border.setVisibility(View.GONE);
+                    holder.title.setText(wrapper.mEverydayActivity.getSteps() + " steps, " + wrapper.mEverydayActivity.getCalories() + " calories burnt.");
+                    SimpleDateFormat sdf = new SimpleDateFormat("d");
+                    holder.day.setText(sdf.format(wrapper.mEverydayActivity.getDateDateFormat()));
                     sdf = new SimpleDateFormat("EEEE", Locale.getDefault());
-                    holder.dayName.setText(sdf.format(wrapper.history.getStartTimeDate()).substring(0, 3));
-                    holder.delete.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mCallBack.deleteItem(position - 1);
-
-
-//                                                setAnimation(holder.container, position, DELETE);
-//                                                exercises.remove(position);
-//                                                new Timer().schedule(new TimerTask() {
-//                                                    @Override
-//                                                    public void run() {
-//                                                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                                                            @Override
-//                                                            public void run() {
-//                                                                notifyItemRemoved(position);
-//                                                                notifyItemRangeChanged(position, exercises.size());
-//                                                            }
-//                                                        });
-//                                                    }
-//                                                }, 400);
-                        }
-                    });
+                    holder.dayName.setText(sdf.format(wrapper.mEverydayActivity.getDateDateFormat()).substring(0, 3));
+                    holder.time.setVisibility(View.GONE);
+                    holder.delete.setVisibility(View.GONE);
                     break;
                 }
                 case TYPE_OTHER:
                 case TYPE_TODAY_OTHER: {
-                    holder.title.setText("You run " + wrapper.history.getDistance() + " m");
-                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                    holder.time.setText(sdf.format(wrapper.history.getStartTimeDate()) + " - " + sdf.format(wrapper.history.getEntTimeDate()));
-//                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-//                    String time = sdf.format(wrapper.event.getStartTime());
-//                    holder.time.setText(getTime(sdf.format(wrapper.event.getStartTime()),sdf.format(wrapper.event.getEndTime())));
-//                    holder.time.setText(time);
-                    if (type == TYPE_TODAY_OTHER) {
-                        holder.borderPadding.setBackgroundColor(Utils.getContext().getResources().getColor(R.color.primary_color));
-                        holder.border.setVisibility(View.VISIBLE);
-                    } else {
-                        holder.borderPadding.setBackgroundColor(Utils.getContext().getResources().getColor(R.color.calendar_day_background));
-                        holder.border.setVisibility(View.VISIBLE);
-                    }
-                    holder.delete.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //TODO delete history
-                            mCallBack.deleteItem(position - 1);
-
-                        }
-                    });
+                    holder.title.setText(wrapper.mEverydayActivity.getSteps() + " steps, " + wrapper.mEverydayActivity.getCalories() + " calories burnt.");
+                    holder.borderPadding.setBackgroundColor(Utils.getContext().getResources().getColor(R.color.calendar_day_background));
+                    holder.border.setVisibility(View.VISIBLE);
+                    holder.time.setVisibility(View.GONE);
+                    holder.delete.setVisibility(View.GONE);
                     break;
                 }
             }
@@ -294,21 +234,59 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
         return view;
     }
 
-    public History getGroupHistory(int groupPosition) {
-        if (!wrappedEventsHeader.get(groupPosition).isHeader) {
-            return wrappedEventsHeader.get(groupPosition).history;
-        } else {
-            return null;
-        }
-    }
+    private PieChart mChart;
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view, ViewGroup viewGroup) {
         if (view == null) {
+            LogUtils.LOGE("getChildView", "view is NULL");
             LayoutInflater infalInflater = (LayoutInflater) mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = infalInflater.inflate(R.layout.item_friend_exercise, viewGroup, false);
+            view = infalInflater.inflate(R.layout.item_everyday_history, viewGroup, false);
+        } else {
+            LogUtils.LOGE("getChildView", "view is NOT NULL");
         }
+
+        EverydayEventWrapper wrapper = ((EverydayEventWrapper) getGroup(groupPosition));
+
+        mChart = ((PieChart) view.findViewById(R.id.pieChart));
+        mChart.setUsePercentValues(false);
+        mChart.setDescription("");
+
+        mChart.setClickable(false);
+
+        mChart.setCenterTextTypeface(Typeface.createFromAsset(mContext.getAssets(), "Lato-Light.ttf"));
+
+        mChart.setDrawHoleEnabled(true);
+
+        mChart.setHoleRadius(60f);
+
+        mChart.setDrawCenterText(true);
+
+        mChart.setCenterText(wrapper.mEverydayActivity.getCalories() + " from 300");
+
+        mChart.setRotationAngle(270);
+        // enable rotation of the chart by touch
+        mChart.setRotationEnabled(false);
+
+        setData(wrapper.mEverydayActivity.getCalories(), 100);
+
+        mChart.setDrawLegend(false);
+
+//        mChart.animateX(1500);
+
+        if (animateMeIndex == groupPosition) {
+            mChart.animateXY(1500, 1500);
+            animateMeIndex = -10000;
+        }
+
+//         mChart.spin(2000, 0, 360);
+//
+//        Legend l = mChart.getLegend();
+//        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
+//        l.setXEntrySpace(7f);
+//        l.setYEntrySpace(5f);
+
 //        if (historyLogs.get(groupPosition).getType().equals("Running")) {
 //            ((TextView) view.findViewById(R.id.item_friend_exercise_name)).setText("37 mins");
 //        } else {
@@ -319,6 +297,41 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
 //        FontUtils.getInst().setRobotoLight((TextView) view.findViewById(R.id.item_friend_exercise_name));
 //        FontUtils.getInst().setRobotoLightItalian((TextView) view.findViewById(R.id.item_friend_exercise_add_comment));
         return view;
+    }
+
+    private void setData(float calories, float range) {
+
+        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
+
+        // IMPORTANT: In a PieChart, no values (Entry) should have the same
+        // xIndex (even if from different DataSets), since no values can be
+        // drawn above each other.
+        yVals1.add(new Entry(calories, 0));
+        yVals1.add(new Entry(300 - calories, 1));
+
+        ArrayList<String> xVals = new ArrayList<String>();
+
+        for (int i = 0; i < 2; i++)
+            xVals.add("");
+
+        PieDataSet dataSet = new PieDataSet(yVals1, "");
+        dataSet.setSliceSpace(0f);
+        dataSet.setSelectionShift(0f);
+
+        dataSet.setColors(new int[]{Color.parseColor("#133860"), Color.parseColor("#D5B855")});
+
+        PieData data = new PieData(xVals, dataSet);
+//        data.setValueFormatter(new PercentFormatter());
+//        data.setValueTextSize(11f);
+//        data.setValueTextColor(Color.WHITE);
+//        data.setValueTypeface(tf);
+
+        mChart.setData(data);
+
+        // undo all highlights
+        mChart.highlightValues(null);
+
+        mChart.invalidate();
     }
 
     @Override
@@ -335,13 +348,13 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
         @InjectView(R.id.history_item_title)
         TextView title;
         @Optional
-        @InjectView(R.id.history_item_time)
-        TextView time;
+        @InjectView(R.id.history_time_layout)
+        LinearLayout time;
         @Optional
-        @InjectView(R.id.item_friends_routine_arrow_down)
+        @InjectView(R.id.history_item_arrow_down)
         ImageView arrowDown;
         @Optional
-        @InjectView(R.id.item_friends_routine_arrow_up)
+        @InjectView(R.id.history_item_arrow_up)
         ImageView arrowUp;
         @Optional
         @InjectView(R.id.history_item_day)
@@ -380,21 +393,5 @@ public class HistoryAdapter extends BaseExpandableListAdapter {
 //                break;
 //        }
 //    }
-
-    public interface CallBack {
-        void deleteItem(int position);
-    }
-
-    public void setCallBack(CallBack callback) {
-        mCallBack = callback;
-    }
-
-    public void removeItem(int position) {
-        if (wrappedEventsHeader.get(position).isFirst && position > 0) {
-            wrappedEventsHeader.get(position + 1).isFirst = true;
-        }
-        wrappedEventsHeader.remove(position);
-        notifyDataSetChanged();
-    }
 
 }

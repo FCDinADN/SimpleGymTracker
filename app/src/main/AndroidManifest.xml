@@ -64,11 +64,6 @@
             android:name=".services.CaloriesService"
             />
 
-        <service
-            android:enabled="true"
-            android:name=".pedometer.StepService"
-            />
-
         <receiver android:name=".receivers.BootCompletedIntentReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
@@ -76,6 +71,9 @@
         </receiver>
 
         <receiver  android:process=":remote" android:name=".receivers.AlarmReceiver"/>
+
+        <activity android:name=".ui.activities.FinishIntenseActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

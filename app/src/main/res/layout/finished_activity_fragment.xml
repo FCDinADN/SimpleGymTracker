@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="7dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/finished_activity_date_layout"
+            android:padding="7dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@color/actionbar_background">
+
+            <com.runApp.ui.FontMerriweatherTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/finished_activity_date"
+                android:textSize="20sp"
+                android:textColor="@color/actionbar_text_color"/>
+
+            <com.runApp.ui.FontMerriweatherTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/finished_activity_hour"
+                android:textSize="20sp"
+                android:textColor="@color/actionbar_text_color"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/finished_activity_calories_layout"
+            android:layout_below="@+id/finished_activity_date_layout">
+
+            <com.runApp.ui.FontLatoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/calories"
+                android:textColor="@color/lighter_grey"
+                android:id="@+id/intense_activity_calories"
+                android:textSize="25sp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/caloriesValue"
+                />
+
+            <com.runApp.ui.FontLatoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/caloriesValue"
+                android:padding="7dp"
+                android:textSize="55sp"
+                android:text="@string/nothing_sign"
+                android:textColor="@color/black"
+                android:layout_centerHorizontal="true"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:orientation="horizontal"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="7dp"
+            android:layout_below="@+id/finished_activity_calories_layout"
+            android:id="@+id/distance_layout"
+            android:background="@drawable/edittext_underline">
+
+            <com.runApp.ui.FontLatoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/distance"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textSize="20sp"
+                android:textColor="@color/lighter_grey"
+                android:layout_gravity="center_vertical"/>
+
+            <com.runApp.ui.FontLatoTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/distance_value"
+                android:text="@string/nothing_sign"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:gravity="center_vertical|end"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:orientation="horizontal"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_below="@+id/distance_layout"
+            android:id="@+id/duration_layout"
+            android:background="@drawable/edittext_underline">
+
+            <com.runApp.ui.FontLatoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/duration"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textSize="20sp"
+                android:textColor="@color/lighter_grey"
+                android:layout_gravity="center_vertical"/>
+
+            <com.runApp.ui.FontLatoTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/duration_value"
+                android:text="@string/nothing_sign"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:gravity="center_vertical|end"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:orientation="horizontal"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_below="@+id/duration_layout"
+            android:id="@+id/speed_layout"
+            android:background="@drawable/edittext_underline">
+
+            <com.runApp.ui.FontLatoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/speed"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textSize="20sp"
+                android:textColor="@color/lighter_grey"
+                android:layout_gravity="center_vertical"/>
+
+            <com.runApp.ui.FontLatoTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/speed_value"
+                android:text="@string/nothing_sign"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:gravity="center_vertical|end"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:orientation="horizontal"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_below="@+id/speed_layout"
+            android:id="@+id/maximum_speed_layout"
+            android:background="@drawable/edittext_underline">
+
+            <com.runApp.ui.FontLatoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/maximum_speed"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textSize="20sp"
+                android:textColor="@color/lighter_grey"
+                android:layout_gravity="center_vertical"/>
+
+            <com.runApp.ui.FontLatoTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/maximum_speed_value"
+                android:text="@string/nothing_sign"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:gravity="center_vertical|end"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:orientation="horizontal"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_below="@+id/maximum_speed_layout"
+            android:id="@+id/heart_rate_layout"
+            android:background="@drawable/edittext_underline">
+
+            <com.runApp.ui.FontLatoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/average_heart_rate"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textSize="20sp"
+                android:textColor="@color/lighter_grey"
+                android:layout_gravity="center_vertical"/>
+
+            <com.runApp.ui.FontLatoTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/heartRate_value"
+                android:text="@string/nothing_sign"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:gravity="center_vertical|end"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+
+        <com.runApp.ui.FontLatoTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:id="@+id/intense_activity_show_graph"
+            android:textSize="20sp"
+            android:text="@string/show_graph"
+            android:gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="7dp"
+            android:layout_below="@+id/heart_rate_layout"
+            android:textColor="@drawable/black_pressed_bg"
+            />
+
+        <com.runApp.ui.FontMerriweatherTextView
+            android:layout_alignParentBottom="true"
+            android:id="@+id/finish_intense_activity_save"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:minWidth="148dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:textSize="20sp"
+            android:text="@string/settings_save"
+            android:textColor="@color/white"
+            android:background="@drawable/start_activity_btn_bk"
+            android:layout_below="@+id/intense_activity_show_graph"
+            android:gravity="center"/>
+
+    </RelativeLayout>
+</ScrollView>

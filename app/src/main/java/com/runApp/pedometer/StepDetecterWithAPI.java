@@ -149,7 +149,7 @@ public class StepDetecterWithAPI implements SensorEventListener {
     public interface Listener {
         void stepsChanged(int value, float calories);
 
-        void resetValues();
+        void resetValues(int value, float calories);
     }
 
     private Listener mListeners;
@@ -164,7 +164,7 @@ public class StepDetecterWithAPI implements SensorEventListener {
 
     public void resetCounterStep() {
         LogUtils.LOGE(TAG, "resetCounterStep");
-        mListeners.resetValues();
+        mListeners.resetValues(stepCounter, actualCalories);
         counterSteps = 0;
     }
 

@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/main_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.runApp.ui.utils.PagerSlidingTabStrip
+        android:id="@+id/pager_tabstrip"
+        android:layout_width="match_parent"
+        android:layout_height="48dip"
+        android:background="@color/save_btn_background"
+        android:clipToPadding="false"
+        app:pstsTabSwitch="true"
+        app:pstsShouldExpand="true"
+        app:pstsTabPaddingLeftRight="24dp"
+        app:pstsActivateTextColor="@color/actionbar_background_dark"
+        app:pstsDeactivateTextColor="@color/actionbar_25p_background" />
+
+    <com.runApp.ui.utils.CustomViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- <android.support.v4.view.PagerTabStrip
+             android:id="@+id/pager_tabstrip"
+             android:padding="10dp"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" /> -->
+
+
+    </com.runApp.ui.utils.CustomViewPager>
+
+</LinearLayout>

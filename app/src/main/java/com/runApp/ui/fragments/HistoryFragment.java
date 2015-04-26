@@ -102,22 +102,23 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
             calendarList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
                 @Override
                 public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                    CubicLineChartFragment historyChartFragment = new CubicLineChartFragment();
-                    Bundle mBundle = new Bundle();
-                    mBundle.putInt(CubicLineChartFragment.EXERCISE_NUMBER, historyList.get(groupPosition - 1).getId());
-                    mBundle.putString(CubicLineChartFragment.EXERCISE_DATE, historyList.get(groupPosition - 1).getStartTime());
-                    mBundle.putBoolean(CubicLineChartFragment.FROM_HISTORY, true);
-                    historyChartFragment.setArguments(mBundle);
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .add(R.id.container, historyChartFragment)
-                            .addToBackStack("")
-                            .commit();
-                    getActivity().getSupportFragmentManager().executePendingTransactions();
+                    if (mHistoryAdapter.getGroupHistory(groupPosition) != null) {
+                        CubicLineChartFragment historyChartFragment = new CubicLineChartFragment();
+                        Bundle mBundle = new Bundle();
+                        mBundle.putInt(CubicLineChartFragment.EXERCISE_NUMBER, mHistoryAdapter.getGroupHistory(groupPosition).getId());
+                        mBundle.putString(CubicLineChartFragment.EXERCISE_DATE, mHistoryAdapter.getGroupHistory(groupPosition).getStartTime());
+                        mBundle.putBoolean(CubicLineChartFragment.SHOW_MAP, true);
+                        historyChartFragment.setArguments(mBundle);
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .add(R.id.container, historyChartFragment)
+                                .addToBackStack("")
+                                .commit();
+                        getActivity().getSupportFragmentManager().executePendingTransactions();
+                    }
                     return true;
                 }
             });
         }
-
     }
 
     @Override

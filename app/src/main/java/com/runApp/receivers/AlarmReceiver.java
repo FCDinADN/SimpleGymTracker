@@ -15,11 +15,9 @@ import com.runApp.utils.Constants;
 import com.runApp.utils.LogUtils;
 import com.runApp.utils.UserUtils;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import hugo.weaving.DebugLog;
 
@@ -52,6 +50,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             case RESET_ALARM_ID:
                 //Send broadcast to reset stepsNumber and burntCalories
                 context.sendBroadcast(new Intent(StepDetecterWithAPI.RESET_VALUES));
+                //TODO remove sending notification from here!!
+                mNM = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                showNotification(UserUtils.getStepsNumber(), UserUtils.getBurntCalories());
                 break;
         }
     }
@@ -70,12 +71,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             /* Check if alarm time is set to time before actual time
             If the time is before, a notification is shown BUG */
             Date now = new Date();
-            if (now.after(alarmDate)){
-                Calendar c = Calendar.getInstance();
-                c.setTime(alarmDate);
-                c.add(Calendar.DATE, 1);
-                alarmDate = c.getTime();
-                LogUtils.LOGE(TAG, "changing " + UserUtils.getAlarmTime() + " -> " + new SimpleDateFormat(Constants.DATE_FORMAT).format(alarmDate));
+            if (now.after(alarmDate)) {
+                alarmDate = getTommorowDate(alarmDate);
             }
             alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, alarmDate.getTime(), AlarmManager.INTERVAL_DAY, notificationAlarmIntent);
         }
@@ -83,7 +80,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @DebugLog
     public static void setResetAlarm(Context context) {
-        LogUtils.LOGE("UserUtils", "setResetAlarm");
+        LogUtils.LOGE(TAG, "setResetAlarm");
 
         alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent resetIntent = new Intent(context, AlarmReceiver.class);
@@ -92,10 +89,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         //set alarm for resetting calories and steps
         Date resetAlarmDate = UserUtils.getTodayDate();
-        if (resetAlarmDate != null) {
-            LogUtils.LOGE(TAG, "setting for reseting " + SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.US).format(UserUtils.getTodayDate()) + " == " + UserUtils.getTodayDateString());
-            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, resetAlarmDate.getTime(), AlarmManager.INTERVAL_DAY, resetAlarmIntent);
+        Date now = new Date();
+        if (now.after(resetAlarmDate)) {
+            resetAlarmDate = getTommorowDate(resetAlarmDate);
         }
+        LogUtils.LOGE(TAG, "setting for reseting " + resetAlarmDate + " == " + UserUtils.getTodayDateString());
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, resetAlarmDate.getTime(), AlarmManager.INTERVAL_DAY, resetAlarmIntent);
     }
 
     public static void cancelAlarm() {
@@ -126,5 +125,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                 (getContext().getText(R.string.notification_subtitle) + "[" + value + "] " + calories), contentIntent);
 
         mNM.notify(R.string.app_name, notification);
+    }
+
+    private static Date getTommorowDate(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.DATE, 1);
+        date = c.getTime();
+        LogUtils.LOGE(TAG, "changing " + UserUtils.getAlarmTime() + " -> " + new SimpleDateFormat(Constants.DATE_FORMAT).format(date));
+        return date;
     }
 }

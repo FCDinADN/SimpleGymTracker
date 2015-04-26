@@ -157,7 +157,6 @@
             android:layout_gravity="center_vertical"/>
     </LinearLayout>
 
-
     <com.runApp.ui.FontLatoTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

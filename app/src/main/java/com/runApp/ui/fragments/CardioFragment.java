@@ -1,8 +1,8 @@
 package com.runApp.ui.fragments;
 
-import android.content.Intent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,11 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.runApp.R;
+import com.runApp.database.GymDatabaseHelper;
+import com.runApp.models.HxMMessage;
 import com.runApp.services.CaloriesService;
 import com.runApp.ui.activities.CardioActivity;
-import com.runApp.database.GymDatabaseHelper;
-import com.runApp.models.History;
-import com.runApp.models.HxMMessage;
+import com.runApp.ui.activities.FinishIntenseActivity;
 import com.runApp.utils.DialogHandler;
 import com.runApp.utils.HxMConnection;
 import com.runApp.utils.HxMListener;
@@ -82,7 +82,7 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
     private short initialValue = -1;
     //the very previous value sent from server
     private short previousValue = -1;
-    private float maxSpeed = -1;
+    //    private float maxSpeed = -1;
     private float valueTravelledBefore = 0;
     private float intermediateValue = 0;
     private boolean showBattery = false;
@@ -108,6 +108,11 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
 
     private Handler mHandler;
 
+    private float averageSpeed;
+    private int averageHeartRate;
+    private float maxSpeed;
+    private int messagesNr;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -130,7 +135,7 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
 //        TODO connect to HxM
         tryToConnectToHxM();
 
-        isShort = getArguments().getBoolean(CardioActivity.SHORT_ACTIVITY);
+//        isShort = getArguments().getBoolean(CardioActivity.SHORT_ACTIVITY);
 
 //        getActivity().getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
 //            @Override
@@ -189,8 +194,24 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
 //        if (!pressed) {
 //            tryToConnectToHxM();
 //        } else {
-        closeConnection(true);
 //        }
+        closeConnection(true);
+        Intent intent = new Intent(getActivity(), FinishIntenseActivity.class);
+        DateFormat dfDate = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat dfHour = new SimpleDateFormat("HH:mm:ss");
+        intent.putExtra(FinishActivityFragment.DATE, dfDate.format(startTime.getTime()));
+        intent.putExtra(FinishActivityFragment.START_TIME, dfHour.format(startTime.getTime()));
+        intent.putExtra(FinishActivityFragment.END_TIME, dfHour.format(new Date().getTime()));
+        intent.putExtra(FinishActivityFragment.CALORIES, Math.round(actualCalories * 100.0f) / 100.0f);
+        intent.putExtra(FinishActivityFragment.DISTANCE, intermediateValue);
+        intent.putExtra(FinishActivityFragment.DURATION, ((CardioActivity) getActivity()).getTotalTime());
+        intent.putExtra(FinishActivityFragment.AVERAGE_SPEED, Math.round(averageSpeed * 100.0f) / 100.0f);
+        intent.putExtra(FinishActivityFragment.MAXIMUM_SPEED, Math.round(maxSpeed * 100.0f) / 100.0f);
+        intent.putExtra(FinishActivityFragment.AVERAGE_HR, averageHeartRate);
+        intent.putExtra(FinishActivityFragment.HEART_RATE_VALUES, entryValues);
+        startActivity(intent);
+        getActivity().finish();
+
     }
 
     private void tryToConnectToHxM() {
@@ -226,6 +247,7 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
 
         previousAltitude = mSensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure);
 
+        LogUtils.LOGE(TAG,"STOP SERVICE");
         UserUtils.setIsServiceRunning(false);
         getActivity().stopService(new Intent(getActivity(), CaloriesService.class));
     }
@@ -340,7 +362,7 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
         minutes = 0;
         seconds = 0;
         ((CardioActivity) getActivity()).stopTracker();
-        connect.setText("CONNECT");
+//        connect.setText("CONNECT");
         ((CardioActivity) getActivity()).stopTimer();
 //        ((CardioActivity) getActivity()).hideShowMap();
         pressed = false;
@@ -348,8 +370,6 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
 //        UserUtils.setActualSpeed(0.0f);
         historyChartFragment.resetValues();
         if (initialValue != -1 && saveToDB) {
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            GymDatabaseHelper.getInst().insertExercise(new History(UserUtils.getExerciseNumber(), df.format(startTime.getTime()), df.format(new Date().getTime()), intermediateValue));
             UserUtils.setIsTracking();
         }
         try {
@@ -358,7 +378,7 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
             if (UserUtils.isTracking()) {
                 UserUtils.setIsTracking();
             }
-            getActivity().finish();
+//            getActivity().finish();
             LogUtils.LOGE(TAG, "burnt calories: " + (UserUtils.getBurntCalories() + actualCalories)
                     + "new steps " + UserUtils.getStepsNumber() + " <- "
                     + (UserUtils.getStepsNumber() + (int) Math.round(intermediateValue / 1.32)));
@@ -407,13 +427,16 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
         @Override
         protected Void doInBackground(HxMMessage... hxMMessages) {
             hxMMessage = hxMMessages[0];
+            int heartRate = hxMMessage.getHeartRate();
+            short distance = hxMMessage.getDistance();
+            float speed = hxMMessage.getSpeed();
 
             if (hxMMessage.getBattery() < UserUtils.getDeviceBattery()) {
                 UserUtils.setDeviceBattery(hxMMessage.getBattery());
             }
 
             if (initialValue == -1) {
-                initialValue = hxMMessage.getDistance();
+                initialValue = distance;
             }
 
 //            if (isShort) {
@@ -426,15 +449,15 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
 
 //                    Log.e("@receiveValues", "hxm [" + hxMMessage.getDistance() + "], previous [" + previousValue + " ], traveledBefore [" + valueTravelledBefore + "], " +
 //                            "intermediate value [" + intermediateValue + "]");
-            if (hxMMessage.getDistance() < previousValue) {
-                previousValue = hxMMessage.getDistance();
+            if (distance < previousValue) {
+                previousValue = distance;
                 initialValue = 0;
                 //TODO here was
 //                        valueTravelledBefore += intermediateValue;
                 valueTravelledBefore = intermediateValue;
             } else {
-                previousValue = hxMMessage.getDistance();
-                intermediateValue = valueTravelledBefore + (((hxMMessage.getDistance() - initialValue) * 6.25f) / 100.0f);
+                previousValue = distance;
+                intermediateValue = valueTravelledBefore + (((distance - initialValue) * 6.25f) / 100.0f);
 //                        intermediateValue += (((hxMMessage.getDistance() - initialValue) * 6.25f) / 100.0f);
 //                    distanceValue.setText(new DecimalFormat("##.##").format(intermediateValue));
 //                        LogUtils.LOGE(TAG, "final value:[" + intermediateValue + "]");
@@ -451,9 +474,13 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
                 updateCalories = false;
             }
 
-            if (hxMMessage.getSpeed() > maxSpeed) {
-                maxSpeed = hxMMessage.getSpeed();
+            if (speed > maxSpeed) {
+                maxSpeed = speed;
             }
+
+            messagesNr++;
+            averageSpeed = (averageSpeed * (messagesNr - 1) + speed) / messagesNr;
+            averageHeartRate = (averageHeartRate * (messagesNr - 1) + heartRate) / messagesNr;
 
 //            } else {
 //                if (hxMMessage.getDistance() < previousValue) {
@@ -478,19 +505,21 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            heartRateValue.setText(hxMMessage.getHeartRate() + " bmp");
+            int heartRate = hxMMessage.getHeartRate();
+            heartRateValue.setText(heartRate + " bmp");
             distanceValue.setText(new DecimalFormat("##.##").format(intermediateValue) + " m");
 
-            historyChartFragment.addEntry((float) hxMMessage.getHeartRate());
-            entryValues.add(hxMMessage.getHeartRate());
+            historyChartFragment.addEntry((float) heartRate);
+            entryValues.add(heartRate);
 
 //            if (showBattery) {
 //                showBattery = false;
 //                hxMBattery.setText(hxMMessage.getBattery() + " %");
 //            }
-            speedValue.setText(new DecimalFormat("##.##").format(hxMMessage.getSpeed()) + " m/s");
             if (updateCalories) {
                 caloriesValue.setText(getCalories(intermediateValue - distanceToBeSubtracted) + "");
+                speedValue.setText(new DecimalFormat("##.##").format(averageSpeed) + " m/s");
+                LogUtils.LOGE(TAG, "show " + speedValue.getText().toString());
             }
 //            status.setText("maximum speed " + new DecimalFormat("##.##").format(maxSpeed));
             status.setVisibility(View.GONE);
@@ -499,13 +528,13 @@ public class CardioFragment extends Fragment implements HxMListener, SensorEvent
 
     @Override
     public void onStop() {
-        LogUtils.LOGE(TAG,"onStop");
+        LogUtils.LOGE(TAG, "onStop");
         super.onStop();
     }
 
     @Override
     public void onDestroy() {
-        LogUtils.LOGE(TAG,"onDestroy");
+        LogUtils.LOGE(TAG, "onDestroy");
         super.onDestroy();
     }
 }

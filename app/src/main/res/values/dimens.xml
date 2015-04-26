@@ -38,4 +38,8 @@
 
 
     <dimen name="button_default_height">50dp</dimen>
+
+    <!-- TABS -->
+    <dimen name="tab_top_text_size">13dp</dimen>
+    <dimen name="tab_paddig">6dp</dimen>
 </resources>

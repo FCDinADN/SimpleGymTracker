@@ -60,13 +60,13 @@ public class StartActivityFragment extends Fragment implements OnMapReadyCallbac
         supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
 
-        steps.setText(UserUtils.getStepsNumber() + " steps today");
-        calories.setText(UserUtils.getBurntCalories() + " calories burnt");
     }
 
     @Override
     public void onResume() {
         getActivity().registerReceiver(mReceiver, new IntentFilter(UPDATE_VALUES));
+        steps.setText(UserUtils.getStepsNumber() + " steps today");
+        calories.setText(UserUtils.getBurntCalories() + " calories burnt");
         super.onResume();
     }
 
